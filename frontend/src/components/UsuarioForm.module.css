@@ -1,0 +1,119 @@
+.formContainer {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+}
+
+.row input, .dynamicRow input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.dynamicSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.dynamicSection label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dynamicRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btnAdd {
+  align-self: flex-start;
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btnRemove {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btnSubmit {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btnSubmit:hover { opacity: 0.9; }
+
+/* MODAL STYLES */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 32px;
+  border-radius: 12px;
+  max-width: 500px;
+  text-align: left;
+}
+
+.modal h4 { color: #f59e0b; margin-top: 0; }
+
+.modalActions {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.btnKeep { background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
+.btnRollback { background: #ef4444; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
+
+input[type=number] {
+   -moz-appearance: textfield;
+   appearance: textfield;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
