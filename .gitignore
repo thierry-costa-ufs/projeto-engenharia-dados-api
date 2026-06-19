@@ -1,45 +1,22 @@
-# ==========================================
-# Compilação e Artefatos (Maven / Gradle)
-# ==========================================
-target/
-build/
-!.mvn/wrapper/maven-wrapper.jar
-
-### STS (Spring Tool Suite) ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
+# IDEs e Sistema
 .idea/
-*.iws
-*.iml
-*.ipr
-out/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
 .vscode/
-
-# ==========================================
-# Arquivos do Sistema Operacional
-# ==========================================
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 .DS_Store
-Thumbs.db
-*.log
 
-# ==========================================
-# Segurança e Configurações Locais
-# ==========================================
-application-local.properties
-.env
+# Java / Spring (Backend)
+backend/target/
+backend/.mvn/
+backend/*.jar
+backend/*.war
+
+# Node / React (Frontend)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.env.local

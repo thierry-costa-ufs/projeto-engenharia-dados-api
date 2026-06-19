@@ -1,0 +1,39 @@
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.postgres { border-top: 4px solid var(--accent); }
+.mongo { border-top: 4px solid var(--accent); }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.table th, .table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-h);
+}
+
+.hexId {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.btnDelete {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btnDelete:hover { opacity: 0.9; }
