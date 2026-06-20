@@ -41,6 +41,46 @@ public class UsuarioService {
         return UsuarioMapper.toResponse(usuarioPg, mongoId, statusExecucao);
     }
 
+    @Transactional
+    public UsuarioDTO.Response atualizar(Long cpf, UsuarioDTO.Request dto) {
+        Usuario usuarioPg = relationalRepository.findById(cpf)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o CPF: " + cpf));
+
+        usuarioPg.setNome(dto.nome());
+        usuarioPg.setLogin(dto.login());
+
+        if (dto.senha() != null && !dto.senha().isBlank()) {
+            usuarioPg.setSenha(dto.senha());
+        }
+
+        usuarioPg.setEmail(dto.email());
+        usuarioPg.setTelefone(dto.telefone());
+
+        relationalRepository.saveAndFlush(usuarioPg);
+
+        String mongoId = null;
+        String statusExecucao = "SUCESSO_TOTAL";
+
+        try {
+            var documentoExistente = noSqlRepository.findAll().stream()
+                    .filter(doc -> doc.getCpf().equals(cpf))
+                    .findFirst();
+
+            UsuarioDocument usuarioMg = UsuarioMapper.toMongoDocument(dto);
+            usuarioMg.setCpf(cpf);
+
+            documentoExistente.ifPresent(doc -> usuarioMg.setId(doc.getId()));
+
+            UsuarioDocument usuarioMgAtualizado = noSqlRepository.save(usuarioMg);
+            mongoId = usuarioMgAtualizado.getId();
+        } catch (Exception e) {
+            System.err.println("[ALERTA] Falha ao atualizar espelho no MongoDB: " + e.getMessage());
+            statusExecucao = "FALHA_PARCIAL_MONGO";
+        }
+
+        return UsuarioMapper.toResponse(usuarioPg, mongoId, statusExecucao);
+    }
+
     public List<UsuarioDTO.Response> listarTodosRelacional() {
         return relationalRepository.findAll().stream()
                 .map(UsuarioMapper::fromPostgresEntity)

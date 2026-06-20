@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/usuarios")
-@CrossOrigin(origins = "*") // Mantém abertura limpa para o seu React local
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -35,9 +34,15 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.listarTodosNoSql());
     }
 
+    @PutMapping("/{cpf}")
+    public ResponseEntity<UsuarioDTO.Response> atualizar(@PathVariable Long cpf, @RequestBody UsuarioDTO.Request dto) {
+        UsuarioDTO.Response usuarioAtualizado = usuarioService.atualizar(cpf, dto);
+        return ResponseEntity.ok(usuarioAtualizado);
+    }
+
     @DeleteMapping("/{cpf}")
     public ResponseEntity<Void> remover(@PathVariable Long cpf) {
         usuarioService.deletar(cpf);
-        return ResponseEntity.noContent().build(); // Retorna 204 No Content ideal para deleções
+        return ResponseEntity.noContent().build();
     }
 }
