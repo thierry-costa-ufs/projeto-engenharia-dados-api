@@ -1,22 +1,14 @@
 package com.ufs.engdados.domain.usuario.model.relational;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(schema = "universidade", name = "usuario")
-@Data
-@NoArgsConstructor
+@Table(name = "usuario", schema = "universidade")
 public class Usuario {
 
     @Id
-    @Column(name = "cpf", columnDefinition = "universidade.tipo_cpf")
     private Long cpf;
 
     @Column(nullable = false, length = 100)
@@ -25,12 +17,14 @@ public class Usuario {
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "email", columnDefinition = "varchar[]")
+    @ElementCollection
+    @CollectionTable(name = "usuario_email", schema = "universidade", joinColumns = @JoinColumn(name = "cpf"))
+    @Column(name = "email")
     private List<String> email;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "telefone", columnDefinition = "varchar[]")
+    @ElementCollection
+    @CollectionTable(name = "usuario_telefone", schema = "universidade", joinColumns = @JoinColumn(name = "cpf"))
+    @Column(name = "telefone")
     private List<String> telefone;
 
     @Column(unique = true, length = 45)
@@ -38,4 +32,27 @@ public class Usuario {
 
     @Column(length = 32)
     private String senha;
+
+    // --- GETTERS E SETTERS ---
+
+    public Long getCpf() { return cpf; }
+    public void setCpf(Long cpf) { this.cpf = cpf; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
+    public LocalDate getDataNascimento() { return dataNascimento; }
+    public void setDataNascimento(LocalDate dataNascimento) { this.dataNascimento = dataNascimento; }
+
+    public List<String> getEmail() { return email; }
+    public void setEmail(List<String> email) { this.email = email; }
+
+    public List<String> getTelefone() { return telefone; }
+    public void setTelefone(List<String> telefone) { this.telefone = telefone; }
+
+    public String getLogin() { return login; }
+    public void setLogin(String login) { this.login = login; }
+
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
 }

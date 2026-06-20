@@ -30,24 +30,42 @@ public class UsuarioMapper {
         return doc;
     }
 
-    public static UsuarioDTO.Response toResponse(Usuario pg, String mongoId, String status) {
+    public static UsuarioDTO.Response toResponse(Usuario usuario, String mongoId, String statusExecucao) {
         return new UsuarioDTO.Response(
-                pg.getCpf(),
+                usuario.getCpf(),
                 mongoId,
-                pg.getNome(),
-                pg.getDataNascimento(),
-                pg.getEmail(),
-                pg.getTelefone(),
-                pg.getLogin(),
-                status
+                usuario.getNome(),
+                usuario.getDataNascimento(),
+                usuario.getEmail(),
+                usuario.getTelefone(),
+                usuario.getLogin(),
+                statusExecucao
         );
     }
 
     public static UsuarioDTO.Response fromPostgresEntity(Usuario u) {
-        return new UsuarioDTO.Response(u.getCpf(), null, u.getNome(), u.getDataNascimento(), u.getEmail(), u.getTelefone(), u.getLogin(), "APENAS_POSTGRES");
+        return new UsuarioDTO.Response(
+                u.getCpf(),
+                null,
+                u.getNome(),
+                u.getDataNascimento(),
+                u.getEmail(),
+                u.getTelefone(),
+                u.getLogin(),
+                "APENAS_POSTGRES"
+        );
     }
 
     public static UsuarioDTO.Response fromMongoDocument(UsuarioDocument doc) {
-        return new UsuarioDTO.Response(doc.getCpf(), doc.getId(), doc.getNome(), doc.getDataNascimento(), doc.getEmail(), doc.getTelefone(), doc.getLogin(), "APENAS_MONGO");
+        return new UsuarioDTO.Response(
+                doc.getCpf(),
+                doc.getId(),
+                doc.getNome(),
+                doc.getDataNascimento(),
+                doc.getEmail(),
+                doc.getTelefone(),
+                doc.getLogin(),
+                "APENAS_MONGO"
+        );
     }
 }
