@@ -103,18 +103,14 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
-  background-color: #10b981;
+  padding: 8.67px 14px;
+  background-color: #3b82f6;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s;
-}
-
-.btnCreate:hover {
-  background-color: #059669;
 }
 
 .tableCardFull {

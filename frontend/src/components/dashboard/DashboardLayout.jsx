@@ -1,36 +1,56 @@
 import { useState } from 'react';
-import { Users, GraduationCap, Link2, BookOpen, LayoutDashboard, LogOut } from 'lucide-react';
+import {
+  Users,
+  GraduationCap,
+  Link2,
+  BookOpen,
+  LayoutDashboard,
+  LogOut,
+  Building2,      // Ícone para Departamentos
+  Briefcase,      // Ícone para Professores
+  BookMarked,     // Ícone para Disciplinas
+  Presentation,   // Ícone para Turmas
+  ClipboardCheck  // Ícone para Cursa
+} from 'lucide-react';
 import styles from './DashboardLayout.module.css';
 
-import UsuariosView from '../../views/UsuariosView';
-import EstudantesView from '../../views/EstudantesView';
-import CursosView from '../../views/CursosView';
-import VinculosView from '../../views/VinculosView';
+import UsuariosView from '../../views/UsuarioView';
+import EstudantesView from '../../views/EstudanteView';
+import CursosView from '../../views/CursoView';
+import VinculosView from '../../views/VinculoView';
+import DepartamentoView from '../../views/DepartamentoView';
+import ProfessorView from '../../views/ProfessorView';
+import DisciplinaView from '../../views/DisciplinaView';
+import TurmaView from '../../views/TurmaView';
+import CursaView from '../../views/CursaView';
+import GeneralView from '../../views/GeneralView';
 
-// Componente simples para a Home da aplicação
-const VisaoGeralOperacional = () => (
-  <div>
-    <h3>Visão Geral Operacional</h3>
-    <p>Métricas de consistência do ecossistema de bancos de dados da UFS.</p>
-  </div>
-);
-
-// 1. DICIONÁRIO DE RENDERIZAÇÃO (Substitui o switch-case inteiro)
+// 1. DICIONÁRIO DE RENDERIZAÇÃO ATUALIZADO
 const VIEWS_MAP = {
-  'visao-geral': <VisaoGeralOperacional />,
+  'visao-geral': <GeneralView />,
   'usuarios': <UsuariosView />,
   'estudantes': <EstudantesView />,
   'cursos': <CursosView />,
-  'vinculos': <VinculosView />
+  'vinculos': <VinculosView />,
+  'departamentos': <DepartamentoView />,
+  'professores': <ProfessorView />,
+  'disciplinas': <DisciplinaView />,
+  'turmas': <TurmaView />,
+  'cursa': <CursaView />
 };
 
-// 2. CONFIGURAÇÃO DE MENUS (Tirado de dentro do componente para não ser recriado em cada render)
+// 2. CONFIGURAÇÃO DE MENUS ATUALIZADA
 const MENU_ITEMS = [
   { id: 'visao-geral', label: 'Visão Geral', icon: LayoutDashboard },
   { id: 'usuarios', label: 'Usuários', icon: Users },
   { id: 'estudantes', label: 'Estudantes', icon: GraduationCap },
   { id: 'cursos', label: 'Cursos', icon: BookOpen },
   { id: 'vinculos', label: 'Vínculos', icon: Link2 },
+  { id: 'departamentos', label: 'Departamentos', icon: Building2 },
+  { id: 'professores', label: 'Professores', icon: Briefcase },
+  { id: 'disciplinas', label: 'Disciplinas', icon: BookMarked },
+  { id: 'turmas', label: 'Turmas', icon: Presentation },
+  { id: 'cursa', label: 'Cursa', icon: ClipboardCheck },
 ];
 
 export default function DashboardLayout() {
@@ -80,7 +100,6 @@ export default function DashboardLayout() {
       <main className={styles.mainContent}>
         <header className={styles.topHeader}>
           <div className={styles.breadCrumb}>
-            {/* Agora exibe "Visão Geral" ou "Estudantes" em vez de "visao-geral" */}
             Dashboard / <span className={styles.breadCrumbActive}>{itemAtivo.label}</span>
           </div>
           <div className={styles.userProfile}>

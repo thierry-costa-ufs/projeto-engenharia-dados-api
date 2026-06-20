@@ -3,10 +3,12 @@ import { useSagaPersistence } from '../../hooks/useSagaPersistence';
 import ResilienceModal from '../shared/ResilienceModal';
 import theme from '../../styles/FormTheme.module.css';
 
-const ESTADO_INICIAL = { matEstudante: '', curso: '', dataEntrada: '', status: 'Ativo', dataSaida: '' };
+const ESTADO_INICIAL = { matEstudante: '', codCurso: '', semestre: '', situacao: 'ATIVO' };
 
 export default function VinculoForm({ onCadastrado }) {
   const [formData, setFormData] = useState(ESTADO_INICIAL);
+
+  // Aponta dinamicamente para o endpoint de vinculos que criamos no backend
   const { modalAberto, executarEscritaDupla, executarRollback, manterApenasNoPostgres } =
     useSagaPersistence('vinculos', onCadastrado);
 
@@ -17,10 +19,13 @@ export default function VinculoForm({ onCadastrado }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Converte e higieniza os dados conforme o DTO do Backend espera
     const payload = {
-      ...formData,
-      curso: Number(formData.curso),
-      dataSaida: formData.dataSaida || null
+      matEstudante: formData.matEstudante,
+      codCurso: Number(formData.codCurso),
+      semestre: formData.semestre,
+      situacao: formData.situacao
     };
 
     const resultado = await executarEscritaDupla(payload);
@@ -33,42 +38,38 @@ export default function VinculoForm({ onCadastrado }) {
     <div className={theme.formContainer}>
       <form onSubmit={handleSubmit} className={theme.form}>
 
-        {/* Usando o padrão de colunas estruturadas para manter labels alinhadas */}
         <div className={theme.row}>
           <div className={theme.column}>
-            <label className={theme.fieldLabel}>Estudante</label>
-            <input type="text" name="matEstudante" placeholder="Matrícula (7 dígitos)" value={formData.matEstudante} onChange={handleChange} maxLength={7} required />
+            <label className={theme.fieldLabel}>Matrícula do Estudante</label>
+            <input type="text" name="matEstudante" placeholder="Ex: E101" value={formData.matEstudante} onChange={handleChange} maxLength={7} required />
           </div>
           <div className={theme.column}>
-            <label className={theme.fieldLabel}>Curso</label>
-            <input type="number" name="curso" placeholder="ID do Curso" value={formData.curso} onChange={handleChange} required />
+            <label className={theme.fieldLabel}>Código do Curso</label>
+            <input type="number" name="codCurso" placeholder="Código numérico" value={formData.codCurso} onChange={handleChange} required />
           </div>
         </div>
 
         <div className={theme.row}>
           <div className={theme.column}>
-            <label className={theme.fieldLabel}>Data de Entrada</label>
-            <input type="date" name="dataEntrada" value={formData.dataEntrada} onChange={handleChange} required />
+            <label className={theme.fieldLabel}>Semestre Vigente</label>
+            <input type="text" name="semestre" placeholder="Ex: 2026.1" value={formData.semestre} onChange={handleChange} maxLength={6} required />
           </div>
           <div className={theme.column}>
-            <label className={theme.fieldLabel}>Data de Saída (Opcional)</label>
-            <input type="date" name="dataSaida" value={formData.dataSaida} onChange={handleChange} />
+            <label className={theme.fieldLabel}>Situação Acadêmica</label>
+            <select name="situacao" value={formData.situacao} onChange={handleChange} className={theme.selectField} required>
+              <option value="ATIVO">ATIVO</option>
+              <option value="TRANCADO">TRANCADO</option>
+              <option value="FORMADO">FORMADO</option>
+              <option value="EVADIDO">EVADIDO</option>
+            </select>
           </div>
         </div>
 
-        <div className={theme.column}>
-          <label className={theme.fieldLabel}>Status do Vínculo</label>
-          <select name="status" value={formData.status} onChange={handleChange}>
-            <option value="Ativo">Ativo</option>
-            <option value="Cancelada">Cancelada</option>
-            <option value="Formando">Formando</option>
-            <option value="Graduado">Graduado</option>
-          </select>
-        </div>
-
-        <button type="submit" className={theme.btnSubmit}>Dupla Inserção</button>
+        <button type="submit" className={theme.btnSubmit}>Dupla Inserção de Vínculo</button>
       </form>
-      <ResilienceModal aberto={modalAberto} entidade="Vínculo Acadêmico" onKeep={manterApenasNoPostgres} onRollback={executarRollback} />
+
+      {/* Seu modal de resiliência interceptando falhas do Mongo para o vínculo */}
+      <ResilienceModal aberto={modalAberto} entidade="Vínculo" onKeep={manterApenasNoPostgres} onRollback={executarRollback} />
     </div>
   );
 }

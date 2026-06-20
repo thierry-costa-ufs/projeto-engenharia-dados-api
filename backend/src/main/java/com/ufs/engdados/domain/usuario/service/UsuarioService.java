@@ -6,11 +6,11 @@ import com.ufs.engdados.domain.usuario.model.nosql.UsuarioDocument;
 import com.ufs.engdados.domain.usuario.model.relational.Usuario;
 import com.ufs.engdados.domain.usuario.repository.nosql.UsuarioNoSqlRepository;
 import com.ufs.engdados.domain.usuario.repository.relational.UsuarioRelationalRepository;
+import com.ufs.engdados.infrastructure.exception.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -25,11 +25,13 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO.Response criar(UsuarioDTO.Request dto) {
+        // 1. Salva no PostgreSQL
         Usuario usuarioPg = relationalRepository.saveAndFlush(UsuarioMapper.toPostgresEntity(dto));
 
         String mongoId = null;
         String statusExecucao = "SUCESSO_TOTAL";
 
+        // 2. Salva simultaneamente no MongoDB
         try {
             UsuarioDocument usuarioMg = noSqlRepository.save(UsuarioMapper.toMongoDocument(dto));
             mongoId = usuarioMg.getId();
@@ -43,8 +45,9 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO.Response atualizar(Long cpf, UsuarioDTO.Request dto) {
+        // 1. Atualiza no PostgreSQL
         Usuario usuarioPg = relationalRepository.findById(cpf)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o CPF: " + cpf));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com o CPF: " + cpf));
 
         usuarioPg.setNome(dto.nome());
         usuarioPg.setLogin(dto.login());
@@ -61,10 +64,9 @@ public class UsuarioService {
         String mongoId = null;
         String statusExecucao = "SUCESSO_TOTAL";
 
+        // 2. Atualiza simultaneamente no MongoDB
         try {
-            var documentoExistente = noSqlRepository.findAll().stream()
-                    .filter(doc -> doc.getCpf().equals(cpf))
-                    .findFirst();
+            var documentoExistente = noSqlRepository.findByCpf(cpf);
 
             UsuarioDocument usuarioMg = UsuarioMapper.toMongoDocument(dto);
             usuarioMg.setCpf(cpf);
@@ -81,16 +83,14 @@ public class UsuarioService {
         return UsuarioMapper.toResponse(usuarioPg, mongoId, statusExecucao);
     }
 
-    public List<UsuarioDTO.Response> listarTodosRelacional() {
-        return relationalRepository.findAll().stream()
-                .map(UsuarioMapper::fromPostgresEntity)
-                .collect(Collectors.toList());
+    public Page<UsuarioDTO.Response> listarTodosRelacional(Pageable pageable) {
+        return relationalRepository.findAll(pageable)
+                .map(UsuarioMapper::fromPostgresEntity);
     }
 
-    public List<UsuarioDTO.Response> listarTodosNoSql() {
-        return noSqlRepository.findAll().stream()
-                .map(UsuarioMapper::fromMongoDocument)
-                .collect(Collectors.toList());
+    public Page<UsuarioDTO.Response> listarTodosNoSql(Pageable pageable) {
+        return noSqlRepository.findAll(pageable)
+                .map(UsuarioMapper::fromMongoDocument);
     }
 
     @Transactional

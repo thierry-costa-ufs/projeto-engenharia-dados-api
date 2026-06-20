@@ -40,7 +40,7 @@ export default function ModuleViewLayout({
 
   useEffect(() => { sincronizarDados(); }, []);
 
-  const listaExibida = bancoAtivo === 'postgres' ? dataPostgres : dataMongo;
+  const listaExibida = bancoAtivo === 'postgres' ? (dataPostgres?.content || []) : (dataMongo?.content || []);
 
   const handleAbrirCriacao = () => {
     setItemEmEdicao(null);

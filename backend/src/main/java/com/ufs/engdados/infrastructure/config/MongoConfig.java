@@ -1,4 +1,4 @@
-package com.ufs.engdados.domain.usuario.config; // Certifique-se de ajustar para o package correto do seu projeto
+package com.ufs.engdados.infrastructure.config;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;

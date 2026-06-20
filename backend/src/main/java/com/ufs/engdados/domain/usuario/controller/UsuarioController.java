@@ -2,11 +2,11 @@ package com.ufs.engdados.domain.usuario.controller;
 
 import com.ufs.engdados.domain.usuario.dto.UsuarioDTO;
 import com.ufs.engdados.domain.usuario.service.UsuarioService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/usuarios")
@@ -25,13 +25,13 @@ public class UsuarioController {
     }
 
     @GetMapping("/relacional")
-    public ResponseEntity<List<UsuarioDTO.Response>> listarRelacional() {
-        return ResponseEntity.ok(usuarioService.listarTodosRelacional());
+    public ResponseEntity<Page<UsuarioDTO.Response>> listarRelacional(Pageable pageable) {
+        return ResponseEntity.ok(usuarioService.listarTodosRelacional(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<List<UsuarioDTO.Response>> listarNoSql() {
-        return ResponseEntity.ok(usuarioService.listarTodosNoSql());
+    public ResponseEntity<Page<UsuarioDTO.Response>> listarNoSql(Pageable pageable) {
+        return ResponseEntity.ok(usuarioService.listarTodosNoSql(pageable));
     }
 
     @PutMapping("/{cpf}")
