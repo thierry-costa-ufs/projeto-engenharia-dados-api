@@ -2,21 +2,34 @@ package com.ufs.engdados.domain.usuario.model.nosql;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDate;
 import java.util.List;
 
-@Document(collection = "usuarios")
+@Document(collection = "usuario")
 public class UsuarioDocument {
 
     @Id
-    private String id; // ID alfanumérico do MongoDB
+    private String id;
 
     private Long cpf;
+
+    @Field("nome")
     private String nome;
+
+    @Field("dataNascimento")
     private LocalDate dataNascimento;
+
+    @Field("email")
     private List<String> email;
+
+    @Field("telefone")
     private List<String> telefone;
+
+    @Field("login")
     private String login;
+
+    @Field("senha")
     private String senha;
 
     // --- GETTERS E SETTERS ---

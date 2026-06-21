@@ -3,6 +3,8 @@ package com.ufs.engdados.domain.usuario.model.relational;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "usuario", schema = "universidade")
@@ -17,14 +19,12 @@ public class Usuario {
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 
-    @ElementCollection
-    @CollectionTable(name = "usuario_email", schema = "universidade", joinColumns = @JoinColumn(name = "cpf"))
-    @Column(name = "email")
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "email", columnDefinition = "varchar[]")
     private List<String> email;
 
-    @ElementCollection
-    @CollectionTable(name = "usuario_telefone", schema = "universidade", joinColumns = @JoinColumn(name = "cpf"))
-    @Column(name = "telefone")
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "telefone", columnDefinition = "varchar[]")
     private List<String> telefone;
 
     @Column(unique = true, length = 45)

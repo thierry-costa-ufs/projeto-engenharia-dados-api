@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/vinculos")
-@CrossOrigin(origins = "*")
 public class VinculoController {
 
     private final VinculoService vinculoService;

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/usuarios")
@@ -19,7 +20,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO.Response> cadastrar(@RequestBody UsuarioDTO.Request dto) {
+    public ResponseEntity<UsuarioDTO.Response> cadastrar(@Valid @RequestBody UsuarioDTO.Request dto) {
         UsuarioDTO.Response novoUsuario = usuarioService.criar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
     }
@@ -35,7 +36,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{cpf}")
-    public ResponseEntity<UsuarioDTO.Response> atualizar(@PathVariable Long cpf, @RequestBody UsuarioDTO.Request dto) {
+    public ResponseEntity<UsuarioDTO.Response> atualizar(@PathVariable Long cpf, @Valid @RequestBody UsuarioDTO.Request dto) {
         UsuarioDTO.Response usuarioAtualizado = usuarioService.atualizar(cpf, dto);
         return ResponseEntity.ok(usuarioAtualizado);
     }
