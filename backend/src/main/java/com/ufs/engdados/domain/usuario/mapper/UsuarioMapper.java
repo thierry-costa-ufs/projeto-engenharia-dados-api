@@ -7,6 +7,7 @@ import com.ufs.engdados.domain.usuario.model.relational.Usuario;
 public class UsuarioMapper {
 
     public static Usuario toPostgresEntity(UsuarioDTO.Request dto) {
+        if (dto == null) return null;
         Usuario usuario = new Usuario();
         usuario.setCpf(dto.cpf());
         usuario.setNome(dto.nome());
@@ -18,19 +19,8 @@ public class UsuarioMapper {
         return usuario;
     }
 
-    public static UsuarioDocument toMongoDocument(UsuarioDTO.Request dto) {
-        UsuarioDocument doc = new UsuarioDocument();
-        doc.setCpf(dto.cpf());
-        doc.setNome(dto.nome());
-        doc.setDataNascimento(dto.dataNascimento());
-        doc.setEmail(dto.email());
-        doc.setTelefone(dto.telefone());
-        doc.setLogin(dto.login());
-        doc.setSenha(dto.senha());
-        return doc;
-    }
-
     public static UsuarioDTO.Response toResponse(Usuario usuario, String mongoId, String statusExecucao) {
+        if (usuario == null) return null;
         return new UsuarioDTO.Response(
                 usuario.getCpf(),
                 mongoId,
@@ -39,24 +29,28 @@ public class UsuarioMapper {
                 usuario.getEmail(),
                 usuario.getTelefone(),
                 usuario.getLogin(),
+                usuario.getSenha(),
                 statusExecucao
         );
     }
 
-    public static UsuarioDTO.Response fromPostgresEntity(Usuario u) {
+    public static UsuarioDTO.Response toResponse(Usuario usuario) {
+        if (usuario == null) return null;
         return new UsuarioDTO.Response(
-                u.getCpf(),
+                usuario.getCpf(),
                 null,
-                u.getNome(),
-                u.getDataNascimento(),
-                u.getEmail(),
-                u.getTelefone(),
-                u.getLogin(),
-                "APENAS_POSTGRES"
+                usuario.getNome(),
+                usuario.getDataNascimento(),
+                usuario.getEmail(),
+                usuario.getTelefone(),
+                usuario.getLogin(),
+                usuario.getSenha(),
+                "ASSINCRONO"
         );
     }
 
     public static UsuarioDTO.Response fromMongoDocument(UsuarioDocument doc) {
+        if (doc == null) return null;
         return new UsuarioDTO.Response(
                 doc.getCpf(),
                 doc.getId(),
@@ -65,7 +59,12 @@ public class UsuarioMapper {
                 doc.getEmail(),
                 doc.getTelefone(),
                 doc.getLogin(),
-                "APENAS_MONGO"
+                doc.getSenha(),
+                "INTEGRADO_NOSQL"
         );
+    }
+
+    public static UsuarioDTO.Response fromPostgresEntity(Usuario usuario) {
+        return toResponse(usuario);
     }
 }
