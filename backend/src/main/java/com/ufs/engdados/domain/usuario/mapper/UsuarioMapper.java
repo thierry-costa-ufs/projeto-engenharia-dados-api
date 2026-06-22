@@ -22,8 +22,8 @@ public class UsuarioMapper {
     public static UsuarioDTO.Response toResponse(Usuario usuario, String mongoId, String statusExecucao) {
         if (usuario == null) return null;
         return new UsuarioDTO.Response(
-                usuario.getCpf(),
                 mongoId,
+                usuario.getCpf(),
                 usuario.getNome(),
                 usuario.getDataNascimento(),
                 usuario.getEmail(),
@@ -37,8 +37,8 @@ public class UsuarioMapper {
     public static UsuarioDTO.Response toResponse(Usuario usuario) {
         if (usuario == null) return null;
         return new UsuarioDTO.Response(
-                usuario.getCpf(),
                 null,
+                usuario.getCpf(),
                 usuario.getNome(),
                 usuario.getDataNascimento(),
                 usuario.getEmail(),
@@ -52,8 +52,8 @@ public class UsuarioMapper {
     public static UsuarioDTO.Response fromMongoDocument(UsuarioDocument doc) {
         if (doc == null) return null;
         return new UsuarioDTO.Response(
-                doc.getCpf(),
                 doc.getId(),
+                doc.getCpf(),
                 doc.getNome(),
                 doc.getDataNascimento(),
                 doc.getEmail(),

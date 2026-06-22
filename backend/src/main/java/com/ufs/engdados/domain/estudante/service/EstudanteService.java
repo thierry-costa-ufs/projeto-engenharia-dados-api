@@ -1,0 +1,83 @@
+package com.ufs.engdados.domain.estudante.service;
+
+import com.ufs.engdados.domain.estudante.dto.EstudanteDTO;
+import com.ufs.engdados.domain.estudante.mapper.EstudanteMapper;
+import com.ufs.engdados.domain.estudante.model.nosql.EstudanteDocument;
+import com.ufs.engdados.domain.estudante.model.relational.Estudante;
+import com.ufs.engdados.domain.estudante.repository.nosql.EstudanteNoSqlRepository;
+import com.ufs.engdados.domain.estudante.repository.relational.EstudanteRelationalRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class EstudanteService{
+
+    private final EstudanteRelationalRepository relationalRepository;
+    private final EstudanteNoSqlRepository noSqlRepository;
+    private final EstudanteMapper estudanteMapper;
+
+    public EstudanteService(EstudanteRelationalRepository relationalRepository, EstudanteNoSqlRepository noSqlRepository, EstudanteMapper estudanteMapper){
+        this.relationalRepository = relationalRepository;
+        this.noSqlRepository = noSqlRepository;
+        this.estudanteMapper = estudanteMapper;
+    }
+
+    @Transactional
+    public EstudanteDTO.Response create(EstudanteDTO.Request request){
+        relationalRepository.save(estudanteMapper.toRelational(request));
+        EstudanteDocument salvoNoSql = noSqlRepository.save(estudanteMapper.toNoSql(request));
+
+        return estudanteMapper.noSqlToResponse(salvoNoSql);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EstudanteDTO.Response> listRelational(Pageable pageable){
+        Page<Estudante> estudantes = relationalRepository.findAll(pageable);
+
+        return estudantes.map(estudante -> estudanteMapper.relationalToResponse(estudante));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EstudanteDTO.Response> listNoSql(Pageable pageable){
+        Page<EstudanteDocument> estudantes = noSqlRepository.findAll(pageable);
+
+        return estudantes.map(estudante -> estudanteMapper.noSqlToResponse(estudante));
+    }
+
+    @Transactional
+    public EstudanteDTO.Response update(String matricula, EstudanteDTO.Request request) {
+        Estudante estudante = relationalRepository.findById(matricula).orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+
+        estudante.setMc(request.mc());
+        relationalRepository.save(estudante);
+
+        EstudanteDocument document = noSqlRepository.findByMatEstudante(matricula).orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+
+        document.setMc(request.mc());
+        noSqlRepository.save(document);
+
+        return new EstudanteDTO.Response(
+                document.getId(),
+                estudante.getMatEstudante(),
+                estudante.getCpf(),
+                estudante.getMc(),
+                estudante.getAnoIngresso()
+        );
+    }
+
+    @Transactional
+    public void delete(String matricula){
+
+        relationalRepository.findById(matricula).orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+        relationalRepository.deleteById(matricula);
+
+        noSqlRepository.findByMatEstudante(matricula).orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+        noSqlRepository.deleteByMatEstudante(matricula);
+
+    }
+
+}

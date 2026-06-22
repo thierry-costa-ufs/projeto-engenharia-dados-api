@@ -12,6 +12,7 @@ public class UsuarioDocument {
     @Id
     private String id;
 
+    @Field("cpf")
     private Long cpf;
 
     @Field("nome")
