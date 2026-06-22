@@ -39,8 +39,8 @@ public interface UsuarioDTO {
     ) {}
 
     record Response(
-            Long cpf,
             String mongoId,
+            Long cpf,
             String nome,
             LocalDate dataNascimento,
             List<String> email,
