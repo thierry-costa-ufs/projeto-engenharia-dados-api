@@ -3,7 +3,6 @@
   width: 100%;
   color: #f8fafc;
 }
-.formContainer h2 { display: none; }
 
 .form {
   display: flex;
@@ -12,20 +11,15 @@
   width: 100%;
 }
 
-/* ==========================================================================
-   CONTRATO DE LAYOUT FLUIDO E ESCALÁVEL
-   ========================================================================== */
 .row {
   display: flex;
   gap: 16px;
   width: 100%;
 }
 
-/* Gênio CSS: Qualquer elemento que for filho imediato de uma linha ocupará espaço */
-/* igualitário e estará blindado contra vazamentos de tamanho intrínseco */
 .row > * {
   flex: 1;
-  min-width: 0; /* Quebra o tamanho padrão do navegador para date/select/inputs */
+  min-width: 0;
 }
 
 .column {
@@ -44,7 +38,7 @@
   margin-bottom: 2px;
 }
 
-/* Inputs, Selects Globais do Formulário */
+/* Inputs, Selects Globais Nativos */
 .form input[type="text"],
 .form input[type="number"],
 .form input[type="email"],
@@ -58,19 +52,32 @@
   padding: 10px 14px;
   color: #f8fafc;
   font-size: 0.9rem;
-  transition: all 0.2s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
   box-sizing: border-box;
 }
 
-.form input:focus, .form select:focus {
+.form input:focus,
+.form select:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
-/* ==========================================================================
-   SEÇÕES DINÂMICAS (VARCHAR[])
-   ========================================================================== */
+/* Engenharia Purista: Elimina a necessidade de classes manuais via JS */
+.form input:disabled,
+.form select:disabled {
+  background-color: #1e293b;
+  color: #64748b;
+  border-color: #334155;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.inputUppercase {
+  text-transform: uppercase;
+}
+
+/* Seções Dinâmicas (Coleções) */
 .dynamicSection {
   border-top: 1px dashed #334155;
   padding-top: 16px;
@@ -85,12 +92,8 @@
   margin-bottom: 8px;
 }
 
-/* Sobrescreve o comportamento de linha padrão apenas para os inputs com botão de remoção */
 .dynamicRow > input {
   flex: 1;
-}
-.dynamicRow > button {
-  flex: none;
 }
 
 .btnRemove {
@@ -105,7 +108,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .btnRemove:hover {
@@ -123,7 +126,7 @@
   font-weight: 500;
   cursor: pointer;
   text-align: center;
-  transition: all 0.2s;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
   width: 100%;
   margin-bottom: 12px;
 }
@@ -143,15 +146,17 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.15s ease;
   width: 100%;
 }
-.btnSubmit:hover { background-color: #2563eb; }
+
+.btnSubmit:hover {
+  background-color: #2563eb;
+}
 
 .formActionsGroup {
   display: flex;
   gap: 12px;
-  margin-top: 16px;
   width: 100%;
 }
 
@@ -165,16 +170,26 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.15s ease;
 }
 
 .btnCancel:hover {
   background-color: #475569;
 }
 
-/* Garante a proporção visual correta quando o botão de cancelar aparecer */
 .btnSubmitEdicao {
   flex: 2;
-  /* Herda as propriedades padrão do seu .btnSubmit existente */
-  composes: btnSubmit;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btnSubmitEdicao:hover {
+  background-color: #2563eb;
 }

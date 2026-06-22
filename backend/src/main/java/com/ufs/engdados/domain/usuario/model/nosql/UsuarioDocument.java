@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDate;
 import java.util.List;
+import com.ufs.engdados.domain.professor.model.nosql.PerfilProfessor;
 
 @Document(collection = "usuario")
 public class UsuarioDocument {
@@ -32,6 +33,16 @@ public class UsuarioDocument {
 
     @Field("senha")
     private String senha;
+
+    private PerfilProfessor perfilProfessor;
+
+    public PerfilProfessor getPerfilProfessor() {
+        return perfilProfessor;
+    }
+
+    public void setPerfilProfessor(PerfilProfessor perfilProfessor) {
+        this.perfilProfessor = perfilProfessor;
+    }
 
     // --- GETTERS E SETTERS ---
 

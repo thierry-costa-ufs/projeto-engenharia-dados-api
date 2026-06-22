@@ -21,8 +21,8 @@ public class VinculoController {
 
     @PostMapping
     public ResponseEntity<VinculoDTO.Response> criar(@RequestBody VinculoDTO.Request dto) {
-        // Corrigido o texto intruso que estava aqui
-        return ResponseEntity.status(HttpStatus.CREATED).body(vinculoService.criar(dto));
+        VinculoDTO.Response response = vinculoService.criar(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/relacional")
@@ -36,12 +36,12 @@ public class VinculoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VinculoDTO.Response> atualizar(@PathVariable String id, @RequestBody VinculoDTO.Request dto) {
+    public ResponseEntity<VinculoDTO.Response> atualizar(@PathVariable Long id, @RequestBody VinculoDTO.Request dto) {
         return ResponseEntity.ok(vinculoService.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable String id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         vinculoService.deletar(id);
         return ResponseEntity.noContent().build();
     }
