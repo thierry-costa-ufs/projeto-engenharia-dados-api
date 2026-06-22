@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VinculoService {
@@ -35,7 +36,6 @@ public class VinculoService {
 
         try {
             VinculoDocument vinculoMg = VinculoMapper.toMongoDocument(dto);
-            // GARANTIDO: Vincula o ID gerado pelo Postgres no documento do MongoDB
             vinculoMg.setIdRelacional(vinculoPg.getIdVinculo());
 
             vinculoMg = noSqlRepository.save(vinculoMg);
@@ -50,7 +50,7 @@ public class VinculoService {
 
     @Transactional(readOnly = true)
     public Page<VinculoDTO.Response> listarTodosRelacional(Pageable pageable) {
-        Page<Vinculo> page = relationalRepository.findAllNativo(pageable);
+        Page<Vinculo> page = relationalRepository.findAll(pageable);
         List<VinculoDTO.Response> dtos = page.getContent().stream()
                 .map(VinculoMapper::fromPostgresEntity)
                 .toList();
@@ -67,22 +67,22 @@ public class VinculoService {
     }
 
     @Transactional
-    public VinculoDTO.Response atualizar(String matEstudante, VinculoDTO.Request dto) {
-        // CORRIGIDO: Utiliza findByMatEstudante em vez do findById numérico
-        Vinculo vinculoPg = relationalRepository.findByMatEstudante(matEstudante)
-                .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para a matrícula: " + matEstudante));
+    public VinculoDTO.Response atualizar(Long idVinculo, VinculoDTO.Request dto) {
+        Vinculo vinculoPg = relationalRepository.findById(idVinculo)
+                .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para o ID: " + idVinculo));
 
         vinculoPg.setCodCurso(dto.codCurso() != null ? dto.codCurso().intValue() : null);
-        vinculoPg.setSituacao(dto.situacao());
+        vinculoPg.setDataEntrada(dto.dataEntrada());
+        vinculoPg.setStatus(dto.status());
+        vinculoPg.setDataSaida(dto.dataSaida());
+
         relationalRepository.saveAndFlush(vinculoPg);
 
         String mongoId = null;
         String statusExecucao = "SUCESSO_TOTAL";
 
         try {
-            var documentoExistente = noSqlRepository.findAll().stream()
-                    .filter(doc -> matEstudante.equals(doc.getMatEstudante()))
-                    .findFirst();
+            Optional<VinculoDocument> documentoExistente = noSqlRepository.findByIdRelacional(idVinculo);
 
             VinculoDocument vinculoMg = VinculoMapper.toMongoDocument(dto);
             vinculoMg.setIdRelacional(vinculoPg.getIdVinculo());
@@ -99,13 +99,10 @@ public class VinculoService {
     }
 
     @Transactional
-    public void deletar(String matEstudante) {
-        // CORRIGIDO: Utiliza os novos métodos por matrícula do repositório relacional
-        if (relationalRepository.existsByMatEstudante(matEstudante)) {
-            relationalRepository.deleteByMatEstudante(matEstudante);
+    public void deletar(Long idVinculo) {
+        if (relationalRepository.existsById(idVinculo)) {
+            relationalRepository.deleteById(idVinculo);
         }
-        noSqlRepository.findAll().stream()
-                .filter(doc -> matEstudante.equals(doc.getMatEstudante()))
-                .forEach(doc -> noSqlRepository.deleteById(doc.getId()));
+        noSqlRepository.deleteByIdRelacional(idVinculo);
     }
 }

@@ -8,13 +8,14 @@ export const api = {
     return res.json();
   },
   post: async (route, body) => {
-    return fetch(`${BASE_URL}/${route}`, {
+    const res = await fetch(`${BASE_URL}/${route}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
+    if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+    return res;
   },
-  // Substitua ou adicione o PUT aqui embaixo:
   put: async (route, body) => {
     const res = await fetch(`${BASE_URL}/${route}`, {
       method: 'PUT',
@@ -25,6 +26,8 @@ export const api = {
     return res.json();
   },
   delete: async (route) => {
-    return fetch(`${BASE_URL}/${route}`, { method: 'DELETE' });
+    const res = await fetch(`${BASE_URL}/${route}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+    return res;
   }
 };

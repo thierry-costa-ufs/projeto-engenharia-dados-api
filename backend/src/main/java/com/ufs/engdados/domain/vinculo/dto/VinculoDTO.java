@@ -1,20 +1,25 @@
 package com.ufs.engdados.domain.vinculo.dto;
 
+import java.time.LocalDate;
+
 public class VinculoDTO {
+
     public record Request(
             String matEstudante,
             Long codCurso,
-            String semestre,
-            String situacao
+            LocalDate dataEntrada,
+            String status,
+            LocalDate dataSaida
     ) {}
 
     public record Response(
-            Long id,
+            Long idVinculo,
             String mongoId,
             String matEstudante,
             Long codCurso,
-            String semestre,
-            String situacao,
+            LocalDate dataEntrada,
+            String status,
+            LocalDate dataSaida,
             String statusExecucao
     ) {}
 }

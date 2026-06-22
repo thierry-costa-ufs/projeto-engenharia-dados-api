@@ -10,22 +10,26 @@ public class VinculoMapper {
         Vinculo vinculo = new Vinculo();
         vinculo.setMatEstudante(dto.matEstudante());
         vinculo.setCodCurso(dto.codCurso() != null ? dto.codCurso().intValue() : null);
-        // Removido o setSemestre que não existe na entidade
-        vinculo.setSituacao(dto.situacao());
+
+        // 🌟 CORREÇÃO: Mapeia as novas colunas e altera 'situacao()' para 'status()'
+        vinculo.setDataEntrada(dto.dataEntrada());
+        vinculo.setStatus(dto.status());
+        vinculo.setDataSaida(dto.dataSaida());
         return vinculo;
     }
 
     public static VinculoDocument toMongoDocument(VinculoDTO.Request dto) {
         VinculoDocument doc = new VinculoDocument();
         doc.setMatEstudante(dto.matEstudante());
-        // CORRIGIDO: VinculoDocument espera Long, então passamos o Long do DTO diretamente
         doc.setCodCurso(dto.codCurso());
-        doc.setSemestre(dto.semestre());
-        doc.setSituacao(dto.situacao());
+
+        doc.setDataEntrada(dto.dataEntrada());
+        doc.setStatus(dto.status());
+        doc.setDataSaida(dto.dataSaida());
         return doc;
     }
 
-    public static VinculoDTO.Response toResponse(Vinculo vinculo, String mongoId, String status) {
+    public static VinculoDTO.Response toResponse(Vinculo vinculo, String mongoId, String statusExecucao) {
         Long cursoLong = (vinculo.getCodCurso() != null) ? Long.valueOf(vinculo.getCodCurso().longValue()) : null;
 
         return new VinculoDTO.Response(
@@ -33,9 +37,10 @@ public class VinculoMapper {
                 mongoId,
                 vinculo.getMatEstudante(),
                 cursoLong,
-                null, // CORRIGIDO: Como o Postgres não possui semestre, passamos null ou tratamos de outra forma
-                vinculo.getSituacao(),
-                status
+                vinculo.getDataEntrada(),
+                vinculo.getStatus(),
+                vinculo.getDataSaida(),
+                statusExecucao
         );
     }
 
@@ -47,8 +52,9 @@ public class VinculoMapper {
                 null,
                 v.getMatEstudante(),
                 cursoLong,
-                null,
-                v.getSituacao(),
+                v.getDataEntrada(),
+                v.getStatus(),
+                v.getDataSaida(),
                 "SUCESSO_POSTGRES"
         );
     }
@@ -57,12 +63,13 @@ public class VinculoMapper {
         Long cursoLong = (doc.getCodCurso() != null) ? Long.valueOf(doc.getCodCurso().longValue()) : null;
 
         return new VinculoDTO.Response(
-                null,
+                doc.getIdRelacional(),
                 doc.getId(),
                 doc.getMatEstudante(),
                 cursoLong,
-                doc.getSemestre(),
-                doc.getSituacao(),
+                doc.getDataEntrada(),
+                doc.getStatus(),
+                doc.getDataSaida(),
                 "SUCESSO_MONGO"
         );
     }

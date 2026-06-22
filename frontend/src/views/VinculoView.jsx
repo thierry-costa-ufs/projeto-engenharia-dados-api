@@ -1,10 +1,12 @@
-import { Paperclip, Trash2, Edit } from 'lucide-react';
+import { Trash2, Pencil } from 'lucide-react';
 import ModuleViewLayout from '../components/shared/ModuleViewLayout';
-import VinculoForm from '../components/vinculos/VinculoForm';
+import { VinculoForm } from '../components/forms';
 
 export default function VinculosView() {
-  // Alinhado com as colunas que realmente vamos renderizar
-  const headers = ['ID Identificador', 'Matrícula', 'Cód. Curso', 'Situação', 'Sincronização'];
+  const formatarData = (dataString) => {
+    if (!dataString) return '—';
+    return dataString.split('-').reverse().join('/');
+  };
 
   return (
     <ModuleViewLayout
@@ -13,49 +15,41 @@ export default function VinculosView() {
       formTitle="Registrar Novo Vínculo"
       endpoint="vinculos"
       FormComponent={VinculoForm}
-      tableHeaders={headers}
-      renderRow={(vinculo, idx, sharedStyles, handleIniciarEdicao, handleDeletar) => {
-        // No Postgres usamos o id (Long), no MongoDB usamos o mongoId (String alfanumérica)
-        const idExibido = vinculo.id || vinculo.mongoId || `Index: ${idx}`;
-
+      tableHeaders={[
+        'ID Vínculo',
+        'Matrícula',
+        'Código do Curso',
+        'Data de Entrada',
+        'Status',
+        'Data de Saída'
+      ]}
+      renderRow={(vinculo, idx, sharedStyles, onEdit, onDelete) => {
+        const idVinculo = vinculo.idVinculo || vinculo.id || vinculo.idvinculo;
         return (
-          <tr key={idExibido} className={sharedStyles.tableRow}>
-            {/* 1. ID Correto */}
-            <td className={sharedStyles.cpfCell}>
-              <strong>{idExibido}</strong>
-            </td>
-
-            {/* 2. Matrícula com o ícone */}
-            <td className={sharedStyles.nameCell}>
-              <Paperclip size={14} style={{ marginRight: '6px', display: 'inline-block', verticalAlign: 'middle' }} />
-              <span>{vinculo.matEstudante}</span>
-            </td>
-
-            {/* 3. Código do Curso (veio como codCurso do DTO) */}
-            <td>Curso #{vinculo.codCurso}</td>
-
-            {/* 4. Situação Acadêmica */}
+          <tr key={idVinculo || idx} className={sharedStyles.tableRow}>
+            <td>{idVinculo}</td>
+            <td>{vinculo.matEstudante}</td>
+            <td>{vinculo.codCurso}</td>
+            <td>{formatarData(vinculo.dataEntrada)}</td>
+            <td>{vinculo.status || vinculo.situacao}</td>
+            <td>{formatarData(vinculo.dataSaida)}</td>
             <td>
-              <span className={`${sharedStyles.emailBadge} ${vinculo.situacao === 'ATIVO' ? sharedStyles.activeMongo : ''}`}>
-                {vinculo.situacao}
-              </span>
-            </td>
-
-            {/* 5. Status da Replicação Dupla Síncrona */}
-            <td>
-              <span className={`${sharedStyles.statusBadge} ${vinculo.statusExecucao === 'SUCESSO_TOTAL' ? sharedStyles.badgeSucesso : sharedStyles.badgeAlerta}`}>
-                {vinculo.statusExecucao}
-              </span>
-            </td>
-
-            {/* 6. Coluna de Ações Obrigatória para o ModuleViewLayout funcionar */}
-            <td>
-              <div className={sharedStyles.tableActions}>
-                <button type="button" onClick={() => handleIniciarEdicao(vinculo)} className={sharedStyles.btnIconEdit} title="Editar">
-                  <Edit size={16} />
+              <div className={sharedStyles.actionsCell}>
+                <button
+                  type="button"
+                  title="Editar Vínculo"
+                  onClick={() => onEdit(vinculo)}
+                  className={sharedStyles.btnTableEdit}
+                >
+                  <Pencil size={14} />
                 </button>
-                <button type="button" onClick={() => handleDeletar(vinculo.id)} className={sharedStyles.btnIconDelete} title="Deletar">
-                  <Trash2 size={16} />
+                <button
+                  type="button"
+                  title="Deletar Vínculo"
+                  onClick={() => onDelete(idVinculo)}
+                  className={sharedStyles.btnTableDelete}
+                >
+                  <Trash2 size={14} />
                 </button>
               </div>
             </td>
