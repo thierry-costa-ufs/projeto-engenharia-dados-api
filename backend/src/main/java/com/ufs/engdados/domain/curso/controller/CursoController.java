@@ -20,30 +20,30 @@ public class CursoController {
     }
 
     @PostMapping
-    public ResponseEntity<CursoDTO.Response> cadastrar(@Valid @RequestBody CursoDTO.Request dto) {
-        CursoDTO.Response novoCurso = cursoService.criar(dto);
+    public ResponseEntity<CursoDTO.Response> create(@Valid @RequestBody CursoDTO.Request dto) {
+        CursoDTO.Response novoCurso = cursoService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoCurso);
     }
 
     @GetMapping("/relacional")
-    public ResponseEntity<Page<CursoDTO.Response>> listarRelacional(Pageable pageable) {
-        return ResponseEntity.ok(cursoService.listarTodosRelacional(pageable));
+    public ResponseEntity<Page<CursoDTO.Response>> findAllRelational(Pageable pageable) {
+        return ResponseEntity.ok(cursoService.findAllRelational(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<Page<CursoDTO.Response>> listarNoSql(Pageable pageable) {
-        return ResponseEntity.ok(cursoService.listarTodosNoSql(pageable));
+    public ResponseEntity<Page<CursoDTO.Response>> findAllNoSql(Pageable pageable) {
+        return ResponseEntity.ok(cursoService.findAllNoSql(pageable));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CursoDTO.Response> atualizar(@PathVariable Integer id, @Valid @RequestBody CursoDTO.Request dto) {
-        CursoDTO.Response cursoAtualizado = cursoService.atualizar(id, dto);
+    public ResponseEntity<CursoDTO.Response> update(@PathVariable Integer id, @Valid @RequestBody CursoDTO.Request dto) {
+        CursoDTO.Response cursoAtualizado = cursoService.update(id, dto);
         return ResponseEntity.ok(cursoAtualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Integer id) {
-        cursoService.deletar(id);
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        cursoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

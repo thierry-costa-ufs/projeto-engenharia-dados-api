@@ -26,13 +26,13 @@ public class EstudanteController{
     }
 
     @GetMapping("/relacional")
-    public ResponseEntity<Page<EstudanteDTO.Response>> listRelational(Pageable pageable){
-        return ResponseEntity.ok(estudanteService.listRelational(pageable));
+    public ResponseEntity<Page<EstudanteDTO.Response>> findAllRelational(Pageable pageable){
+        return ResponseEntity.ok(estudanteService.findAllRelational(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<Page<EstudanteDTO.Response>> listNoSql(Pageable pageable){
-        return ResponseEntity.ok(estudanteService.listNoSql(pageable));
+    public ResponseEntity<Page<EstudanteDTO.Response>> findAllNoSql(Pageable pageable){
+        return ResponseEntity.ok(estudanteService.findAllNoSql(pageable));
     }
 
     @PutMapping("/{matricula}")

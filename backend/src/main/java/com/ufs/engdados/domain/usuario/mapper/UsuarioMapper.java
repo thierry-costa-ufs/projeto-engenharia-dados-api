@@ -6,7 +6,7 @@ import com.ufs.engdados.domain.usuario.model.relational.Usuario;
 
 public class UsuarioMapper {
 
-    public static Usuario toPostgresEntity(UsuarioDTO.Request dto) {
+    public static Usuario toEntity(UsuarioDTO.Request dto) {
         if (dto == null) return null;
         Usuario usuario = new Usuario();
         usuario.setCpf(dto.cpf());
@@ -18,6 +18,20 @@ public class UsuarioMapper {
         usuario.setSenha(dto.senha());
         return usuario;
     }
+
+    public static UsuarioDocument toDocument(UsuarioDTO.Request dto) {
+        if (dto == null) return null;
+        UsuarioDocument usuario = new UsuarioDocument();
+        usuario.setCpf(dto.cpf());
+        usuario.setNome(dto.nome());
+        usuario.setDataNascimento(dto.dataNascimento());
+        usuario.setEmail(dto.email());
+        usuario.setTelefone(dto.telefone());
+        usuario.setLogin(dto.login());
+        usuario.setSenha(dto.senha());
+        return usuario;
+    }
+
 
     public static UsuarioDTO.Response toResponse(Usuario usuario, String mongoId, String statusExecucao) {
         if (usuario == null) return null;
@@ -49,7 +63,7 @@ public class UsuarioMapper {
         );
     }
 
-    public static UsuarioDTO.Response fromMongoDocument(UsuarioDocument doc) {
+    public static UsuarioDTO.Response toResponse(UsuarioDocument doc) {
         if (doc == null) return null;
         return new UsuarioDTO.Response(
                 doc.getId(),
@@ -64,7 +78,4 @@ public class UsuarioMapper {
         );
     }
 
-    public static UsuarioDTO.Response fromPostgresEntity(Usuario usuario) {
-        return toResponse(usuario);
-    }
 }

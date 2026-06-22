@@ -20,29 +20,29 @@ public class VinculoController {
     }
 
     @PostMapping
-    public ResponseEntity<VinculoDTO.Response> criar(@RequestBody VinculoDTO.Request dto) {
-        VinculoDTO.Response response = vinculoService.criar(dto);
+    public ResponseEntity<VinculoDTO.Response> create(@RequestBody VinculoDTO.Request dto) {
+        VinculoDTO.Response response = vinculoService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/relacional")
-    public ResponseEntity<Page<VinculoDTO.Response>> listarRelacional(@PageableDefault(size = 20) Pageable pageable) {
-        return ResponseEntity.ok(vinculoService.listarTodosRelacional(pageable));
+    public ResponseEntity<Page<VinculoDTO.Response>> findAllRelational(@PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(vinculoService.findAllRelational(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<Page<VinculoDTO.Response>> listarNoSql(@PageableDefault(size = 20) Pageable pageable) {
-        return ResponseEntity.ok(vinculoService.listarTodosNoSql(pageable));
+    public ResponseEntity<Page<VinculoDTO.Response>> findAllNoSql(@PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(vinculoService.findAllNoSql(pageable));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VinculoDTO.Response> atualizar(@PathVariable Long id, @RequestBody VinculoDTO.Request dto) {
-        return ResponseEntity.ok(vinculoService.atualizar(id, dto));
+    public ResponseEntity<VinculoDTO.Response> update(@PathVariable Long id, @RequestBody VinculoDTO.Request dto) {
+        return ResponseEntity.ok(vinculoService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        vinculoService.deletar(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        vinculoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

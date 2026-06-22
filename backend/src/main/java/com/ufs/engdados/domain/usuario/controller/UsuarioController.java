@@ -20,30 +20,30 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO.Response> cadastrar(@Valid @RequestBody UsuarioDTO.Request dto) {
-        UsuarioDTO.Response novoUsuario = usuarioService.criar(dto);
+    public ResponseEntity<UsuarioDTO.Response> create(@Valid @RequestBody UsuarioDTO.Request dto) {
+        UsuarioDTO.Response novoUsuario = usuarioService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
     }
 
     @GetMapping("/relacional")
-    public ResponseEntity<Page<UsuarioDTO.Response>> listarRelacional(Pageable pageable) {
-        return ResponseEntity.ok(usuarioService.listarTodosRelacional(pageable));
+    public ResponseEntity<Page<UsuarioDTO.Response>> findAllRelational(Pageable pageable) {
+        return ResponseEntity.ok(usuarioService.findAllRelational(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<Page<UsuarioDTO.Response>> listarNoSql(Pageable pageable) {
-        return ResponseEntity.ok(usuarioService.listarTodosNoSql(pageable));
+    public ResponseEntity<Page<UsuarioDTO.Response>> findAllNoSql(Pageable pageable) {
+        return ResponseEntity.ok(usuarioService.findAllNoSql(pageable));
     }
 
     @PutMapping("/{cpf}")
-    public ResponseEntity<UsuarioDTO.Response> atualizar(@PathVariable Long cpf, @Valid @RequestBody UsuarioDTO.Request dto) {
-        UsuarioDTO.Response usuarioAtualizado = usuarioService.atualizar(cpf, dto);
+    public ResponseEntity<UsuarioDTO.Response> update(@PathVariable Long cpf, @Valid @RequestBody UsuarioDTO.Request dto) {
+        UsuarioDTO.Response usuarioAtualizado = usuarioService.update(cpf, dto);
         return ResponseEntity.ok(usuarioAtualizado);
     }
 
     @DeleteMapping("/{cpf}")
-    public ResponseEntity<Void> remover(@PathVariable Long cpf) {
-        usuarioService.deletar(cpf);
+    public ResponseEntity<Void> delete(@PathVariable Long cpf) {
+        usuarioService.delete(cpf);
         return ResponseEntity.noContent().build();
     }
 }

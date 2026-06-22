@@ -3,6 +3,8 @@
     import org.springframework.data.annotation.Id;
     import org.springframework.data.mongodb.core.mapping.Document;
     import org.springframework.data.mongodb.core.mapping.Field;
+
+    import java.math.BigDecimal;
     import java.time.LocalDate;
     import java.util.List;
 
@@ -31,10 +33,10 @@
         private LocalDate dataAdmissao;
 
         @Field("tipo_jornada_trabalho")
-        private String tipoJornadaTrabalho;
+        private String jornada;
 
         @Field("salario")
-        private Double salario;
+        private BigDecimal salario;
 
         // Construtores
         public ProfessorDocument() {}
@@ -61,9 +63,9 @@
         public LocalDate getDataAdmissao() { return dataAdmissao; }
         public void setDataAdmissao(LocalDate dataAdmissao) { this.dataAdmissao = dataAdmissao; }
 
-        public String getTipoJornadaTrabalho() { return tipoJornadaTrabalho; }
-        public void setTipoJornadaTrabalho(String tipoJornadaTrabalho) { this.tipoJornadaTrabalho = tipoJornadaTrabalho; }
+        public String getJornada() { return jornada; }
+        public void setJornada(String jornada) { this.jornada = this.jornada; }
 
-        public Double getSalario() { return salario; }
-        public void setSalario(Double salario) { this.salario = salario; }
+        public BigDecimal getSalario() { return salario; }
+        public void setSalario(BigDecimal salario) { this.salario = salario; }
     }

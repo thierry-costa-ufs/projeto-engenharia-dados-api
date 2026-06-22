@@ -38,7 +38,7 @@ public class CursoService {
     }
 
     @Transactional
-    public CursoDTO.Response criar(CursoDTO.Request dto) {
+    public CursoDTO.Response create(CursoDTO.Request dto) {
         Curso relational = mapper.toEntity(dto);
         relational = relationalRepository.save(relational);
 
@@ -47,31 +47,8 @@ public class CursoService {
         return mapper.toResponse(relational);
     }
 
-    @Transactional
-    public CursoDTO.Response atualizar(Integer id, CursoDTO.Request dto) {
-        Curso relational = relationalRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Curso não encontrado na base relacional ID: " + id));
-
-        mapper.updateEntityFromDto(dto, relational);
-        Curso cursoAtualizado = relationalRepository.save(relational);
-
-        eventPublisher.publishEvent(new CursoSalvoEvent(cursoAtualizado.getIdCurso(), dto));
-
-        return mapper.toResponse(cursoAtualizado);
-    }
-
-    @Transactional
-    public void deletar(Integer id) {
-        if (!relationalRepository.existsById(id)) {
-            throw new EntityNotFoundException("Curso inexistente.");
-        }
-        relationalRepository.deleteById(id);
-
-        eventPublisher.publishEvent(new CursoDeletadoEvent(id));
-    }
-
     @Transactional(readOnly = true)
-    public Page<CursoDTO.Response> listarTodosRelacional(Pageable pageable) {
+    public Page<CursoDTO.Response> findAllRelational(Pageable pageable) {
         Page<Curso> cursosPg = relationalRepository.findAll(pageable);
 
         List<Integer> ids = cursosPg.getContent().stream().map(Curso::getIdCurso).toList();
@@ -91,7 +68,31 @@ public class CursoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CursoDTO.Response> listarTodosNoSql(Pageable pageable) {
-        return noSqlRepository.findAll(pageable).map(mapper::fromMongoDocument);
+    public Page<CursoDTO.Response> findAllNoSql(Pageable pageable) {
+        return noSqlRepository.findAll(pageable).map(mapper::toResponse);
     }
+
+    @Transactional
+    public CursoDTO.Response update(Integer id, CursoDTO.Request dto) {
+        Curso relational = relationalRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Curso não encontrado na base relacional ID: " + id));
+
+        mapper.updateEntityFromDto(dto, relational);
+        Curso cursoAtualizado = relationalRepository.save(relational);
+
+        eventPublisher.publishEvent(new CursoSalvoEvent(cursoAtualizado.getIdCurso(), dto));
+
+        return mapper.toResponse(cursoAtualizado);
+    }
+
+    @Transactional
+    public void delete(Integer id) {
+        if (!relationalRepository.existsById(id)) {
+            throw new EntityNotFoundException("Curso inexistente.");
+        }
+        relationalRepository.deleteById(id);
+
+        eventPublisher.publishEvent(new CursoDeletadoEvent(id));
+    }
+
 }

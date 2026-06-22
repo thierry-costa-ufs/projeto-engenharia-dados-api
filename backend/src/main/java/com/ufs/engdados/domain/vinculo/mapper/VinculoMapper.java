@@ -6,19 +6,18 @@ import com.ufs.engdados.domain.vinculo.model.relational.Vinculo;
 
 public class VinculoMapper {
 
-    public static Vinculo toPostgresEntity(VinculoDTO.Request dto) {
+    public static Vinculo toEntity(VinculoDTO.Request dto) {
         Vinculo vinculo = new Vinculo();
         vinculo.setMatEstudante(dto.matEstudante());
         vinculo.setCodCurso(dto.codCurso() != null ? dto.codCurso().intValue() : null);
 
-        // 🌟 CORREÇÃO: Mapeia as novas colunas e altera 'situacao()' para 'status()'
         vinculo.setDataEntrada(dto.dataEntrada());
         vinculo.setStatus(dto.status());
         vinculo.setDataSaida(dto.dataSaida());
         return vinculo;
     }
 
-    public static VinculoDocument toMongoDocument(VinculoDTO.Request dto) {
+    public static VinculoDocument toDocument(VinculoDTO.Request dto) {
         VinculoDocument doc = new VinculoDocument();
         doc.setMatEstudante(dto.matEstudante());
         doc.setCodCurso(dto.codCurso());
@@ -44,7 +43,7 @@ public class VinculoMapper {
         );
     }
 
-    public static VinculoDTO.Response fromPostgresEntity(Vinculo v) {
+    public static VinculoDTO.Response toResponse(Vinculo v) {
         Long cursoLong = (v.getCodCurso() != null) ? Long.valueOf(v.getCodCurso().longValue()) : null;
 
         return new VinculoDTO.Response(
@@ -59,7 +58,7 @@ public class VinculoMapper {
         );
     }
 
-    public static VinculoDTO.Response fromMongoDocument(VinculoDocument doc) {
+    public static VinculoDTO.Response toResponse(VinculoDocument doc) {
         Long cursoLong = (doc.getCodCurso() != null) ? Long.valueOf(doc.getCodCurso().longValue()) : null;
 
         return new VinculoDTO.Response(

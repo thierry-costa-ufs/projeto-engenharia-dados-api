@@ -12,7 +12,7 @@ import org.hibernate.type.SqlTypes;
 public class Professor {
 
     @Id
-    @Column(name = "cpf") // CORREÇÃO: O nome da coluna no banco é 'cpf'
+    @Column(name = "cpf")
     private Long cpf;
 
     @OneToOne(fetch = FetchType.LAZY)

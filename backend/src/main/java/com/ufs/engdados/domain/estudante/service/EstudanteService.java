@@ -11,41 +11,37 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 public class EstudanteService{
 
     private final EstudanteRelationalRepository relationalRepository;
     private final EstudanteNoSqlRepository noSqlRepository;
-    private final EstudanteMapper estudanteMapper;
 
     public EstudanteService(EstudanteRelationalRepository relationalRepository, EstudanteNoSqlRepository noSqlRepository, EstudanteMapper estudanteMapper){
         this.relationalRepository = relationalRepository;
         this.noSqlRepository = noSqlRepository;
-        this.estudanteMapper = estudanteMapper;
     }
 
     @Transactional
     public EstudanteDTO.Response create(EstudanteDTO.Request request){
-        relationalRepository.save(estudanteMapper.toRelational(request));
-        EstudanteDocument salvoNoSql = noSqlRepository.save(estudanteMapper.toNoSql(request));
+        relationalRepository.save(EstudanteMapper.toEntity(request));
+        EstudanteDocument salvoNoSql = noSqlRepository.save(EstudanteMapper.toDocument(request));
 
-        return estudanteMapper.noSqlToResponse(salvoNoSql);
+        return EstudanteMapper.toResponse(salvoNoSql);
     }
 
     @Transactional(readOnly = true)
-    public Page<EstudanteDTO.Response> listRelational(Pageable pageable){
+    public Page<EstudanteDTO.Response> findAllRelational(Pageable pageable){
         Page<Estudante> estudantes = relationalRepository.findAll(pageable);
 
-        return estudantes.map(estudante -> estudanteMapper.relationalToResponse(estudante));
+        return estudantes.map(estudante -> EstudanteMapper.toResponse(estudante));
     }
 
     @Transactional(readOnly = true)
-    public Page<EstudanteDTO.Response> listNoSql(Pageable pageable){
+    public Page<EstudanteDTO.Response> findAllNoSql(Pageable pageable){
         Page<EstudanteDocument> estudantes = noSqlRepository.findAll(pageable);
 
-        return estudantes.map(estudante -> estudanteMapper.noSqlToResponse(estudante));
+        return estudantes.map(estudante -> EstudanteMapper.toResponse(estudante));
     }
 
     @Transactional

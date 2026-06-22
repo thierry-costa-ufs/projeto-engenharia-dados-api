@@ -48,7 +48,7 @@ public class CursoMapper {
         return toResponse(r, "ASSINCRONO");
     }
 
-    public CursoDTO.Response fromMongoDocument(CursoDocument n) {
+    public CursoDTO.Response toResponse(CursoDocument n) {
         if (n == null) return null;
         return new CursoDTO.Response(
                 n.getIdCurso(),

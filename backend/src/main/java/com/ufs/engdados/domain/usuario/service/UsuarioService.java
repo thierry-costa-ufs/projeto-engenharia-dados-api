@@ -31,14 +31,36 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioDTO.Response criar(UsuarioDTO.Request dto) {
-        Usuario usuarioPg = relationalRepository.save(UsuarioMapper.toPostgresEntity(dto));
+    public UsuarioDTO.Response create(UsuarioDTO.Request dto) {
+        Usuario usuarioPg = relationalRepository.save(UsuarioMapper.toEntity(dto));
         eventPublisher.publishEvent(new UsuarioSalvoEvent(dto, usuarioPg, false));
         return UsuarioMapper.toResponse(usuarioPg);
     }
 
+    @Transactional(readOnly = true)
+    public Page<UsuarioDTO.Response> findAllRelational(Pageable pageable) {
+        Page<Usuario> usuariosPg = relationalRepository.findAll(pageable);
+        List<Long> cpfs = usuariosPg.getContent().stream().map(Usuario::getCpf).toList();
+        List<UsuarioDocument> documentos = noSqlRepository.findByCpfIn(cpfs);
+        Map<Long, UsuarioDocument> mongoMap = documentos.stream()
+                .collect(Collectors.toMap(UsuarioDocument::getCpf, doc -> doc));
+        return usuariosPg.map(usuario -> {
+            UsuarioDocument doc = mongoMap.get(usuario.getCpf());
+            if (doc != null) {
+                return UsuarioMapper.toResponse(usuario, doc.getId(), "INTEGRADO_NOSQL");
+            }
+            return UsuarioMapper.toResponse(usuario);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UsuarioDTO.Response> findAllNoSql(Pageable pageable) {
+        return noSqlRepository.findAll(pageable)
+                .map(UsuarioMapper::toResponse);
+    }
+
     @Transactional
-    public UsuarioDTO.Response atualizar(Long cpf, UsuarioDTO.Request dto) {
+    public UsuarioDTO.Response update(Long cpf, UsuarioDTO.Request dto) {
         if (!cpf.equals(dto.cpf())) {
             throw new IllegalArgumentException("O CPF da URL não corresponde ao CPF enviado no corpo da requisição.");
         }
@@ -56,30 +78,9 @@ public class UsuarioService {
         return UsuarioMapper.toResponse(usuarioAtualizado);
     }
 
-    @Transactional(readOnly = true)
-    public Page<UsuarioDTO.Response> listarTodosRelacional(Pageable pageable) {
-        Page<Usuario> usuariosPg = relationalRepository.findAll(pageable);
-        List<Long> cpfs = usuariosPg.getContent().stream().map(Usuario::getCpf).toList();
-        List<UsuarioDocument> documentos = noSqlRepository.findByCpfIn(cpfs);
-        Map<Long, UsuarioDocument> mongoMap = documentos.stream()
-                .collect(Collectors.toMap(UsuarioDocument::getCpf, doc -> doc));
-        return usuariosPg.map(usuario -> {
-            UsuarioDocument doc = mongoMap.get(usuario.getCpf());
-            if (doc != null) {
-                return UsuarioMapper.toResponse(usuario, doc.getId(), "INTEGRADO_NOSQL");
-            }
-            return UsuarioMapper.toResponse(usuario);
-        });
-    }
-
-    @Transactional(readOnly = true)
-    public Page<UsuarioDTO.Response> listarTodosNoSql(Pageable pageable) {
-        return noSqlRepository.findAll(pageable)
-                .map(UsuarioMapper::fromMongoDocument);
-    }
 
     @Transactional
-    public void deletar(Long cpf) {
+    public void delete(Long cpf) {
         if (!relationalRepository.existsById(cpf)) {
             throw new ResourceNotFoundException("Usuário não encontrado com o CPF: " + cpf);
         }

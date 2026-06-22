@@ -27,15 +27,15 @@ public class VinculoService {
     }
 
     @Transactional
-    public VinculoDTO.Response criar(VinculoDTO.Request dto) {
-        Vinculo vinculoPg = VinculoMapper.toPostgresEntity(dto);
+    public VinculoDTO.Response create(VinculoDTO.Request dto) {
+        Vinculo vinculoPg = VinculoMapper.toEntity(dto);
         vinculoPg = relationalRepository.save(vinculoPg);
 
         String mongoId = null;
         String statusExecucao = "SUCESSO_TOTAL";
 
         try {
-            VinculoDocument vinculoMg = VinculoMapper.toMongoDocument(dto);
+            VinculoDocument vinculoMg = VinculoMapper.toDocument(dto);
             vinculoMg.setIdRelacional(vinculoPg.getIdVinculo());
 
             vinculoMg = noSqlRepository.save(vinculoMg);
@@ -49,25 +49,25 @@ public class VinculoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<VinculoDTO.Response> listarTodosRelacional(Pageable pageable) {
+    public Page<VinculoDTO.Response> findAllRelational(Pageable pageable) {
         Page<Vinculo> page = relationalRepository.findAll(pageable);
         List<VinculoDTO.Response> dtos = page.getContent().stream()
-                .map(VinculoMapper::fromPostgresEntity)
+                .map(VinculoMapper::toResponse)
                 .toList();
         return new PageImpl<>(dtos, pageable, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public Page<VinculoDTO.Response> listarTodosNoSql(Pageable pageable) {
+    public Page<VinculoDTO.Response> findAllNoSql(Pageable pageable) {
         Page<VinculoDocument> page = noSqlRepository.findAll(pageable);
         List<VinculoDTO.Response> dtos = page.getContent().stream()
-                .map(VinculoMapper::fromMongoDocument)
+                .map(VinculoMapper::toResponse)
                 .toList();
         return new PageImpl<>(dtos, pageable, page.getTotalElements());
     }
 
     @Transactional
-    public VinculoDTO.Response atualizar(Long idVinculo, VinculoDTO.Request dto) {
+    public VinculoDTO.Response update(Long idVinculo, VinculoDTO.Request dto) {
         Vinculo vinculoPg = relationalRepository.findById(idVinculo)
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para o ID: " + idVinculo));
 
@@ -84,7 +84,7 @@ public class VinculoService {
         try {
             Optional<VinculoDocument> documentoExistente = noSqlRepository.findByIdRelacional(idVinculo);
 
-            VinculoDocument vinculoMg = VinculoMapper.toMongoDocument(dto);
+            VinculoDocument vinculoMg = VinculoMapper.toDocument(dto);
             vinculoMg.setIdRelacional(vinculoPg.getIdVinculo());
             documentoExistente.ifPresent(doc -> vinculoMg.setId(doc.getId()));
 
@@ -99,7 +99,7 @@ public class VinculoService {
     }
 
     @Transactional
-    public void deletar(Long idVinculo) {
+    public void delete(Long idVinculo) {
         if (relationalRepository.existsById(idVinculo)) {
             relationalRepository.deleteById(idVinculo);
         }

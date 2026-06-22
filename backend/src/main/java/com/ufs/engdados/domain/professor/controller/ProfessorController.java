@@ -21,36 +21,36 @@ public class ProfessorController {
         this.professorService = professorService;
     }
 
-    // CORREÇÃO: Adicionado Pageable e extração correta de conteúdo para retornar List
+    @PostMapping
+    public ResponseEntity<ProfessorDTO.Response> create(@Valid @RequestBody ProfessorDTO.Request dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(professorService.create(dto));
+    }
+
     @GetMapping
-    public ResponseEntity<List<ProfessorDTO.Response>> listarTodos(Pageable pageable) {
-        return ResponseEntity.ok(professorService.listarTodosRelacional(pageable).getContent());
+    public ResponseEntity<List<ProfessorDTO.Response>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(professorService.findAllRelational(pageable).getContent());
     }
 
     @GetMapping("/relacional")
-    public ResponseEntity<Page<ProfessorDTO.Response>> listarTodosRelacional(Pageable pageable) {
-        return ResponseEntity.ok(professorService.listarTodosRelacional(pageable));
+    public ResponseEntity<Page<ProfessorDTO.Response>> findAllRelational(Pageable pageable) {
+        return ResponseEntity.ok(professorService.findAllRelational(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<Page<ProfessorDTO.Response>> listarTodosNoSql(Pageable pageable) {
-        Page<ProfessorDTO.Response> page = professorService.listarTodosNoSql(pageable);
+    public ResponseEntity<Page<ProfessorDTO.Response>> findAllNoSql(Pageable pageable) {
+        Page<ProfessorDTO.Response> page = professorService.findAllNoSql(pageable);
         return ResponseEntity.ok(page);
     }
 
-    @PostMapping
-    public ResponseEntity<ProfessorDTO.Response> cadastrar(@Valid @RequestBody ProfessorDTO.Request dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(professorService.criar(dto));
-    }
 
     @PutMapping("/{cpf}")
-    public ResponseEntity<ProfessorDTO.Response> atualizar(@PathVariable Long cpf, @Valid @RequestBody ProfessorDTO.Request dto) {
-        return ResponseEntity.ok(professorService.atualizar(cpf, dto));
+    public ResponseEntity<ProfessorDTO.Response> update(@PathVariable Long cpf, @Valid @RequestBody ProfessorDTO.Request dto) {
+        return ResponseEntity.ok(professorService.update(cpf, dto));
     }
 
     @DeleteMapping("/{cpf}")
-    public ResponseEntity<Void> remover(@PathVariable Long cpf) {
-        professorService.deletar(cpf);
+    public ResponseEntity<Void> delete(@PathVariable Long cpf) {
+        professorService.delete(cpf);
         return ResponseEntity.noContent().build();
     }
 }

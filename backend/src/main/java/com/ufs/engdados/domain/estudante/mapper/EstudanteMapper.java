@@ -6,7 +6,7 @@ import com.ufs.engdados.domain.estudante.model.relational.Estudante;
 
 public class EstudanteMapper {
 
-    public static Estudante toRelational(EstudanteDTO.Request request){
+    public static Estudante toEntity(EstudanteDTO.Request request){
         Estudante estudante = new Estudante();
         estudante.setMatEstudante(request.matEstudante());
         estudante.setCpf(request.cpf());
@@ -15,7 +15,7 @@ public class EstudanteMapper {
         return estudante;
     }
 
-    public static EstudanteDocument toNoSql(EstudanteDTO.Request request){
+    public static EstudanteDocument toDocument(EstudanteDTO.Request request){
         EstudanteDocument estudanteDocument = new EstudanteDocument();
         estudanteDocument.setMatEstudante(request.matEstudante());
         estudanteDocument.setCpf(request.cpf());
@@ -24,7 +24,7 @@ public class EstudanteMapper {
         return estudanteDocument;
     }
 
-    public static EstudanteDTO.Response relationalToResponse(Estudante estudante){
+    public static EstudanteDTO.Response toResponse(Estudante estudante){
         return new EstudanteDTO.Response(
                 null,
                 estudante.getMatEstudante(),
@@ -34,7 +34,7 @@ public class EstudanteMapper {
         );
     }
 
-    public static EstudanteDTO.Response noSqlToResponse(EstudanteDocument estudante) {
+    public static EstudanteDTO.Response toResponse(EstudanteDocument estudante) {
         return new EstudanteDTO.Response(
                 estudante.getId(),
                 estudante.getMatEstudante(),

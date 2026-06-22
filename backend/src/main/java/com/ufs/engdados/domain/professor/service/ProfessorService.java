@@ -43,7 +43,7 @@ public class ProfessorService {
     }
 
     @Transactional
-    public ProfessorDTO.Response criar(ProfessorDTO.Request dto) {
+    public ProfessorDTO.Response create(ProfessorDTO.Request dto) {
         var usuario = usuarioRelationalRepository.findById(dto.cpf())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário base não encontrado para o CPF: " + dto.cpf()));
 
@@ -55,29 +55,8 @@ public class ProfessorService {
         return mapper.toResponse(prof, "ASSINCRONO");
     }
 
-    @Transactional
-    public ProfessorDTO.Response atualizar(Long cpf, ProfessorDTO.Request dto) {
-        Professor prof = relationalRepository.findById(cpf)
-                .orElseThrow(() -> new ResourceNotFoundException("Professor não encontrado com o CPF: " + cpf));
-
-        mapper.updateEntityFromDto(dto, prof);
-        prof = relationalRepository.save(prof);
-
-        eventPublisher.publishEvent(new ProfessorSalvoEvent(prof.getCpf(), dto));
-        return mapper.toResponse(prof, "ASSINCRONO");
-    }
-
-    @Transactional
-    public void deletar(Long cpf) {
-        if (!relationalRepository.existsById(cpf)) {
-            throw new ResourceNotFoundException("Professor não encontrado com o CPF: " + cpf);
-        }
-        relationalRepository.deleteById(cpf);
-        eventPublisher.publishEvent(new ProfessorDeletadoEvent(cpf));
-    }
-
     @Transactional(readOnly = true)
-    public Page<ProfessorDTO.Response> listarTodosRelacional(Pageable pageable) {
+    public Page<ProfessorDTO.Response> findAllRelational(Pageable pageable) {
         Page<Professor> professoresPg = relationalRepository.findAllEager(pageable);
 
         List<Long> cpfs = professoresPg.getContent().stream().map(Professor::getCpf).toList();
@@ -114,13 +93,35 @@ public class ProfessorService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProfessorDTO.Response> listarTodosNoSql(Pageable pageable) {
+    public Page<ProfessorDTO.Response> findAllNoSql(Pageable pageable) {
         Page<UsuarioDocument> usuariosDoc = usuarioNoSqlRepository.findByPerfilProfessorIsNotNull(pageable);
 
         List<ProfessorDTO.Response> professores = usuariosDoc.getContent().stream()
-                .map(mapper::fromMongoDocument)
+                .map(mapper::toResponse)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(professores, pageable, usuariosDoc.getTotalElements());
     }
+
+    @Transactional
+    public ProfessorDTO.Response update(Long cpf, ProfessorDTO.Request dto) {
+        Professor prof = relationalRepository.findById(cpf)
+                .orElseThrow(() -> new ResourceNotFoundException("Professor não encontrado com o CPF: " + cpf));
+
+        mapper.updateEntityFromDto(dto, prof);
+        prof = relationalRepository.save(prof);
+
+        eventPublisher.publishEvent(new ProfessorSalvoEvent(prof.getCpf(), dto));
+        return mapper.toResponse(prof, "ASSINCRONO");
+    }
+
+    @Transactional
+    public void delete(Long cpf) {
+        if (!relationalRepository.existsById(cpf)) {
+            throw new ResourceNotFoundException("Professor não encontrado com o CPF: " + cpf);
+        }
+        relationalRepository.deleteById(cpf);
+        eventPublisher.publishEvent(new ProfessorDeletadoEvent(cpf));
+    }
+
 }
