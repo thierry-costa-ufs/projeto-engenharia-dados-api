@@ -1,10 +1,12 @@
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Pencil } from 'lucide-react';
 import ModuleViewLayout from '../components/shared/ModuleViewLayout';
-import VinculoForm from '../components/vinculos/VinculoForm';
+import { VinculoForm } from '../components/forms';
 
 export default function VinculosView() {
-  // Removido o 'Ações' manual, pois o ModuleViewLayout injeta o cabeçalho de ações automaticamente
-  const headers = ['ID Vínculo', 'Matrícula', 'Código do Curso', 'Data de Entrada', 'Status', 'Data de Saída'];
+  const formatarData = (dataString) => {
+    if (!dataString) return '—';
+    return dataString.split('-').reverse().join('/');
+  };
 
   return (
     <ModuleViewLayout
@@ -13,62 +15,41 @@ export default function VinculosView() {
       formTitle="Registrar Novo Vínculo"
       endpoint="vinculos"
       FormComponent={VinculoForm}
-      tableHeaders={headers}
-      renderRow={(vinculo, idx, sharedStyles, handleIniciarEdicao, handleDeletar) => {
+      tableHeaders={[
+        'ID Vínculo',
+        'Matrícula',
+        'Código do Curso',
+        'Data de Entrada',
+        'Status',
+        'Data de Saída'
+      ]}
+      renderRow={(vinculo, idx, sharedStyles, onEdit, onDelete) => {
+        const idVinculo = vinculo.idVinculo || vinculo.id || vinculo.idvinculo;
         return (
-          <tr key={vinculo.idVinculo || vinculo.id || idx} className={sharedStyles.tableRow}>
-            {/* 1. ID Vínculo - Fallback seguro para garantir a renderização do número puro */}
+          <tr key={idVinculo || idx} className={sharedStyles.tableRow}>
+            <td>{idVinculo}</td>
+            <td>{vinculo.matEstudante}</td>
+            <td>{vinculo.codCurso}</td>
+            <td>{formatarData(vinculo.dataEntrada)}</td>
+            <td>{vinculo.status || vinculo.situacao}</td>
+            <td>{formatarData(vinculo.dataSaida)}</td>
             <td>
-              {vinculo.idVinculo || vinculo.id || vinculo.idvinculo}
-            </td>
-
-            {/* 2. Matrícula */}
-            <td>
-              {vinculo.matEstudante}
-            </td>
-
-            {/* 3. Código do Curso */}
-            <td>
-              {vinculo.codCurso}
-            </td>
-
-            {/* 4. Data de Entrada */}
-            <td>
-              {vinculo.dataEntrada ? new Date(vinculo.dataEntrada).toLocaleDateString('pt-BR') : '-'}
-            </td>
-
-            {/* 5. Status - Cor corrigida para o tema Dark (#e6edf3) evitando o sumiço do texto */}
-            <td>
-              <span style={{ fontWeight: '600', color: '#e6edf3', display: 'inline-block' }}>
-                {vinculo.status}
-              </span>
-            </td>
-
-            {/* 6. Data de Saída */}
-            <td>
-              {vinculo.dataSaida ? new Date(vinculo.dataSaida).toLocaleDateString('pt-BR') : '-'}
-            </td>
-
-            {/* 7. Coluna de Ações unificada */}
-            <td>
-              <div className={sharedStyles.tableActions}>
+              <div className={sharedStyles.actionsCell}>
                 <button
                   type="button"
-                  onClick={() => handleIniciarEdicao(vinculo)}
-                  className="btnTableEdit"
-                  style={{ marginRight: '8px', padding: '4px 8px', cursor: 'pointer' }}
-                  title="Editar"
+                  title="Editar Vínculo"
+                  onClick={() => onEdit(vinculo)}
+                  className={sharedStyles.btnTableEdit}
                 >
-                  <Edit size={16} />
+                  <Pencil size={14} />
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleDeletar(vinculo.idVinculo || vinculo.id)}
-                  className="btnTableDelete"
-                  style={{ padding: '4px 8px', color: '#ff4d4f', cursor: 'pointer' }}
-                  title="Deletar"
+                  title="Deletar Vínculo"
+                  onClick={() => onDelete(idVinculo)}
+                  className={sharedStyles.btnTableDelete}
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={14} />
                 </button>
               </div>
             </td>

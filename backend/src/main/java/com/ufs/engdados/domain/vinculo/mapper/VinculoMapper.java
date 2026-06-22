@@ -11,7 +11,10 @@ public class VinculoMapper {
         vinculo.setMatEstudante(dto.matEstudante());
         vinculo.setCodCurso(dto.codCurso() != null ? dto.codCurso().intValue() : null);
 
-        vinculo.setStatus(dto.situacao());
+        // 🌟 CORREÇÃO: Mapeia as novas colunas e altera 'situacao()' para 'status()'
+        vinculo.setDataEntrada(dto.dataEntrada());
+        vinculo.setStatus(dto.status());
+        vinculo.setDataSaida(dto.dataSaida());
         return vinculo;
     }
 
@@ -19,8 +22,10 @@ public class VinculoMapper {
         VinculoDocument doc = new VinculoDocument();
         doc.setMatEstudante(dto.matEstudante());
         doc.setCodCurso(dto.codCurso());
-        doc.setSemestre(dto.semestre());
-        doc.setSituacao(dto.situacao());
+
+        doc.setDataEntrada(dto.dataEntrada());
+        doc.setStatus(dto.status());
+        doc.setDataSaida(dto.dataSaida());
         return doc;
     }
 
@@ -32,8 +37,9 @@ public class VinculoMapper {
                 mongoId,
                 vinculo.getMatEstudante(),
                 cursoLong,
-                null,
+                vinculo.getDataEntrada(),
                 vinculo.getStatus(),
+                vinculo.getDataSaida(),
                 statusExecucao
         );
     }
@@ -46,8 +52,9 @@ public class VinculoMapper {
                 null,
                 v.getMatEstudante(),
                 cursoLong,
-                null,
+                v.getDataEntrada(),
                 v.getStatus(),
+                v.getDataSaida(),
                 "SUCESSO_POSTGRES"
         );
     }
@@ -56,12 +63,13 @@ public class VinculoMapper {
         Long cursoLong = (doc.getCodCurso() != null) ? Long.valueOf(doc.getCodCurso().longValue()) : null;
 
         return new VinculoDTO.Response(
-                null,
+                doc.getIdRelacional(),
                 doc.getId(),
                 doc.getMatEstudante(),
                 cursoLong,
-                doc.getSemestre(),
-                doc.getSituacao(), // Mapeia o campo do mongo para a mesma posição do DTO
+                doc.getDataEntrada(),
+                doc.getStatus(),
+                doc.getDataSaida(),
                 "SUCESSO_MONGO"
         );
     }

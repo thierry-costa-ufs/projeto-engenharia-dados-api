@@ -1,46 +1,46 @@
-import React from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
+import ModuleViewLayout from '../components/shared/ModuleViewLayout';
+import { TurmaForm } from '../components/forms';
 
-export default function TurmaView() {
-  const mockTurmas = [
-    { id_turma: 1, cod_disc: 'COMP0212', numero: 1, ano: 2017, semestre: 2 }
-  ];
-
+export default function TurmasView() {
   return (
-    <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'between', alignItems: 'center', borderBottom: '1px solid #e5e7eb', paddingBottom: '16px', marginBottom: '24px' }}>
-        <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1f2937' }}>Módulo: Turmas</h1>
-          <p style={{ fontSize: '14px', color: '#6b7280' }}>Seções e ofertas de disciplinas ativas organizadas por ano letivo e período.</p>
-        </div>
-        <span style={{ padding: '4px 12px', backgroundColor: '#fef3c7', color: '#92400e', fontSize: '12px', fontWeight: '600', borderRadius: '9999px', textTransform: 'uppercase' }}>
-          Placeholder / Sem Backend
-        </span>
-      </div>
-
-      <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', overflow: 'hidden', opacity: 0.6, pointerEvents: 'none' }}>
-        <table style={{ minWidth: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead style={{ backgroundColor: '#f9fafb', fontSize: '12px', textTransform: 'uppercase', color: '#6b7280' }}>
-            <tr>
-              <th style={{ padding: '12px 24px' }}>ID Turma</th>
-              <th style={{ padding: '12px 24px' }}>Cód. Disciplina</th>
-              <th style={{ padding: '12px 24px' }}>Número (Turma)</th>
-              <th style={{ padding: '12px 24px' }}>Ano Letivo</th>
-              <th style={{ padding: '12px 24px' }}>Semestre</th>
-            </tr>
-          </thead>
-          <tbody style={{ fontSize: '14px', color: '#4b5563' }}>
-            {mockTurmas.map((t) => (
-              <tr key={t.id_turma} style={{ borderTop: '1px solid #e5e7eb' }}>
-                <td style={{ padding: '16px 24px' }}>{t.id_turma}</td>
-                <td style={{ padding: '16px 24px', fontFamily: 'monospace' }}>{t.cod_disc}</td>
-                <td style={{ padding: '16px 24px' }}>{t.numero}</td>
-                <td style={{ padding: '16px 24px' }}>{t.ano}</td>
-                <td style={{ padding: '16px 24px' }}>{t.semestre}°</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <ModuleViewLayout
+      title="Módulo de Turmas"
+      subtitle="Alocação de horários, salas, atribuição docente e oferta de disciplinas."
+      formTitle="Cadastrar Nova Turma"
+      endpoint="turmas"
+      FormComponent={TurmaForm}
+      tableHeaders={['ID Turma', 'Código', 'Disciplina', 'Professor (Matrícula)', 'Horário', 'Sala']}
+      renderRow={(turma, idx, sharedStyles, onEdit, onDelete) => (
+        <tr key={turma.idTurma || idx} className={sharedStyles.tableRow}>
+          <td>{turma.idTurma}</td>
+          <td className={sharedStyles.textMono}>{turma.codigoTurma}</td>
+          <td>{turma.codigoDisciplina || turma.codDisciplina}</td>
+          <td className={sharedStyles.textMono}>{turma.matriculaProfessor || '—'}</td>
+          <td>{turma.horario}</td>
+          <td>{turma.sala || '—'}</td>
+          <td>
+            <div className={sharedStyles.actionsCell}>
+              <button
+                type="button"
+                title="Editar Turma"
+                onClick={() => onEdit(turma)}
+                className={sharedStyles.btnTableEdit}
+              >
+                <Pencil size={14} />
+              </button>
+              <button
+                type="button"
+                title="Deletar Turma"
+                onClick={() => onDelete(turma.idTurma)}
+                className={sharedStyles.btnTableDelete}
+              >
+                <Trash2 size={14} />
+              </button>
+            </div>
+          </td>
+        </tr>
+      )}
+    />
   );
 }
