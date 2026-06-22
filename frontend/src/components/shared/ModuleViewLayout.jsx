@@ -40,7 +40,9 @@ export default function ModuleViewLayout({
 
   useEffect(() => { sincronizarDados(); }, []);
 
-  const listaExibida = bancoAtivo === 'postgres' ? (dataPostgres?.content || []) : (dataMongo?.content || []);
+  const listaExibida = bancoAtivo === 'postgres'
+    ? (Array.isArray(dataPostgres) ? dataPostgres : dataPostgres?.content || [])
+    : (Array.isArray(dataMongo) ? dataMongo : dataMongo?.content || []);
 
   const handleAbrirCriacao = () => {
     setItemEmEdicao(null);
@@ -132,19 +134,47 @@ export default function ModuleViewLayout({
 
       {/* Modal sem nenhuma sujeira de style inline */}
       {isModalOpen && (
-        <Modal
-                 isOpen={isModalOpen}
-                 onClose={handleFecharModal}
-                 title={itemEmEdicao ? 'Editar Registro' : formTitle}
-                 variant="default"
-               >
-                 <FormComponent
-                   onCadastrado={() => { sincronizarDados(); handleFecharModal(); }}
-                   itemEmEdicao={itemEmEdicao}
-                   onCancelarEdicao={handleFecharModal}
-                 />
-        </Modal>
-      )}
+            <Modal
+              isOpen={isModalOpen}
+              onClose={handleFecharModal}
+              title={itemEmEdicao ? 'Editar Registro' : formTitle}
+              variant="default"
+            >
+              <FormComponent
+                onSubmit={async (formData) => {
+                  if (itemEmEdicao) {
+                    try {
+                      const id = itemEmEdicao.idVinculo || itemEmEdicao.idRelacional || itemEmEdicao.matricula || itemEmEdicao.cpf;
+                      await api.put(`${endpoint}/${id}`, formData);
+                      sincronizarDados();
+                      handleFecharModal();
+                    } catch (err) {
+                      alert('Erro ao atualizar o registro.');
+                    }
+                  } else if (onSaveCustom) {
+                    // Executa a escrita dupla via Saga Hook injetado externamente
+                    const res = await onSaveCustom(formData);
+                    if (res?.status === 'SUCESSO') {
+                      sincronizarDados();
+                      handleFecharModal();
+                    }
+                  } else {
+                    try {
+                      await api.post(endpoint, formData);
+                      sincronizarDados();
+                      handleFecharModal();
+                    } catch (err) {
+                      alert('Erro ao cadastrar o registro.');
+                    }
+                  }
+                }}
+                initialData={itemEmEdicao}
+                isEditing={!!itemEmEdicao}
+                sharedStyles={styles}
+                onCancel={handleFecharModal}
+              />
+            </Modal>
+          )}
     </div>
   );
 }

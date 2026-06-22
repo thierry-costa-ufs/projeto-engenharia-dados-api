@@ -50,7 +50,7 @@ public class VinculoService {
 
     @Transactional(readOnly = true)
     public Page<VinculoDTO.Response> listarTodosRelacional(Pageable pageable) {
-        Page<Vinculo> page = relationalRepository.findAllNativo(pageable);
+        Page<Vinculo> page = relationalRepository.findAll(pageable);
         List<VinculoDTO.Response> dtos = page.getContent().stream()
                 .map(VinculoMapper::fromPostgresEntity)
                 .toList();
@@ -68,12 +68,12 @@ public class VinculoService {
 
     @Transactional
     public VinculoDTO.Response atualizar(String matEstudante, VinculoDTO.Request dto) {
-        // CORRIGIDO: Utiliza findByMatEstudante em vez do findById numérico
         Vinculo vinculoPg = relationalRepository.findByMatEstudante(matEstudante)
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para a matrícula: " + matEstudante));
 
         vinculoPg.setCodCurso(dto.codCurso() != null ? dto.codCurso().intValue() : null);
-        vinculoPg.setSituacao(dto.situacao());
+
+        vinculoPg.setStatus(dto.situacao());
         relationalRepository.saveAndFlush(vinculoPg);
 
         String mongoId = null;

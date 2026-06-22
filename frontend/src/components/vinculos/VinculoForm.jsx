@@ -3,12 +3,17 @@ import { useSagaPersistence } from '../../hooks/useSagaPersistence';
 import ResilienceModal from '../shared/ResilienceModal';
 import theme from '../../styles/FormTheme.module.css';
 
-const ESTADO_INICIAL = { matEstudante: '', codCurso: '', semestre: '', situacao: 'ATIVO' };
+const ESTADO_INICIAL = {
+  matEstudante: '',
+  codCurso: '',
+  dataEntrada: '',
+  status: 'Ativo',
+  dataSaida: ''
+};
 
 export default function VinculoForm({ onCadastrado }) {
   const [formData, setFormData] = useState(ESTADO_INICIAL);
 
-  // Aponta dinamicamente para o endpoint de vinculos que criamos no backend
   const { modalAberto, executarEscritaDupla, executarRollback, manterApenasNoPostgres } =
     useSagaPersistence('vinculos', onCadastrado);
 
@@ -20,12 +25,12 @@ export default function VinculoForm({ onCadastrado }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Converte e higieniza os dados conforme o DTO do Backend espera
     const payload = {
       matEstudante: formData.matEstudante,
       codCurso: Number(formData.codCurso),
-      semestre: formData.semestre,
-      situacao: formData.situacao
+      dataEntrada: formData.dataEntrada || null,
+      status: formData.status,
+      dataSaida: formData.dataSaida || null
     };
 
     const resultado = await executarEscritaDupla(payload);
@@ -51,16 +56,23 @@ export default function VinculoForm({ onCadastrado }) {
 
         <div className={theme.row}>
           <div className={theme.column}>
-            <label className={theme.fieldLabel}>Semestre Vigente</label>
-            <input type="text" name="semestre" placeholder="Ex: 2026.1" value={formData.semestre} onChange={handleChange} maxLength={6} required />
+            <label className={theme.fieldLabel}>Data de Entrada</label>
+            <input type="date" name="dataEntrada" value={formData.dataEntrada} onChange={handleChange} required />
           </div>
           <div className={theme.column}>
-            <label className={theme.fieldLabel}>Situação Acadêmica</label>
-            <select name="situacao" value={formData.situacao} onChange={handleChange} className={theme.selectField} required>
-              <option value="ATIVO">ATIVO</option>
-              <option value="TRANCADO">TRANCADO</option>
-              <option value="FORMADO">FORMADO</option>
-              <option value="EVADIDO">EVADIDO</option>
+            <label className={theme.fieldLabel}>Data de Saída (Opcional)</label>
+            <input type="date" name="dataSaida" value={formData.dataSaida} onChange={handleChange} />
+          </div>
+        </div>
+
+        <div className={theme.row}>
+          <div className={theme.column}>
+            <label className={theme.fieldLabel}>Status Acadêmico</label>
+            <select name="status" value={formData.status} onChange={handleChange} className={theme.selectField} required>
+              <option value="Ativo">Ativo</option>
+              <option value="Cancelada">Cancelada</option>
+              <option value="Formando">Formando</option>
+              <option value="Graduado">Graduado</option>
             </select>
           </div>
         </div>
@@ -68,7 +80,6 @@ export default function VinculoForm({ onCadastrado }) {
         <button type="submit" className={theme.btnSubmit}>Dupla Inserção de Vínculo</button>
       </form>
 
-      {/* Seu modal de resiliência interceptando falhas do Mongo para o vínculo */}
       <ResilienceModal aberto={modalAberto} entidade="Vínculo" onKeep={manterApenasNoPostgres} onRollback={executarRollback} />
     </div>
   );

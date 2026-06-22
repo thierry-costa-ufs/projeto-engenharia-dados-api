@@ -1,6 +1,9 @@
 package com.ufs.engdados.domain.vinculo.model.relational;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "vinculo", schema = "universidade")
@@ -17,40 +20,27 @@ public class Vinculo {
     @Column(name = "curso", nullable = false)
     private Integer codCurso;
 
-    @Column(name = "status")
-    private String situacao;
+    @Column(name = "data_entrada")
+    private LocalDate dataEntrada;
 
-    // --- GETTERS E SETTERS ---
+    @Column(name = "status", columnDefinition = "universidade.status_estudante")
+    @JdbcTypeCode(SqlTypes.OTHER)
+    private String status;
 
-    public Long getIdVinculo() {
-        return idVinculo;
-    }
+    @Column(name = "data_saida")
+    private LocalDate dataSaida;
 
-    public void setIdVinculo(Long idVinculo) {
-        this.idVinculo = idVinculo;
-    }
-
-    public String getMatEstudante() {
-        return matEstudante;
-    }
-
-    public void setMatEstudante(String matEstudante) {
-        this.matEstudante = matEstudante;
-    }
-
-    public Integer getCodCurso() {
-        return codCurso;
-    }
-
-    public void setCodCurso(Integer codCurso) {
-        this.codCurso = codCurso;
-    }
-
-    public String getSituacao() {
-        return situacao;
-    }
-
-    public void setSituacao(String situacao) {
-        this.situacao = situacao;
-    }
+    // --- GETTERS E SETTERS MANTER IGUAL ---
+    public Long getIdVinculo() { return idVinculo; }
+    public void setIdVinculo(Long idVinculo) { this.idVinculo = idVinculo; }
+    public String getMatEstudante() { return matEstudante; }
+    public void setMatEstudante(String matEstudante) { this.matEstudante = matEstudante; }
+    public Integer getCodCurso() { return codCurso; }
+    public void setCodCurso(Integer codCurso) { this.codCurso = codCurso; }
+    public LocalDate getDataEntrada() { return dataEntrada; }
+    public void setDataEntrada(LocalDate dataEntrada) { this.dataEntrada = dataEntrada; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public LocalDate getDataSaida() { return dataSaida; }
+    public void setDataSaida(LocalDate dataSaida) { this.dataSaida = dataSaida; }
 }

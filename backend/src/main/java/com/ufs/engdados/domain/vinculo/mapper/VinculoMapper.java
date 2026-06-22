@@ -10,22 +10,21 @@ public class VinculoMapper {
         Vinculo vinculo = new Vinculo();
         vinculo.setMatEstudante(dto.matEstudante());
         vinculo.setCodCurso(dto.codCurso() != null ? dto.codCurso().intValue() : null);
-        // Removido o setSemestre que não existe na entidade
-        vinculo.setSituacao(dto.situacao());
+
+        vinculo.setStatus(dto.situacao());
         return vinculo;
     }
 
     public static VinculoDocument toMongoDocument(VinculoDTO.Request dto) {
         VinculoDocument doc = new VinculoDocument();
         doc.setMatEstudante(dto.matEstudante());
-        // CORRIGIDO: VinculoDocument espera Long, então passamos o Long do DTO diretamente
         doc.setCodCurso(dto.codCurso());
         doc.setSemestre(dto.semestre());
         doc.setSituacao(dto.situacao());
         return doc;
     }
 
-    public static VinculoDTO.Response toResponse(Vinculo vinculo, String mongoId, String status) {
+    public static VinculoDTO.Response toResponse(Vinculo vinculo, String mongoId, String statusExecucao) {
         Long cursoLong = (vinculo.getCodCurso() != null) ? Long.valueOf(vinculo.getCodCurso().longValue()) : null;
 
         return new VinculoDTO.Response(
@@ -33,9 +32,9 @@ public class VinculoMapper {
                 mongoId,
                 vinculo.getMatEstudante(),
                 cursoLong,
-                null, // CORRIGIDO: Como o Postgres não possui semestre, passamos null ou tratamos de outra forma
-                vinculo.getSituacao(),
-                status
+                null,
+                vinculo.getStatus(),
+                statusExecucao
         );
     }
 
@@ -48,7 +47,7 @@ public class VinculoMapper {
                 v.getMatEstudante(),
                 cursoLong,
                 null,
-                v.getSituacao(),
+                v.getStatus(),
                 "SUCESSO_POSTGRES"
         );
     }
@@ -62,7 +61,7 @@ public class VinculoMapper {
                 doc.getMatEstudante(),
                 cursoLong,
                 doc.getSemestre(),
-                doc.getSituacao(),
+                doc.getSituacao(), // Mapeia o campo do mongo para a mesma posição do DTO
                 "SUCESSO_MONGO"
         );
     }
