@@ -21,8 +21,7 @@ public class EstudanteController{
 
     @PostMapping
     public ResponseEntity<EstudanteDTO.Response> create(@Valid @RequestBody EstudanteDTO.Request request){
-        EstudanteDTO.Response resultado = estudanteService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(estudanteService.create(request));
     }
 
     @GetMapping("/relacional")
@@ -37,8 +36,7 @@ public class EstudanteController{
 
     @PutMapping("/{matricula}")
     public ResponseEntity<EstudanteDTO.Response> update(@PathVariable String matricula, @Valid @RequestBody EstudanteDTO.Request request){
-        EstudanteDTO.Response resultado = estudanteService.update(matricula, request);
-        return ResponseEntity.ok(resultado);
+        return ResponseEntity.ok(estudanteService.update(matricula, request));
     }
 
     @DeleteMapping("/{matricula}")

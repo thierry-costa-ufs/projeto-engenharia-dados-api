@@ -16,7 +16,7 @@ public class Estudante{
     private Long cpf;
 
     @Column(name = "mc")
-    private Integer mc;
+    private Double mc;
 
     @Column(name = "ano_ingresso")
     private Integer anoIngresso;
@@ -44,10 +44,10 @@ public class Estudante{
         this.mat_estudante = mat_estudante;
     }
 
-    public Integer getMc() {
+    public Double getMc() {
         return mc;
     }
-    public void setMc(Integer mc) {
+    public void setMc(Double mc) {
         this.mc = mc;
     }
 }
