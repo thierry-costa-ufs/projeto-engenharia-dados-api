@@ -16,7 +16,7 @@ export function useSagaPersistence(endpoint, onSucess) {
 
         if (resultado.status === "FALHA_PARCIAL_MONGO") {
           // Captura dinâmica da PK retornada
-          const id = resultado.cpf || resultado.matEstudante || resultado.idCurso || resultado.idVinculo;
+          const id = resultado.cpf || resultado.matEstudante || resultado.codDepto || resultado.cod_depto || resultado.idCurso || resultado.idVinculo;
           setIdPendente(id);
           setModalAberto(true);
           return { status: 'FALHA_PARCIAL' };

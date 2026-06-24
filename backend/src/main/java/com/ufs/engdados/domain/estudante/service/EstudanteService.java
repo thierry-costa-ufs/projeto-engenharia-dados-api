@@ -17,7 +17,7 @@ public class EstudanteService{
     private final EstudanteRelationalRepository relationalRepository;
     private final EstudanteNoSqlRepository noSqlRepository;
 
-    public EstudanteService(EstudanteRelationalRepository relationalRepository, EstudanteNoSqlRepository noSqlRepository, EstudanteMapper estudanteMapper){
+    public EstudanteService(EstudanteRelationalRepository relationalRepository, EstudanteNoSqlRepository noSqlRepository){
         this.relationalRepository = relationalRepository;
         this.noSqlRepository = noSqlRepository;
     }
@@ -33,7 +33,6 @@ public class EstudanteService{
     @Transactional(readOnly = true)
     public Page<EstudanteDTO.Response> findAllRelational(Pageable pageable){
         Page<Estudante> estudantes = relationalRepository.findAll(pageable);
-
         return estudantes.map(estudante -> EstudanteMapper.toResponse(estudante));
     }
 
@@ -46,32 +45,30 @@ public class EstudanteService{
 
     @Transactional
     public EstudanteDTO.Response update(String matricula, EstudanteDTO.Request request) {
-        Estudante estudante = relationalRepository.findById(matricula).orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+        Estudante estudante = relationalRepository.findById(matricula)
+                .orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
 
         estudante.setMc(request.mc());
         relationalRepository.save(estudante);
 
-        EstudanteDocument document = noSqlRepository.findByMatEstudante(matricula).orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+        EstudanteDocument document = noSqlRepository.findByMatEstudante(matricula)
+                .orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
 
         document.setMc(request.mc());
         noSqlRepository.save(document);
 
-        return new EstudanteDTO.Response(
-                document.getId(),
-                estudante.getMatEstudante(),
-                estudante.getCpf(),
-                estudante.getMc(),
-                estudante.getAnoIngresso()
-        );
+        return EstudanteMapper.toResponse(estudante);
     }
 
     @Transactional
     public void delete(String matricula){
 
-        relationalRepository.findById(matricula).orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+        relationalRepository.findById(matricula)
+                .orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
         relationalRepository.deleteById(matricula);
 
-        noSqlRepository.findByMatEstudante(matricula).orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+        noSqlRepository.findByMatEstudante(matricula)
+                .orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
         noSqlRepository.deleteByMatEstudante(matricula);
 
     }
