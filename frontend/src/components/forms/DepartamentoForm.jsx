@@ -6,7 +6,7 @@ import theme from '../../styles/FormTheme.module.css';
 
 export default function DepartamentoForm({ onSubmit, initialData, isEditing, onCancel }) {
   const [formData, setFormData] = useState({
-    cod_depto: '', nome: '', chefe: '', orcamento: '', comissal: ''
+    codDepto: '', nome: '', chefe: '', orcamento: '', comissal: ''
   });
   const [errors, setErrors] = useState({});
 
@@ -16,14 +16,14 @@ export default function DepartamentoForm({ onSubmit, initialData, isEditing, onC
   useEffect(() => {
     if (initialData) {
       setFormData({
-        cod_depto: initialData.idDepartamento || initialData.cod_depto || '',
+        codDepto: initialData.idDepartamento || initialData.codDepto || '',
         nome: initialData.nome || '',
         chefe: initialData.chefe || '',
         orcamento: initialData.orcamento || '',
         comissal: initialData.comissal || ''
       });
     } else {
-      setFormData({ cod_depto: '', nome: '', chefe: '', orcamento: '', comissal: '' });
+      setFormData({ codDepto: '', nome: '', chefe: '', orcamento: '', comissal: '' });
     }
     setErrors({});
   }, [initialData]);
@@ -49,7 +49,7 @@ export default function DepartamentoForm({ onSubmit, initialData, isEditing, onC
     }
 
     const payload = {
-      cod_depto: validacao.data.cod_depto,
+      codDepto: validacao.data.codDepto,
       nome: validacao.data.nome,
       chefe: validacao.data.chefe,
       orcamento: validacao.data.orcamento,
@@ -61,7 +61,7 @@ export default function DepartamentoForm({ onSubmit, initialData, isEditing, onC
     } else {
       const resultado = await executarEscritaDupla(payload);
       if (resultado.status === 'SUCESSO' || resultado.status === 'FALHA_PARCIAL') {
-        setFormData({ cod_depto: '', nome: '', chefe: '', orcamento: '', comissal: '' });
+        setFormData({ codDepto: '', nome: '', chefe: '', orcamento: '', comissal: '' });
         if (resultado.status === 'SUCESSO') onSubmit({ status: 'SUCESSO' });
       }
     }
@@ -72,15 +72,15 @@ export default function DepartamentoForm({ onSubmit, initialData, isEditing, onC
       <form onSubmit={handleLocalSubmit} className={theme.form}>
         <input
           type="text"
-          name="cod_depto"
+          name="codDepto"
           placeholder="Código do Departamento (Ex: DCOMP)"
           maxLength={5}
-          value={formData.cod_depto}
+          value={formData.codDepto}
           onChange={handleChange}
           required
           disabled={isEditing}
         />
-        {errors.cod_depto && <span className={theme.errorText}>{errors.cod_depto}</span>}
+        {errors.codDepto && <span className={theme.errorText}>{errors.codDepto}</span>}
 
         <input
           type="text"
@@ -96,10 +96,11 @@ export default function DepartamentoForm({ onSubmit, initialData, isEditing, onC
         <input
           type="text"
           name="chefe"
-          placeholder="Matrícula do Chefe (Opcional)"
+          placeholder="Matrícula do Chefe"
           maxLength={7}
           value={formData.chefe}
           onChange={handleChange}
+          required
         />
         {errors.chefe && <span className={theme.errorText}>{errors.chefe}</span>}
 
@@ -112,6 +113,7 @@ export default function DepartamentoForm({ onSubmit, initialData, isEditing, onC
               placeholder="Orçamento (Deve ser > 0)"
               value={formData.orcamento}
               onChange={handleChange}
+              required
             />
             {errors.orcamento && <span className={theme.errorText}>{errors.orcamento}</span>}
           </div>
@@ -124,6 +126,7 @@ export default function DepartamentoForm({ onSubmit, initialData, isEditing, onC
               placeholder="Comissão de Função"
               value={formData.comissal}
               onChange={handleChange}
+              required
             />
             {errors.comissal && <span className={theme.errorText}>{errors.comissal}</span>}
           </div>

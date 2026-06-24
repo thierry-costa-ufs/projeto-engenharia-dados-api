@@ -9,8 +9,8 @@ import jakarta.persistence.Table;
 @Table(name = "estudante", schema = "universidade")
 public class Estudante{
 
-    @Id
-    private String mat_estudante;
+    @Id @Column(name = "mat_estudante", length = 7, nullable = false)
+    private String matEstudante;
 
     @Column(name = "cpf")
     private Long cpf;
@@ -38,10 +38,10 @@ public class Estudante{
     }
 
     public String getMatEstudante() {
-        return mat_estudante;
+        return matEstudante;
     }
-    public void setMatEstudante(String mat_estudante) {
-        this.mat_estudante = mat_estudante;
+    public void setMatEstudante(String matEstudante) {
+        this.matEstudante = matEstudante;
     }
 
     public Double getMc() {

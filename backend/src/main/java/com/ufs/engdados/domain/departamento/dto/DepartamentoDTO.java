@@ -11,7 +11,7 @@ public interface DepartamentoDTO{
     record Request(
             @NotBlank(message = "O código do departamento é obrigatório")
             @Size(max = 5, message = "O código do departamento deve ter no máximo 5 carcteres")
-            String cod_depto,
+            String codDepto,
 
             @NotBlank(message = "O nome  é obrigatório")
             @Size(max = 50, message = "O nome deve ter no máximo 50 carcteres")
@@ -30,7 +30,7 @@ public interface DepartamentoDTO{
 
     record Response(
             String mongoId,
-            String cod_depto,
+            String codDepto,
             String nome,
             String chefe,
             BigDecimal orcamento,

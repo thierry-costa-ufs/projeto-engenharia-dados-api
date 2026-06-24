@@ -5,7 +5,7 @@ import ResilienceModal from '../shared/ResilienceModal';
 import theme from '../../styles/FormTheme.module.css';
 
 export default function EstudanteForm({ onSubmit, initialData, isEditing, onCancel }) {
-  const [formData, setFormData] = useState({ mat_estudante: '', cpf: '', MC: '', ano_ingresso: '' });
+  const [formData, setFormData] = useState({ matEstudante: '', cpf: '', mc: '', anoIngresso: '' });
   const [errors, setErrors] = useState({});
 
   const { modalAberto, executarEscritaDupla, executarRollback, manterApenasNoPostgres } =
@@ -14,13 +14,13 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
   useEffect(() => {
     if (initialData) {
       setFormData({
-        mat_estudante: initialData.matricula || initialData.mat_estudante || '',
+        matEstudante: initialData.matEstudante || initialData.matricula || initialData.mat_estudante || '',
         cpf: initialData.cpf || '',
-        MC: initialData.MC !== undefined ? initialData.MC : '',
-        ano_ingresso: initialData.ano_ingresso || initialData.dataIngresso?.split('-')[0] || ''
+        mc: initialData.mc ?? initialData.MC ?? '',
+        anoIngresso: initialData.anoIngresso || initialData.ano_ingresso || initialData.dataIngresso?.split('-')[0] || ''
       });
     } else {
-      setFormData({ mat_estudante: '', cpf: '', MC: '', ano_ingresso: '' });
+      setFormData({ matEstudante: '', cpf: '', mc: '', anoIngresso: '' });
     }
     setErrors({});
   }, [initialData]);
@@ -46,10 +46,10 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
     }
 
     const payload = {
-      mat_estudante: validacao.data.mat_estudante,
+      matEstudante: validacao.data.matEstudante,
       cpf: Number(validacao.data.cpf),
-      MC: validacao.data.MC,
-      ano_ingresso: validacao.data.ano_ingresso
+      mc: validacao.data.mc,
+      anoIngresso: validacao.data.anoIngresso
     };
 
     if (isEditing) {
@@ -57,7 +57,7 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
     } else {
       const resultado = await executarEscritaDupla(payload);
       if (resultado.status === 'SUCESSO' || resultado.status === 'FALHA_PARCIAL') {
-        setFormData({ mat_estudante: '', cpf: '', MC: '', ano_ingresso: '' });
+        setFormData({ matEstudante: '', cpf: '', mc: '', anoIngresso: '' });
         if (resultado.status === 'SUCESSO') onSubmit({ status: 'SUCESSO' });
       }
     }
@@ -70,15 +70,15 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
           <div style={{ flex: 1 }}>
             <input
               type="text"
-              name="mat_estudante"
+              name="matEstudante"
               placeholder="Matrícula (7 caracteres)"
               maxLength={7}
-              value={formData.mat_estudante}
+              value={formData.matEstudante}
               onChange={handleChange}
               required
               disabled={isEditing}
             />
-            {errors.mat_estudante && <span className={theme.errorText}>{errors.mat_estudante}</span>}
+            {errors.matEstudante && <span className={theme.errorText}>{errors.matEstudante}</span>}
           </div>
 
           <div style={{ flex: 1 }}>
@@ -100,24 +100,24 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
             <input
               type="number"
               step="0.1"
-              name="MC"
+              name="mc"
               placeholder="Média Conclusão (MC)"
-              value={formData.MC}
+              value={formData.mc}
               onChange={handleChange}
             />
-            {errors.MC && <span className={theme.errorText}>{errors.MC}</span>}
+            {errors.mc && <span className={theme.errorText}>{errors.mc}</span>}
           </div>
 
           <div style={{ flex: 1 }}>
             <input
               type="number"
-              name="ano_ingresso"
+              name="anoIngresso"
               placeholder="Ano de Ingresso"
-              value={formData.ano_ingresso}
+              value={formData.anoIngresso}
               onChange={handleChange}
               required
             />
-            {errors.ano_ingresso && <span className={theme.errorText}>{errors.ano_ingresso}</span>}
+            {errors.anoIngresso && <span className={theme.errorText}>{errors.anoIngresso}</span>}
           </div>
         </div>
 

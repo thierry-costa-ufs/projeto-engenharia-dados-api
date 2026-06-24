@@ -17,7 +17,7 @@ public class EstudanteService{
     private final EstudanteRelationalRepository relationalRepository;
     private final EstudanteNoSqlRepository noSqlRepository;
 
-    public EstudanteService(EstudanteRelationalRepository relationalRepository, EstudanteNoSqlRepository noSqlRepository, EstudanteMapper estudanteMapper){
+    public EstudanteService(EstudanteRelationalRepository relationalRepository, EstudanteNoSqlRepository noSqlRepository){
         this.relationalRepository = relationalRepository;
         this.noSqlRepository = noSqlRepository;
     }
@@ -33,7 +33,6 @@ public class EstudanteService{
     @Transactional(readOnly = true)
     public Page<EstudanteDTO.Response> findAllRelational(Pageable pageable){
         Page<Estudante> estudantes = relationalRepository.findAll(pageable);
-
         return estudantes.map(estudante -> EstudanteMapper.toResponse(estudante));
     }
 

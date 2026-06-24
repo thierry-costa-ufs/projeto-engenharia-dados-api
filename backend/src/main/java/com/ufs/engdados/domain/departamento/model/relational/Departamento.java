@@ -11,8 +11,8 @@ import java.math.BigDecimal;
 @Table(name = "departamento", schema = "universidade")
 public class Departamento{
 
-    @Id
-    private String cod_depto;
+    @Id @Column(name = "cod_depto", length = 5, nullable = false)
+    private String codDepto;
 
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -36,10 +36,10 @@ public class Departamento{
     }
 
     public String getCodDepto() {
-        return cod_depto;
+        return codDepto;
     }
-    public void setCodDepto(String cod_depto) {
-        this.cod_depto = cod_depto;
+    public void setCodDepto(String codDepto) {
+        this.codDepto = codDepto;
     }
 
     public BigDecimal getComissal() {

@@ -41,7 +41,7 @@ export default function ModuleViewLayout({
 
   const extrairChavePrimaria = (item) => {
     if (!item) return null;
-    return item.idVinculo || item.idCurso || item.matricula || item.cpf || item.id || item.idRelacional;
+    return item.idVinculo || item.idCurso || item.codDepto || item.matEstudante || item.matricula || item.cpf || item.id || item.idRelacional;
   };
 
   const listaExibida = bancoAtivo === 'postgres'

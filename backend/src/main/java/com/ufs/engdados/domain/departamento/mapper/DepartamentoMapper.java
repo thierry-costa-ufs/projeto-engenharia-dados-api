@@ -8,7 +8,7 @@ public class DepartamentoMapper{
 
     public static Departamento toEntity(DepartamentoDTO.Request request){
         Departamento departamento = new Departamento();
-        departamento.setCodDepto(request.cod_depto());
+        departamento.setCodDepto(request.codDepto());
         departamento.setNome(request.nome());
         departamento.setChefe(request.chefe());
         departamento.setOrcamento(request.orcamento());
@@ -18,7 +18,7 @@ public class DepartamentoMapper{
 
     public static DepartamentoDocument toDocument(DepartamentoDTO.Request request) {
         DepartamentoDocument departamento = new DepartamentoDocument();
-        departamento.setCodDepto(request.cod_depto());
+        departamento.setCodDepto(request.codDepto());
         departamento.setNome(request.nome());
         departamento.setChefe(request.chefe());
         departamento.setOrcamento(request.orcamento());

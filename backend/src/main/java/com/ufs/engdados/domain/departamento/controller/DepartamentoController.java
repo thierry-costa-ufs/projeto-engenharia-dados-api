@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+@RestController
+@RequestMapping("/api/v1/departamentos")
 public class DepartamentoController{
 
     private final DepartamentoService departamentoService;
@@ -31,12 +34,12 @@ public class DepartamentoController{
         return ResponseEntity.ok(departamentoService.findAllNoSql(pageable));
     }
 
-    @PutMapping("/{matricula}")
+    @PutMapping("/{codDepto}")
     public ResponseEntity<DepartamentoDTO.Response> update(@PathVariable String codDepto, @Valid @RequestBody DepartamentoDTO.Request request){
         return ResponseEntity.ok(departamentoService.update(codDepto, request));
     }
 
-    @DeleteMapping("/{matricula}")
+    @DeleteMapping("/{codDepto}")
     public ResponseEntity<Void> delete(@PathVariable String codDepto){
         departamentoService.delete(codDepto);
         return ResponseEntity.noContent().build();

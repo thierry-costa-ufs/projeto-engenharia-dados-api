@@ -8,8 +8,10 @@ import com.ufs.engdados.domain.departamento.repository.nosql.DepartamentoNoSqlRe
 import com.ufs.engdados.domain.departamento.repository.relational.DepartamentoRelationalRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class DepartamentoService{
 
     private final DepartamentoRelationalRepository relationalRepository;
@@ -62,7 +64,7 @@ public class DepartamentoService{
         document.setComissal(request.comissal());
         noSqlRepository.save(document);
 
-        return DepartamentoMapper.toResponse(departamento);
+        return DepartamentoMapper.toResponse(document);
     }
 
     @Transactional
@@ -74,7 +76,7 @@ public class DepartamentoService{
 
     DepartamentoDocument document = noSqlRepository.findByCodDepto(codDepto)
             .orElseThrow(() -> new RuntimeException("Departamento de código " + codDepto + " não encontrado"));
-    noSqlRepository.deleteById(codDepto);
+    noSqlRepository.deleteByCodDepto(codDepto);
 
     }
 

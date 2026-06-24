@@ -13,7 +13,7 @@ public interface EstudanteDTO{
             String matEstudante,
 
             @NotNull(message = "O cpf é obrigatório")
-            @Size(max = 13, message = "O cpf deve ter no máximo 13 caracteres")
+            @Digits(integer = 13, fraction = 0, message = "O cpf deve ter no máximo 13 caracteres")
             Long cpf,
 
             @Digits(integer = 2, fraction = 2, message = "A média deve ter no máximo 2 dígitos inteiros e 2 casas decimais")
