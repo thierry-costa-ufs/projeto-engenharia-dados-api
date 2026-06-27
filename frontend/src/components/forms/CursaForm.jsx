@@ -4,7 +4,7 @@ import { cursaSchema } from '../../utils/validators'; // IMPORT VIA BARREL
 import ResilienceModal from '../shared/ResilienceModal';
 import theme from '../../styles/FormTheme.module.css';
 
-export default function CursaForm({ onSubmit, initialData, isEditing, onCancel }) {
+export default function CursaForm({ onSubmit, initialData, isEditing, onCancel, onSuccess }) {
   const [formData, setFormData] = useState({ mat_estudante: '', id_turma: '', nota: '' });
   const [errors, setErrors] = useState({}); // Estado de erros
 
@@ -56,9 +56,21 @@ export default function CursaForm({ onSubmit, initialData, isEditing, onCancel }
       await onSubmit(payload);
     } else {
       const resultado = await executarEscritaDupla(payload);
-      if (resultado.status === 'SUCESSO' || resultado.status === 'FALHA_PARCIAL') {
+
+      // se o hook não disparou um erro explícito, nós avançamos!
+      if (!resultado || resultado?.status !== 'ERRO') {
+        // limpa os campos do formulário
         setFormData({ mat_estudante: '', id_turma: '', nota: '' });
-        if (resultado.status === 'SUCESSO') onSubmit({ status: 'SUCESSO' });
+
+        // fecha a janela do modal
+        if (onCancel) {
+          onCancel();
+        }
+
+        // atualiza a tabela em segundo plano
+        if (onSuccess) {
+          onSuccess();
+        }
       }
     }
   };

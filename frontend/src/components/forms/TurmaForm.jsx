@@ -4,7 +4,7 @@ import { turmaSchema } from '../../utils/validators';
 import ResilienceModal from '../shared/ResilienceModal';
 import theme from '../../styles/FormTheme.module.css';
 
-export default function TurmaForm({ onSubmit, initialData, isEditing, onCancel }) {
+export default function TurmaForm({ onSubmit, initialData, isEditing, onCancel, onSuccess }) {
   const [formData, setFormData] = useState({ id_turma: '', cod_disc: '', numero: '', ano: '', semestre: '' });
   const [errors, setErrors] = useState({});
 
@@ -54,13 +54,23 @@ export default function TurmaForm({ onSubmit, initialData, isEditing, onCancel }
     };
 
     if (isEditing) {
-      payload.id_turma = Number(formData.id_turma);
       await onSubmit(payload);
     } else {
       const resultado = await executarEscritaDupla(payload);
-      if (resultado.status === 'SUCESSO' || resultado.status === 'FALHA_PARCIAL') {
+
+      if (!resultado || resultado?.status !== 'ERRO') {
+        // limpa os campos
         setFormData({ id_turma: '', cod_disc: '', numero: '', ano: '', semestre: '' });
-        if (resultado.status === 'SUCESSO') onSubmit({ status: 'SUCESSO' });
+
+        // fecha a janela
+        if (onCancel) {
+          onCancel();
+        }
+
+        // atualiza a tabela em segundo plano
+        if (onSuccess) {
+          onSuccess();
+        }
       }
     }
   };
