@@ -26,6 +26,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/relacional")
+<<<<<<< Updated upstream
     public ResponseEntity<Page<UsuarioDTO.Response>> findAllRelational(Pageable pageable) {
         return ResponseEntity.ok(usuarioService.findAllRelational(pageable));
     }
@@ -33,6 +34,15 @@ public class UsuarioController {
     @GetMapping("/nosql")
     public ResponseEntity<Page<UsuarioDTO.Response>> findAllNoSql(Pageable pageable) {
         return ResponseEntity.ok(usuarioService.findAllNoSql(pageable));
+=======
+    public ResponseEntity<Page<UsuarioDTO.Response>> listRelational(Pageable pageable) {
+        return ResponseEntity.ok(usuarioService.listRelational(pageable));
+    }
+
+    @GetMapping("/nosql")
+    public ResponseEntity<Page<UsuarioDTO.Response>> listNoSql(Pageable pageable) {
+        return ResponseEntity.ok(usuarioService.listNoSql(pageable));
+>>>>>>> Stashed changes
     }
 
     @PutMapping("/{cpf}")
@@ -42,7 +52,11 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{cpf}")
+<<<<<<< Updated upstream
     public ResponseEntity<Void> delete(@PathVariable Long cpf) {
+=======
+    public ResponseEntity<Void> remove(@PathVariable Long cpf) {
+>>>>>>> Stashed changes
         usuarioService.delete(cpf);
         return ResponseEntity.noContent().build();
     }

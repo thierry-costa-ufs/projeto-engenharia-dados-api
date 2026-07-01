@@ -32,7 +32,11 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO.Response create(UsuarioDTO.Request dto) {
+<<<<<<< Updated upstream
         Usuario usuarioPg = relationalRepository.save(UsuarioMapper.toEntity(dto));
+=======
+        Usuario usuarioPg = relationalRepository.save(UsuarioMapper.toPostgresEntity(dto));
+>>>>>>> Stashed changes
         eventPublisher.publishEvent(new UsuarioSalvoEvent(dto, usuarioPg, false));
         return UsuarioMapper.toResponse(usuarioPg);
     }
@@ -78,6 +82,30 @@ public class UsuarioService {
         return UsuarioMapper.toResponse(usuarioAtualizado);
     }
 
+<<<<<<< Updated upstream
+=======
+    @Transactional(readOnly = true)
+    public Page<UsuarioDTO.Response> listRelational(Pageable pageable) {
+        Page<Usuario> usuariosPg = relationalRepository.findAll(pageable);
+        List<Long> cpfs = usuariosPg.getContent().stream().map(Usuario::getCpf).toList();
+        List<UsuarioDocument> documentos = noSqlRepository.findByCpfIn(cpfs);
+        Map<Long, UsuarioDocument> mongoMap = documentos.stream()
+                .collect(Collectors.toMap(UsuarioDocument::getCpf, doc -> doc));
+        return usuariosPg.map(usuario -> {
+            UsuarioDocument doc = mongoMap.get(usuario.getCpf());
+            if (doc != null) {
+                return UsuarioMapper.toResponse(usuario, doc.getId(), "INTEGRADO_NOSQL");
+            }
+            return UsuarioMapper.toResponse(usuario);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UsuarioDTO.Response> listNoSql(Pageable pageable) {
+        return noSqlRepository.findAll(pageable)
+                .map(UsuarioMapper::fromMongoDocument);
+    }
+>>>>>>> Stashed changes
 
     @Transactional
     public void delete(Long cpf) {
