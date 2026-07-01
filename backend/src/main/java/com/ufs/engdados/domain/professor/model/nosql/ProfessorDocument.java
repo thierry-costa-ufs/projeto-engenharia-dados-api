@@ -12,6 +12,9 @@
     public class ProfessorDocument {
 
         @Id
+        private String id;
+
+        @Field
         private String matricula;
 
         @Field("cpf")
@@ -19,9 +22,6 @@
 
         @Field("nome")
         private String nome;
-
-        @Field("email")
-        private List<String> emails;
 
         @Field("departamento")
         private String departamento;
@@ -50,9 +50,6 @@
 
         public String getNome() { return nome; }
         public void setNome(String nome) { this.nome = nome; }
-
-        public List<String> getEmails() { return emails; }
-        public void setEmails(List<String> emails) { this.emails = emails; }
 
         public String getDepartamento() { return departamento; }
         public void setDepartamento(String departamento) { this.departamento = departamento; }

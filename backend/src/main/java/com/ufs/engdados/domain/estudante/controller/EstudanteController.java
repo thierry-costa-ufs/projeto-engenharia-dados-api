@@ -25,6 +25,11 @@ public class EstudanteController{
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
     }
 
+    @GetMapping
+    public ResponseEntity<Page<EstudanteDTO.Response>> findAll(Pageable pageable){
+        return ResponseEntity.ok(estudanteService.findAllRelational(pageable));
+    }
+
     @GetMapping("/relacional")
     public ResponseEntity<Page<EstudanteDTO.Response>> findAllRelational(Pageable pageable){
         return ResponseEntity.ok(estudanteService.findAllRelational(pageable));
@@ -35,13 +40,12 @@ public class EstudanteController{
         return ResponseEntity.ok(estudanteService.findAllNoSql(pageable));
     }
 
-    @PutMapping("/{matricula}")
+    @PutMapping("/{mat_estudante}")
     public ResponseEntity<EstudanteDTO.Response> update(@PathVariable String matricula, @Valid @RequestBody EstudanteDTO.Request request){
-        EstudanteDTO.Response resultado = estudanteService.update(matricula, request);
-        return ResponseEntity.ok(resultado);
+        return ResponseEntity.ok(estudanteService.update(matricula, request));
     }
 
-    @DeleteMapping("/{matricula}")
+    @DeleteMapping("/{mat_estudante}")
     public ResponseEntity<Void> delete(@PathVariable String matricula){
         estudanteService.delete(matricula);
         return ResponseEntity.noContent().build();

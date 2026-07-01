@@ -11,17 +11,11 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "professor", schema = "universidade")
 public class Professor {
 
-    @Id
+    @Id @Column(name = "mat_professor", nullable = false, unique = true, length = 7)
+    private String matricula;
+
     @Column(name = "cpf")
     private Long cpf;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "cpf")
-    private Usuario usuario;
-
-    @Column(name = "mat_professor", nullable = false, unique = true, length = 7)
-    private String matricula;
 
     @Column(nullable = false, length = 5)
     private String departamento;
@@ -45,8 +39,6 @@ public class Professor {
     // --- GETTERS E SETTERS ---
     public Long getCpf() { return cpf; }
     public void setCpf(Long cpf) { this.cpf = cpf; }
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
     public String getMatricula() { return matricula; }
     public void setMatricula(String matricula) { this.matricula = matricula; }
     public String getDepartamento() { return departamento; }

@@ -43,14 +43,14 @@ public class ProfessorController {
     }
 
 
-    @PutMapping("/{cpf}")
-    public ResponseEntity<ProfessorDTO.Response> update(@PathVariable Long cpf, @Valid @RequestBody ProfessorDTO.Request dto) {
-        return ResponseEntity.ok(professorService.update(cpf, dto));
+    @PutMapping("/{mat_professor}")
+    public ResponseEntity<ProfessorDTO.Response> update(@PathVariable String matricula, @Valid @RequestBody ProfessorDTO.Request dto) {
+        return ResponseEntity.ok(professorService.update(matricula, dto));
     }
 
-    @DeleteMapping("/{cpf}")
-    public ResponseEntity<Void> delete(@PathVariable Long cpf) {
-        professorService.delete(cpf);
+    @DeleteMapping("/{mat_professor}")
+    public ResponseEntity<Void> delete(@PathVariable String matricula) {
+        professorService.delete(matricula);
         return ResponseEntity.noContent().build();
     }
 }

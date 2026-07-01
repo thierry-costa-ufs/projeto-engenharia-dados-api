@@ -1,5 +1,8 @@
 package com.ufs.engdados.domain.usuario.mapper;
 
+import com.ufs.engdados.domain.estudante.dto.EstudanteDTO;
+import com.ufs.engdados.domain.estudante.model.nosql.EstudanteDocument;
+import com.ufs.engdados.domain.estudante.model.relational.Estudante;
 import com.ufs.engdados.domain.usuario.dto.UsuarioDTO;
 import com.ufs.engdados.domain.usuario.model.nosql.UsuarioDocument;
 import com.ufs.engdados.domain.usuario.model.relational.Usuario;
@@ -32,22 +35,6 @@ public class UsuarioMapper {
         return usuario;
     }
 
-
-    public static UsuarioDTO.Response toResponse(Usuario usuario, String mongoId, String statusExecucao) {
-        if (usuario == null) return null;
-        return new UsuarioDTO.Response(
-                mongoId,
-                usuario.getCpf(),
-                usuario.getNome(),
-                usuario.getDataNascimento(),
-                usuario.getEmail(),
-                usuario.getTelefone(),
-                usuario.getLogin(),
-                usuario.getSenha(),
-                statusExecucao
-        );
-    }
-
     public static UsuarioDTO.Response toResponse(Usuario usuario) {
         if (usuario == null) return null;
         return new UsuarioDTO.Response(
@@ -58,8 +45,7 @@ public class UsuarioMapper {
                 usuario.getEmail(),
                 usuario.getTelefone(),
                 usuario.getLogin(),
-                usuario.getSenha(),
-                "ASSINCRONO"
+                usuario.getSenha()
         );
     }
 
@@ -73,9 +59,28 @@ public class UsuarioMapper {
                 doc.getEmail(),
                 doc.getTelefone(),
                 doc.getLogin(),
-                doc.getSenha(),
-                "INTEGRADO_NOSQL"
+                doc.getSenha()
         );
+    }
+
+    public static void updateEntity(UsuarioDTO.Request request, Usuario usuario){
+        if(request == null || usuario == null) return;
+        usuario.setNome(request.nome());
+        usuario.setDataNascimento(request.dataNascimento());
+        usuario.setEmail(request.email());
+        usuario.setTelefone(request.telefone());
+        usuario.setLogin(request.login());
+        usuario.setSenha(request.senha());
+    }
+
+    public static void updateDocument(UsuarioDTO.Request request, UsuarioDocument usuario){
+        if(request == null || usuario == null) return;
+        usuario.setNome(request.nome());
+        usuario.setDataNascimento(request.dataNascimento());
+        usuario.setEmail(request.email());
+        usuario.setTelefone(request.telefone());
+        usuario.setLogin(request.login());
+        usuario.setSenha(request.senha());
     }
 
 }

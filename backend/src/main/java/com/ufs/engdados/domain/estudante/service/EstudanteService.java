@@ -6,6 +6,7 @@ import com.ufs.engdados.domain.estudante.model.nosql.EstudanteDocument;
 import com.ufs.engdados.domain.estudante.model.relational.Estudante;
 import com.ufs.engdados.domain.estudante.repository.nosql.EstudanteNoSqlRepository;
 import com.ufs.engdados.domain.estudante.repository.relational.EstudanteRelationalRepository;
+import com.ufs.engdados.infrastructure.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -51,31 +52,29 @@ public class EstudanteService{
         }
 
         Estudante estudante = relationalRepository.findById(matricula).
-                orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+                orElseThrow(() -> new ResourceNotFoundException("Estudante " + matricula + " não encontrado"));
 
         estudante.setMc(request.mc());
         relationalRepository.save(estudante);
 
         EstudanteDocument document = noSqlRepository.findByMatEstudante(matricula).
-                orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+                orElseThrow(() -> new ResourceNotFoundException("Estudante " + matricula + " não encontrado"));
 
         document.setMc(request.mc());
         noSqlRepository.save(document);
 
-        return EstudanteMapper.noSqlToResponse(document);
+        return EstudanteMapper.toResponse(document);
     }
 
     @Transactional
     public void delete(String matricula){
-
         relationalRepository.findById(matricula)
-                .orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Estudante " + matricula + " não encontrado"));
         relationalRepository.deleteById(matricula);
 
         noSqlRepository.findByMatEstudante(matricula)
-                .orElseThrow(() -> new RuntimeException("Estudante " + matricula + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Estudante " + matricula + " não encontrado"));
         noSqlRepository.deleteByMatEstudante(matricula);
-
     }
 
 }

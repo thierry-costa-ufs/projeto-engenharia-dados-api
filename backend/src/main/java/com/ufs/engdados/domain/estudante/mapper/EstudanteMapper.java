@@ -25,6 +25,7 @@ public class EstudanteMapper {
     }
 
     public static EstudanteDTO.Response toResponse(Estudante estudante){
+        if(estudante == null) return null;
         return new EstudanteDTO.Response(
                 null,
                 estudante.getMatEstudante(),
@@ -42,5 +43,19 @@ public class EstudanteMapper {
                 estudante.getMc(),
                 estudante.getAnoIngresso()
         );
+    }
+
+    public static void updateEntity(EstudanteDTO.Request request, Estudante estudante){
+        if(request == null || estudante == null) return;
+        estudante.setMatEstudante(request.matEstudante());
+        estudante.setMc(request.mc());
+        estudante.setAnoIngresso(request.anoIngresso());
+    }
+
+    public static void updateDocument(EstudanteDTO.Request request, EstudanteDocument estudante){
+        if(request == null || estudante == null) return;
+        estudante.setMatEstudante(request.matEstudante());
+        estudante.setMc(request.mc());
+        estudante.setAnoIngresso(request.anoIngresso());
     }
 }

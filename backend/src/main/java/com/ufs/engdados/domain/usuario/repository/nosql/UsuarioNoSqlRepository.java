@@ -13,6 +13,4 @@ public interface UsuarioNoSqlRepository extends MongoRepository<UsuarioDocument,
     List<UsuarioDocument> findByCpfIn(List<Long> cpfs);
     Optional<UsuarioDocument> findByCpf(Long cpf);
     void deleteByCpf(Long cpf);
-
-    Page<UsuarioDocument> findByPerfilProfessorIsNotNull(Pageable pageable);
 }

@@ -4,7 +4,9 @@ import com.ufs.engdados.domain.professor.dto.ProfessorDTO;
 import com.ufs.engdados.domain.professor.event.ProfessorDeletadoEvent;
 import com.ufs.engdados.domain.professor.event.ProfessorSalvoEvent;
 import com.ufs.engdados.domain.professor.mapper.ProfessorMapper;
+import com.ufs.engdados.domain.professor.model.nosql.ProfessorDocument;
 import com.ufs.engdados.domain.professor.model.relational.Professor;
+import com.ufs.engdados.domain.professor.repository.nosql.ProfessorNoSqlRepository;
 import com.ufs.engdados.domain.usuario.model.nosql.UsuarioDocument;
 import com.ufs.engdados.domain.usuario.repository.nosql.UsuarioNoSqlRepository;
 import com.ufs.engdados.domain.professor.repository.relational.ProfessorRelationalRepository;
@@ -25,103 +27,64 @@ import java.util.stream.Collectors;
 public class ProfessorService {
 
     private final ProfessorRelationalRepository relationalRepository;
-    private final UsuarioRelationalRepository usuarioRelationalRepository;
-    private final UsuarioNoSqlRepository usuarioNoSqlRepository; // Substituído o repositório isolado pelo de Usuário
-    private final ProfessorMapper mapper;
-    private final ApplicationEventPublisher eventPublisher;
+    private final ProfessorNoSqlRepository noSqlRepository;
 
     public ProfessorService(ProfessorRelationalRepository relationalRepository,
-                            UsuarioRelationalRepository usuarioRelationalRepository,
-                            UsuarioNoSqlRepository usuarioNoSqlRepository,
-                            ProfessorMapper mapper,
-                            ApplicationEventPublisher eventPublisher) {
+                            ProfessorNoSqlRepository noSqlRepository) {
         this.relationalRepository = relationalRepository;
-        this.usuarioRelationalRepository = usuarioRelationalRepository;
-        this.usuarioNoSqlRepository = usuarioNoSqlRepository;
-        this.mapper = mapper;
-        this.eventPublisher = eventPublisher;
+        this.noSqlRepository = noSqlRepository;
     }
 
     @Transactional
     public ProfessorDTO.Response create(ProfessorDTO.Request dto) {
-        var usuario = usuarioRelationalRepository.findById(dto.cpf())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário base não encontrado para o CPF: " + dto.cpf()));
+        relationalRepository.save(ProfessorMapper.toEntity(dto));
+        ProfessorDocument prof = noSqlRepository.save(ProfessorMapper.toDocument(dto));
 
-        Professor prof = mapper.toEntity(dto);
-        prof.setUsuario(usuario);
-        prof = relationalRepository.save(prof);
-
-        eventPublisher.publishEvent(new ProfessorSalvoEvent(prof.getCpf(), dto));
-        return mapper.toResponse(prof, "ASSINCRONO");
+        return ProfessorMapper.toResponse(prof);
     }
 
     @Transactional(readOnly = true)
     public Page<ProfessorDTO.Response> findAllRelational(Pageable pageable) {
-        Page<Professor> professoresPg = relationalRepository.findAllEager(pageable);
+        Page<Professor> professores = relationalRepository.findAll(pageable);
 
-        List<Long> cpfs = professoresPg.getContent().stream().map(Professor::getCpf).toList();
-
-        List<UsuarioDocument> usuariosDoc = cpfs.isEmpty()
-                ? List.of()
-                : usuarioNoSqlRepository.findByCpfIn(cpfs);
-
-        Map<Long, UsuarioDocument> mongoMap = usuariosDoc.stream()
-                .filter(doc -> doc != null && doc.getCpf() != null)
-                .collect(Collectors.toMap(UsuarioDocument::getCpf, doc -> doc, (a, b) -> a));
-
-        return professoresPg.map(prof -> {
-            UsuarioDocument doc = mongoMap.get(prof.getCpf());
-            String status = (doc != null && doc.getPerfilProfessor() != null) ? "INTEGRADO_NOSQL" : "ASSINCRONO";
-
-            String nomeDocente = (prof.getUsuario() != null) ? prof.getUsuario().getNome() : "Professor Sem Nome";
-            if (doc != null && doc.getNome() != null) {
-                nomeDocente = doc.getNome();
-            }
-
-            return new ProfessorDTO.Response(
-                    prof.getCpf(),
-                    prof.getMatricula(),
-                    prof.getDepartamento(),
-                    prof.getFormacao(),
-                    prof.getJornada(),
-                    prof.getSalario() != null ? prof.getSalario().doubleValue() : null,
-                    prof.getDataAdmissao(),
-                    status,
-                    nomeDocente
-            );
-        });
+        return professores.map(professor -> ProfessorMapper.toResponse(professor));
     }
 
     @Transactional(readOnly = true)
     public Page<ProfessorDTO.Response> findAllNoSql(Pageable pageable) {
-        Page<UsuarioDocument> usuariosDoc = usuarioNoSqlRepository.findByPerfilProfessorIsNotNull(pageable);
+        Page<ProfessorDocument> professores = noSqlRepository.findAll(pageable);
 
-        List<ProfessorDTO.Response> professores = usuariosDoc.getContent().stream()
-                .map(mapper::toResponse)
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(professores, pageable, usuariosDoc.getTotalElements());
+        return professores.map(professor -> ProfessorMapper.toResponse(professor));
     }
 
     @Transactional
-    public ProfessorDTO.Response update(Long cpf, ProfessorDTO.Request dto) {
-        Professor prof = relationalRepository.findById(cpf)
-                .orElseThrow(() -> new ResourceNotFoundException("Professor não encontrado com o CPF: " + cpf));
-
-        mapper.updateEntityFromDto(dto, prof);
-        prof = relationalRepository.save(prof);
-
-        eventPublisher.publishEvent(new ProfessorSalvoEvent(prof.getCpf(), dto));
-        return mapper.toResponse(prof, "ASSINCRONO");
-    }
-
-    @Transactional
-    public void delete(Long cpf) {
-        if (!relationalRepository.existsById(cpf)) {
-            throw new ResourceNotFoundException("Professor não encontrado com o CPF: " + cpf);
+    public ProfessorDTO.Response update(String matricula, ProfessorDTO.Request dto) {
+        if(!(matricula.equals(dto.matricula()))){
+            throw new IllegalArgumentException("A matrícula da URL não corresponde a matrícula enviada no corpo da requisição.");
         }
-        relationalRepository.deleteById(cpf);
-        eventPublisher.publishEvent(new ProfessorDeletadoEvent(cpf));
+
+        Professor prof = relationalRepository.findById(matricula)
+                .orElseThrow(() -> new ResourceNotFoundException("Professor " + matricula + " não encontrado"));
+
+        ProfessorMapper.updateEntity(dto, prof);
+        relationalRepository.save(prof);
+
+        ProfessorDocument doc = noSqlRepository.findByMatricula(matricula)
+                .orElseThrow(() -> new ResourceNotFoundException("Professor " + matricula + " não encontrado"));
+
+        ProfessorMapper.updateDocument(dto, doc);
+        return ProfessorMapper.toResponse(doc);
+    }
+
+    @Transactional
+    public void delete(String matricula) {
+        relationalRepository.findById(matricula)
+                .orElseThrow(() -> new ResourceNotFoundException("Professor " + matricula + " não encontrado"));
+        relationalRepository.deleteById(matricula);
+
+        noSqlRepository.findByMatricula(matricula)
+                .orElseThrow(() -> new ResourceNotFoundException("Professor " + matricula + " não encontrado"));
+        noSqlRepository.findByMatricula(matricula);
     }
 
 }

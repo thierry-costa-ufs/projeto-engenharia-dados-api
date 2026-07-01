@@ -46,7 +46,6 @@ public interface UsuarioDTO {
             List<String> email,
             List<String> telefone,
             String login,
-            String senha,
-            String status
+            String senha
     ) {}
 }
