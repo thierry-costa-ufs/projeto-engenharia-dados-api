@@ -4,19 +4,20 @@ import com.ufs.engdados.domain.estudante.dto.EstudanteDTO;
 import com.ufs.engdados.domain.estudante.service.EstudanteService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
 @RestController
-@RequestMapping("api/v1/estudantes")
+@RequestMapping("/api/v1/estudantes")
 public class EstudanteController{
 
     private final EstudanteService estudanteService;
 
-    public EstudanteController(EstudanteService estudanteServie){
-        this.estudanteService = estudanteServie;
+    public EstudanteController(EstudanteService estudanteService){
+        this.estudanteService = estudanteService;
     }
 
     @PostMapping
@@ -25,12 +26,12 @@ public class EstudanteController{
     }
 
     @GetMapping("/relacional")
-    public ResponseEntity<Page<EstudanteDTO.Response>> findAllRelational(Pageable pageable){
+    public ResponseEntity<Page<EstudanteDTO.Response>> findAllRelational(@PageableDefault(size = 20) Pageable pageable){
         return ResponseEntity.ok(estudanteService.findAllRelational(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<Page<EstudanteDTO.Response>> findAllNoSql(Pageable pageable){
+    public ResponseEntity<Page<EstudanteDTO.Response>> findAllNoSql(@PageableDefault(size = 20) Pageable pageable){
         return ResponseEntity.ok(estudanteService.findAllNoSql(pageable));
     }
 

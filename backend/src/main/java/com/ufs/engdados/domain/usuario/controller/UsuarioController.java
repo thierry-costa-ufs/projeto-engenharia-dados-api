@@ -4,6 +4,7 @@ import com.ufs.engdados.domain.usuario.dto.UsuarioDTO;
 import com.ufs.engdados.domain.usuario.service.UsuarioService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,24 +22,22 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioDTO.Response> create(@Valid @RequestBody UsuarioDTO.Request dto) {
-        UsuarioDTO.Response novoUsuario = usuarioService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.create(dto));
     }
 
     @GetMapping("/relacional")
-    public ResponseEntity<Page<UsuarioDTO.Response>> findAllRelational(Pageable pageable) {
+    public ResponseEntity<Page<UsuarioDTO.Response>> findAllRelational(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(usuarioService.findAllRelational(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<Page<UsuarioDTO.Response>> findAllNoSql(Pageable pageable) {
+    public ResponseEntity<Page<UsuarioDTO.Response>> findAllNoSql(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(usuarioService.findAllNoSql(pageable));
     }
 
     @PutMapping("/{cpf}")
     public ResponseEntity<UsuarioDTO.Response> update(@PathVariable Long cpf, @Valid @RequestBody UsuarioDTO.Request dto) {
-        UsuarioDTO.Response usuarioAtualizado = usuarioService.update(cpf, dto);
-        return ResponseEntity.ok(usuarioAtualizado);
+        return ResponseEntity.ok(usuarioService.update(cpf, dto));
     }
 
     @DeleteMapping("/{cpf}")

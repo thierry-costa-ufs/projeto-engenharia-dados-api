@@ -4,6 +4,7 @@ import com.ufs.engdados.domain.curso.dto.CursoDTO;
 import com.ufs.engdados.domain.curso.service.CursoService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,24 +22,22 @@ public class CursoController {
 
     @PostMapping
     public ResponseEntity<CursoDTO.Response> create(@Valid @RequestBody CursoDTO.Request dto) {
-        CursoDTO.Response novoCurso = cursoService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoCurso);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cursoService.create(dto));
     }
 
     @GetMapping("/relacional")
-    public ResponseEntity<Page<CursoDTO.Response>> findAllRelational(Pageable pageable) {
+    public ResponseEntity<Page<CursoDTO.Response>> findAllRelational(@PageableDefault(size = 20)Pageable pageable) {
         return ResponseEntity.ok(cursoService.findAllRelational(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<Page<CursoDTO.Response>> findAllNoSql(Pageable pageable) {
+    public ResponseEntity<Page<CursoDTO.Response>> findAllNoSql(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(cursoService.findAllNoSql(pageable));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CursoDTO.Response> update(@PathVariable Integer id, @Valid @RequestBody CursoDTO.Request dto) {
-        CursoDTO.Response cursoAtualizado = cursoService.update(id, dto);
-        return ResponseEntity.ok(cursoAtualizado);
+        return ResponseEntity.ok(cursoService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")

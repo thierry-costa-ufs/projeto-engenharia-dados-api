@@ -4,6 +4,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDate; // 🌟 Importado para os controles temporais de datas
 
 @Document(collection = "vinculo")
@@ -15,25 +17,36 @@ public class VinculoDocument {
     @Id
     private String id;
 
-    private Long idRelacional;
+    @Field
+    private Long idVinculo;
+
+    @Field
     private String matEstudante;
-    private Long codCurso;
+
+    @Field
+    private Integer codCurso;
+
+    @Field
     private LocalDate dataEntrada;
+
+    @Field
     private String status;
+
+    @Field
     private LocalDate dataSaida;
 
     // Getters e Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public Long getIdRelacional() { return idRelacional; }
-    public void setIdRelacional(Long idRelacional) { this.idRelacional = idRelacional; }
+    public Long getIdVinculo() { return idVinculo; }
+    public void setIdVinculo(Long idVinculo) { this.idVinculo = idVinculo; }
 
     public String getMatEstudante() { return matEstudante; }
     public void setMatEstudante(String matEstudante) { this.matEstudante = matEstudante; }
 
-    public Long getCodCurso() { return codCurso; }
-    public void setCodCurso(Long codCurso) { this.codCurso = codCurso; }
+    public Integer getCodCurso() { return codCurso; }
+    public void setCodCurso(Integer codCurso) { this.codCurso = codCurso; }
 
     public LocalDate getDataEntrada() { return dataEntrada; }
     public void setDataEntrada(LocalDate dataEntrada) { this.dataEntrada = dataEntrada; }

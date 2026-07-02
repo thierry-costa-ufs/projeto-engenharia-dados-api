@@ -9,7 +9,7 @@ public class Vinculo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idvinculo")
+    @Column(name = "idVinculo")
     private Long idVinculo;
 
     @Column(name = "mat_estudante")

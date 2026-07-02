@@ -1,19 +1,15 @@
 package com.ufs.engdados.domain.curso.mapper;
 
 import com.ufs.engdados.domain.curso.dto.CursoDTO;
-import com.ufs.engdados.domain.curso.enums.TipoGrau;
-import com.ufs.engdados.domain.curso.enums.TipoNivel;
-import com.ufs.engdados.domain.curso.enums.TipoTurno;
 import com.ufs.engdados.domain.curso.model.nosql.CursoDocument;
 import com.ufs.engdados.domain.curso.model.relational.Curso;
-import org.springframework.stereotype.Component;
 
-@Component
 public class CursoMapper {
 
-    public Curso toEntity(CursoDTO.Request dto) {
+    public static Curso toEntity(CursoDTO.Request dto) {
         if (dto == null) return null;
         Curso ent = new Curso();
+        ent.setIdCurso(dto.idCurso());
         ent.setNome(dto.nome());
         ent.setGrau(dto.grau());
         ent.setTurno(dto.turno());
@@ -22,8 +18,46 @@ public class CursoMapper {
         return ent;
     }
 
-    public void updateEntityFromDto(CursoDTO.Request dto, Curso ent) {
+    public static CursoDocument toDocument(CursoDTO.Request dto){
+        if (dto == null) return null;
+        CursoDocument ent = new CursoDocument();
+        ent.setIdCurso(dto.idCurso());
+        ent.setNome(dto.nome());
+        ent.setGrau(dto.grau());
+        ent.setTurno(dto.turno());
+        ent.setCampus(dto.campus());
+        ent.setNivel(dto.nivel());
+        return ent;
+    }
+
+    public static CursoDTO.Response toResponse(Curso r) {
+        if (r == null) return null;
+        return new CursoDTO.Response(
+                null,
+                r.getIdCurso(),
+                r.getNome(),
+                r.getGrau(),
+                r.getTurno(),
+                r.getCampus(),
+                r.getNivel()
+        );
+    }
+    public static CursoDTO.Response toResponse(CursoDocument n) {
+        if (n == null) return null;
+        return new CursoDTO.Response(
+                n.getId(),
+                n.getIdCurso(),
+                n.getNome(),
+                n.getGrau(),
+                n.getTurno(),
+                n.getCampus(),
+                n.getNivel()
+        );
+    }
+
+    public static void updateEntity(CursoDTO.Request dto, Curso ent) {
         if (dto == null || ent == null) return;
+        ent.setIdCurso(dto.idCurso());
         ent.setNome(dto.nome());
         ent.setGrau(dto.grau());
         ent.setTurno(dto.turno());
@@ -31,33 +65,13 @@ public class CursoMapper {
         ent.setNivel(dto.nivel());
     }
 
-    public CursoDTO.Response toResponse(Curso r, String statusExecucao) {
-        if (r == null) return null;
-        return new CursoDTO.Response(
-                r.getIdCurso(),
-                r.getNome(),
-                TipoGrau.deString(r.getGrau()),
-                TipoTurno.deString(r.getTurno()),
-                r.getCampus(),
-                TipoNivel.deString(r.getNivel()),
-                statusExecucao
-        );
-    }
-
-    public CursoDTO.Response toResponse(Curso r) {
-        return toResponse(r, "ASSINCRONO");
-    }
-
-    public CursoDTO.Response toResponse(CursoDocument n) {
-        if (n == null) return null;
-        return new CursoDTO.Response(
-                n.getIdCurso(),
-                n.getNome(),
-                n.getGrau(),
-                n.getTurno(),
-                n.getCampus(),
-                n.getNivel(),
-                "INTEGRADO_NOSQL"
-        );
+    public static void updateDocument(CursoDTO.Request dto, CursoDocument ent) {
+        if (dto == null || ent == null) return;
+        ent.setIdCurso(dto.idCurso());
+        ent.setNome(dto.nome());
+        ent.setGrau(dto.grau());
+        ent.setTurno(dto.turno());
+        ent.setCampus(dto.campus());
+        ent.setNivel(dto.nivel());
     }
 }

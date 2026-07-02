@@ -5,11 +5,10 @@ import com.ufs.engdados.domain.professor.service.ProfessorService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/professores")
@@ -26,31 +25,25 @@ public class ProfessorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(professorService.create(dto));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProfessorDTO.Response>> findAll(Pageable pageable) {
-        return ResponseEntity.ok(professorService.findAllRelational(pageable).getContent());
-    }
-
     @GetMapping("/relacional")
-    public ResponseEntity<Page<ProfessorDTO.Response>> findAllRelational(Pageable pageable) {
+    public ResponseEntity<Page<ProfessorDTO.Response>> findAllRelational(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(professorService.findAllRelational(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<Page<ProfessorDTO.Response>> findAllNoSql(Pageable pageable) {
+    public ResponseEntity<Page<ProfessorDTO.Response>> findAllNoSql(@PageableDefault(size = 20) Pageable pageable) {
         Page<ProfessorDTO.Response> page = professorService.findAllNoSql(pageable);
         return ResponseEntity.ok(page);
     }
 
-
-    @PutMapping("/{cpf}")
-    public ResponseEntity<ProfessorDTO.Response> update(@PathVariable Long cpf, @Valid @RequestBody ProfessorDTO.Request dto) {
-        return ResponseEntity.ok(professorService.update(cpf, dto));
+    @PutMapping("/{matricula}")
+    public ResponseEntity<ProfessorDTO.Response> update(@PathVariable String matricula, @Valid @RequestBody ProfessorDTO.Request dto) {
+        return ResponseEntity.ok(professorService.update(matricula, dto));
     }
 
-    @DeleteMapping("/{cpf}")
-    public ResponseEntity<Void> delete(@PathVariable Long cpf) {
-        professorService.delete(cpf);
+    @DeleteMapping("/{matricula}")
+    public ResponseEntity<Void> delete(@PathVariable String matricula) {
+        professorService.delete(matricula);
         return ResponseEntity.noContent().build();
     }
 }

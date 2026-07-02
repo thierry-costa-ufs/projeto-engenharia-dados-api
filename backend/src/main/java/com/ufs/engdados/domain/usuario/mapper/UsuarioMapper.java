@@ -32,22 +32,6 @@ public class UsuarioMapper {
         return usuario;
     }
 
-
-    public static UsuarioDTO.Response toResponse(Usuario usuario, String mongoId, String statusExecucao) {
-        if (usuario == null) return null;
-        return new UsuarioDTO.Response(
-                mongoId,
-                usuario.getCpf(),
-                usuario.getNome(),
-                usuario.getDataNascimento(),
-                usuario.getEmail(),
-                usuario.getTelefone(),
-                usuario.getLogin(),
-                usuario.getSenha(),
-                statusExecucao
-        );
-    }
-
     public static UsuarioDTO.Response toResponse(Usuario usuario) {
         if (usuario == null) return null;
         return new UsuarioDTO.Response(
@@ -58,8 +42,7 @@ public class UsuarioMapper {
                 usuario.getEmail(),
                 usuario.getTelefone(),
                 usuario.getLogin(),
-                usuario.getSenha(),
-                "ASSINCRONO"
+                usuario.getSenha()
         );
     }
 
@@ -73,9 +56,30 @@ public class UsuarioMapper {
                 doc.getEmail(),
                 doc.getTelefone(),
                 doc.getLogin(),
-                doc.getSenha(),
-                "INTEGRADO_NOSQL"
+                doc.getSenha()
         );
+    }
+
+    public static void updateEntity(UsuarioDTO.Request dto, Usuario usuario){
+        if(dto == null || usuario == null) return;
+        usuario.setCpf(dto.cpf());
+        usuario.setNome(dto.nome());
+        usuario.setDataNascimento(dto.dataNascimento());
+        usuario.setEmail(dto.email());
+        usuario.setTelefone(dto.telefone());
+        usuario.setLogin(dto.login());
+        usuario.setSenha(dto.senha());
+    }
+
+    public static void updateDocument(UsuarioDTO.Request dto, UsuarioDocument usuario){
+        if(dto == null || usuario == null) return;
+        usuario.setCpf(dto.cpf());
+        usuario.setNome(dto.nome());
+        usuario.setDataNascimento(dto.dataNascimento());
+        usuario.setEmail(dto.email());
+        usuario.setTelefone(dto.telefone());
+        usuario.setLogin(dto.login());
+        usuario.setSenha(dto.senha());
     }
 
 }

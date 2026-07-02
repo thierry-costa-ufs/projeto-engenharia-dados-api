@@ -7,10 +7,11 @@ import com.ufs.engdados.domain.vinculo.model.relational.Vinculo;
 public class VinculoMapper {
 
     public static Vinculo toEntity(VinculoDTO.Request dto) {
+        if(dto == null) return null;
         Vinculo vinculo = new Vinculo();
+        vinculo.setIdVinculo(dto.idVinculo());
         vinculo.setMatEstudante(dto.matEstudante());
-        vinculo.setCodCurso(dto.codCurso() != null ? dto.codCurso().intValue() : null);
-
+        vinculo.setCodCurso(dto.codCurso());
         vinculo.setDataEntrada(dto.dataEntrada());
         vinculo.setStatus(dto.status());
         vinculo.setDataSaida(dto.dataSaida());
@@ -18,58 +19,59 @@ public class VinculoMapper {
     }
 
     public static VinculoDocument toDocument(VinculoDTO.Request dto) {
+        if(dto == null) return null;
         VinculoDocument doc = new VinculoDocument();
+        doc.setIdVinculo(dto.idVinculo());
         doc.setMatEstudante(dto.matEstudante());
         doc.setCodCurso(dto.codCurso());
-
         doc.setDataEntrada(dto.dataEntrada());
         doc.setStatus(dto.status());
         doc.setDataSaida(dto.dataSaida());
         return doc;
     }
 
-    public static VinculoDTO.Response toResponse(Vinculo vinculo, String mongoId, String statusExecucao) {
-        Long cursoLong = (vinculo.getCodCurso() != null) ? Long.valueOf(vinculo.getCodCurso().longValue()) : null;
-
-        return new VinculoDTO.Response(
-                vinculo.getIdVinculo(),
-                mongoId,
-                vinculo.getMatEstudante(),
-                cursoLong,
-                vinculo.getDataEntrada(),
-                vinculo.getStatus(),
-                vinculo.getDataSaida(),
-                statusExecucao
-        );
-    }
-
     public static VinculoDTO.Response toResponse(Vinculo v) {
-        Long cursoLong = (v.getCodCurso() != null) ? Long.valueOf(v.getCodCurso().longValue()) : null;
-
         return new VinculoDTO.Response(
-                v.getIdVinculo(),
                 null,
+                v.getIdVinculo(),
                 v.getMatEstudante(),
-                cursoLong,
+                v.getCodCurso(),
                 v.getDataEntrada(),
                 v.getStatus(),
-                v.getDataSaida(),
-                "SUCESSO_POSTGRES"
+                v.getDataSaida()
         );
     }
 
-    public static VinculoDTO.Response toResponse(VinculoDocument doc) {
-        Long cursoLong = (doc.getCodCurso() != null) ? Long.valueOf(doc.getCodCurso().longValue()) : null;
-
+    public static VinculoDTO.Response toResponse(VinculoDocument vinculo) {
         return new VinculoDTO.Response(
-                doc.getIdRelacional(),
-                doc.getId(),
-                doc.getMatEstudante(),
-                cursoLong,
-                doc.getDataEntrada(),
-                doc.getStatus(),
-                doc.getDataSaida(),
-                "SUCESSO_MONGO"
+                vinculo.getId(),
+                vinculo.getIdVinculo(),
+                vinculo.getMatEstudante(),
+                vinculo.getCodCurso(),
+                vinculo.getDataEntrada(),
+                vinculo.getStatus(),
+                vinculo.getDataSaida()
         );
     }
+
+    public static void updateEntity(VinculoDTO.Request dto, Vinculo vinculo){
+        if(dto == null || vinculo == null) return;
+        vinculo.setIdVinculo(dto.idVinculo());
+        vinculo.setMatEstudante(dto.matEstudante());
+        vinculo.setCodCurso(dto.codCurso());
+        vinculo.setDataEntrada(dto.dataEntrada());
+        vinculo.setStatus(dto.status());
+        vinculo.setDataSaida(dto.dataSaida());
+    }
+
+    public static void updateDocument(VinculoDTO.Request dto, VinculoDocument vinculo){
+        if(dto == null || vinculo == null) return;
+        vinculo.setIdVinculo(dto.idVinculo());
+        vinculo.setMatEstudante(dto.matEstudante());
+        vinculo.setCodCurso(dto.codCurso());
+        vinculo.setDataEntrada(dto.dataEntrada());
+        vinculo.setStatus(dto.status());
+        vinculo.setDataSaida(dto.dataSaida());
+    }
+
 }

@@ -12,6 +12,9 @@
     public class ProfessorDocument {
 
         @Id
+        private String id;
+
+        @Field
         private String matricula;
 
         @Field("cpf")
@@ -19,9 +22,6 @@
 
         @Field("nome")
         private String nome;
-
-        @Field("email")
-        private List<String> emails;
 
         @Field("departamento")
         private String departamento;
@@ -42,6 +42,15 @@
         public ProfessorDocument() {}
 
         // Getters e Setters
+
+
+        public String getId() {
+            return id;
+        }
+        public void setId(String id) {
+            this.id = id;
+        }
+
         public String getMatricula() { return matricula; }
         public void setMatricula(String matricula) { this.matricula = matricula; }
 
@@ -50,9 +59,6 @@
 
         public String getNome() { return nome; }
         public void setNome(String nome) { this.nome = nome; }
-
-        public List<String> getEmails() { return emails; }
-        public void setEmails(List<String> emails) { this.emails = emails; }
 
         public String getDepartamento() { return departamento; }
         public void setDepartamento(String departamento) { this.departamento = departamento; }
@@ -64,7 +70,7 @@
         public void setDataAdmissao(LocalDate dataAdmissao) { this.dataAdmissao = dataAdmissao; }
 
         public String getJornada() { return jornada; }
-        public void setJornada(String jornada) { this.jornada = this.jornada; }
+        public void setJornada(String jornada) { this.jornada = jornada; }
 
         public BigDecimal getSalario() { return salario; }
         public void setSalario(BigDecimal salario) { this.salario = salario; }

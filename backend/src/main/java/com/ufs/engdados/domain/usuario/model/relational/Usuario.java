@@ -10,7 +10,7 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "usuario", schema = "universidade")
 public class Usuario {
 
-    @Id
+    @Id @Column(name = "cpf")
     private Long cpf;
 
     @Column(nullable = false, length = 100)

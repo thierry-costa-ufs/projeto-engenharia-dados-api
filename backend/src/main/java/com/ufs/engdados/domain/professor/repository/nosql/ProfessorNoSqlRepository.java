@@ -9,7 +9,9 @@ import java.util.Optional;
 @Repository
 public interface ProfessorNoSqlRepository extends MongoRepository<ProfessorDocument, String> {
 
-    Optional<ProfessorDocument> findByCpf(Long cpf);
+    Optional<ProfessorDocument> findByMatricula(String matricula);
 
-    List<ProfessorDocument> findByCpfIn(List<Long> cpfs);
+    List<ProfessorDocument> findByMatriculaIn(List<String> matriculas);
+
+    void deleteByMatricula(String matricula);
 }

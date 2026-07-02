@@ -23,9 +23,9 @@ public record TurmaDTO(
 
         Integer semestre
 ) {
-        // para o botão de editar e deletar do React funcionar
-        @JsonProperty("id")
-        public Integer getId() {
-                return idTurma;
-        }
+    // para o botão de editar e deletar do React funcionar
+    @JsonProperty("id")
+    public Integer getId() {
+        return idTurma;
+    }
 }
