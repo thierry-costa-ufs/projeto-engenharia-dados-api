@@ -2,6 +2,7 @@ package com.ufs.engdados.domain.vinculo.controller;
 
 import com.ufs.engdados.domain.vinculo.dto.VinculoDTO;
 import com.ufs.engdados.domain.vinculo.service.VinculoService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,7 +21,7 @@ public class VinculoController {
     }
 
     @PostMapping
-    public ResponseEntity<VinculoDTO.Response> create(@RequestBody VinculoDTO.Request dto) {
+    public ResponseEntity<VinculoDTO.Response> create(@Valid @RequestBody VinculoDTO.Request dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(vinculoService.create(dto));
     }
 
@@ -35,7 +36,7 @@ public class VinculoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VinculoDTO.Response> update(@PathVariable Long id, @RequestBody VinculoDTO.Request dto) {
+    public ResponseEntity<VinculoDTO.Response> update(@PathVariable Long id, @Valid @RequestBody VinculoDTO.Request dto) {
         return ResponseEntity.ok(vinculoService.update(id, dto));
     }
 

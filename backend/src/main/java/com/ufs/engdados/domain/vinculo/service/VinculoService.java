@@ -8,12 +8,9 @@ import com.ufs.engdados.domain.vinculo.repository.nosql.VinculoNoSqlRepository;
 import com.ufs.engdados.domain.vinculo.repository.relational.VinculoRelationalRepository;
 import com.ufs.engdados.infrastructure.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class VinculoService {
@@ -50,6 +47,10 @@ public class VinculoService {
 
     @Transactional
     public VinculoDTO.Response update(Long idVinculo, VinculoDTO.Request dto) {
+        if(!(idVinculo.equals(dto.idVinculo()))){
+            throw new IllegalArgumentException("O id da URL não corresponde ao id enviada no corpo da requisição.");
+        }
+
         Vinculo vinculoPg = relationalRepository.findById(idVinculo)
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para o ID: " + idVinculo));
 

@@ -6,6 +6,7 @@ import com.ufs.engdados.domain.curso.model.relational.Curso;
 import com.ufs.engdados.domain.curso.mapper.CursoMapper;
 import com.ufs.engdados.domain.curso.repository.nosql.CursoNoSqlRepository;
 import com.ufs.engdados.domain.curso.repository.relational.CursoRelationalRepository;
+import com.ufs.engdados.infrastructure.exception.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,14 +49,18 @@ public class CursoService {
 
     @Transactional
     public CursoDTO.Response update(Integer id, CursoDTO.Request dto) {
+        if(!(id.equals(dto.idCurso()))){
+            throw new IllegalArgumentException("O id do curso da URL não corresponde ao id do curso enviado no corpo da requisição.");
+        }
+
         Curso relational = relationalRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Curso não encontrado na base relacional ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Curso não encontrado na base relacional ID: " + id));
 
         CursoMapper.updateEntity(dto, relational);
         relationalRepository.save(relational);
 
         CursoDocument nosql = noSqlRepository.findByIdCurso(id)
-                .orElseThrow(() -> new EntityNotFoundException("Curso não encontrado na base relacional ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Curso não encontrado na base relacional ID: " + id));
 
         CursoMapper.updateDocument(dto, nosql);
         CursoDocument salvoNoSql = noSqlRepository.save(nosql);
@@ -66,11 +71,11 @@ public class CursoService {
     @Transactional
     public void delete(Integer id) {
         relationalRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Curso não encontrado na base relacional ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Curso não encontrado na base relacional ID: " + id));
         relationalRepository.deleteById(id);
 
          noSqlRepository.findByIdCurso(id)
-                .orElseThrow(() -> new EntityNotFoundException("Curso não encontrado na base relacional ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Curso não encontrado na base relacional ID: " + id));
         noSqlRepository.deleteByIdCurso(id);
     }
 

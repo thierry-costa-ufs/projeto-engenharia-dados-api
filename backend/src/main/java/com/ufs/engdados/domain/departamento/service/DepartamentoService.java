@@ -47,6 +47,10 @@ public class DepartamentoService{
 
     @Transactional
     public DepartamentoDTO.Response update(String codDepto, DepartamentoDTO.Request request){
+        if(!(codDepto.equals(request.codDepto()))){
+            throw new IllegalArgumentException("O código de departamento da URL não corresponde ao código de departamento enviada no corpo da requisição.");
+        }
+
         Departamento departamento = relationalRepository.findById(codDepto)
                 .orElseThrow(() -> new ResourceNotFoundException("Departamento de código " + codDepto + " não encontrado"));
 

@@ -1,32 +1,24 @@
 package com.ufs.engdados.domain.usuario.service;
 
-import com.ufs.engdados.domain.estudante.mapper.EstudanteMapper;
-import com.ufs.engdados.domain.estudante.model.nosql.EstudanteDocument;
-import com.ufs.engdados.domain.estudante.model.relational.Estudante;
 import com.ufs.engdados.domain.usuario.dto.UsuarioDTO;
-import com.ufs.engdados.domain.usuario.event.UsuarioDeletadoEvent;
-import com.ufs.engdados.domain.usuario.event.UsuarioSalvoEvent;
 import com.ufs.engdados.domain.usuario.mapper.UsuarioMapper;
 import com.ufs.engdados.domain.usuario.model.relational.Usuario;
 import com.ufs.engdados.domain.usuario.model.nosql.UsuarioDocument;
 import com.ufs.engdados.domain.usuario.repository.nosql.UsuarioNoSqlRepository;
 import com.ufs.engdados.domain.usuario.repository.relational.UsuarioRelationalRepository;
 import com.ufs.engdados.infrastructure.exception.ResourceNotFoundException;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
     private final UsuarioRelationalRepository relationalRepository;
     private final UsuarioNoSqlRepository noSqlRepository;
 
-    public UsuarioService(UsuarioRelationalRepository relationalRepository, UsuarioNoSqlRepository noSqlRepository, ApplicationEventPublisher eventPublisher) {
+    public UsuarioService(UsuarioRelationalRepository relationalRepository,
+                          UsuarioNoSqlRepository noSqlRepository) {
         this.relationalRepository = relationalRepository;
         this.noSqlRepository = noSqlRepository;
     }
@@ -56,7 +48,7 @@ public class UsuarioService {
     @Transactional
     public UsuarioDTO.Response update(Long cpf, UsuarioDTO.Request dto) {
         if(!(cpf.equals(dto.cpf()))){
-            throw new IllegalArgumentException("O cpf da URL não corresponde a matrícula enviada no corpo da requisição.");
+            throw new IllegalArgumentException("O cpf da URL não corresponde ao cpf enviada no corpo da requisição.");
         }
 
         Usuario usuario = relationalRepository.findById(cpf)

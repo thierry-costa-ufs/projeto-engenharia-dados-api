@@ -18,7 +18,8 @@ public class EstudanteService{
     private final EstudanteRelationalRepository relationalRepository;
     private final EstudanteNoSqlRepository noSqlRepository;
 
-    public EstudanteService(EstudanteRelationalRepository relationalRepository, EstudanteNoSqlRepository noSqlRepository, EstudanteMapper estudanteMapper){
+    public EstudanteService(EstudanteRelationalRepository relationalRepository,
+                            EstudanteNoSqlRepository noSqlRepository){
         this.relationalRepository = relationalRepository;
         this.noSqlRepository = noSqlRepository;
     }

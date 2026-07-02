@@ -42,6 +42,15 @@
         public ProfessorDocument() {}
 
         // Getters e Setters
+
+
+        public String getId() {
+            return id;
+        }
+        public void setId(String id) {
+            this.id = id;
+        }
+
         public String getMatricula() { return matricula; }
         public void setMatricula(String matricula) { this.matricula = matricula; }
 
@@ -61,7 +70,7 @@
         public void setDataAdmissao(LocalDate dataAdmissao) { this.dataAdmissao = dataAdmissao; }
 
         public String getJornada() { return jornada; }
-        public void setJornada(String jornada) { this.jornada = this.jornada; }
+        public void setJornada(String jornada) { this.jornada = jornada; }
 
         public BigDecimal getSalario() { return salario; }
         public void setSalario(BigDecimal salario) { this.salario = salario; }

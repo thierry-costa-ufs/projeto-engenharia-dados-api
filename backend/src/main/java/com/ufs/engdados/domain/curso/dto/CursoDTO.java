@@ -17,17 +17,17 @@ public interface CursoDTO {
             @Size(max = 100, message = "O nome não pode exceder 100 caracteres.")
             String nome,
 
-            @NotBlank(message = "O grau acadêmico é obrigatório.")
+            @NotNull(message = "O grau acadêmico é obrigatório.")
             TipoGrau grau,
 
-            @NotBlank(message = "O turno do curso é obrigatório.")
+            @NotNull(message = "O turno do curso é obrigatório.")
             TipoTurno turno,
 
             @NotBlank(message = "O campus é obrigatório.")
             @Size(max = 100, message = "O campus não pode exceder 100 caracteres.")
             String campus,
 
-            @NotBlank(message = "O nível do curso é obrigatório.")
+            @NotNull(message = "O nível do curso é obrigatório.")
             TipoNivel nivel
     ) {}
 

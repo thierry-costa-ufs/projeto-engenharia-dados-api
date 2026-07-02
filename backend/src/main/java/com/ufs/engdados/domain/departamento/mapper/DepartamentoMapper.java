@@ -3,13 +3,11 @@ package com.ufs.engdados.domain.departamento.mapper;
 import com.ufs.engdados.domain.departamento.dto.DepartamentoDTO;
 import com.ufs.engdados.domain.departamento.model.nosql.DepartamentoDocument;
 import com.ufs.engdados.domain.departamento.model.relational.Departamento;
-import com.ufs.engdados.domain.estudante.dto.EstudanteDTO;
-import com.ufs.engdados.domain.estudante.model.nosql.EstudanteDocument;
-import com.ufs.engdados.domain.estudante.model.relational.Estudante;
 
 public class DepartamentoMapper{
 
     public static Departamento toEntity(DepartamentoDTO.Request request){
+        if(request == null) return null;
         Departamento departamento = new Departamento();
         departamento.setCodDepto(request.codDepto());
         departamento.setNome(request.nome());
@@ -20,6 +18,7 @@ public class DepartamentoMapper{
     }
 
     public static DepartamentoDocument toDocument(DepartamentoDTO.Request request) {
+        if(request == null) return null;
         DepartamentoDocument departamento = new DepartamentoDocument();
         departamento.setCodDepto(request.codDepto());
         departamento.setNome(request.nome());
@@ -53,6 +52,7 @@ public class DepartamentoMapper{
 
     public static void updateEntity(DepartamentoDTO.Request request, Departamento departamento){
         if(request == null || departamento == null) return;
+        departamento.setCodDepto(request.codDepto());
         departamento.setNome(request.nome());
         departamento.setChefe(request.chefe());
         departamento.setOrcamento(request.orcamento());
@@ -61,6 +61,7 @@ public class DepartamentoMapper{
 
     public static void updateDocument(DepartamentoDTO.Request request, DepartamentoDocument departamento){
         if(request == null || departamento == null) return;
+        departamento.setCodDepto(request.codDepto());
         departamento.setNome(request.nome());
         departamento.setChefe(request.chefe());
         departamento.setOrcamento(request.orcamento());

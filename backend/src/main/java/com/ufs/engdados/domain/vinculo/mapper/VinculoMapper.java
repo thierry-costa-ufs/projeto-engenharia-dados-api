@@ -1,8 +1,5 @@
 package com.ufs.engdados.domain.vinculo.mapper;
 
-import com.ufs.engdados.domain.estudante.dto.EstudanteDTO;
-import com.ufs.engdados.domain.estudante.model.nosql.EstudanteDocument;
-import com.ufs.engdados.domain.estudante.model.relational.Estudante;
 import com.ufs.engdados.domain.vinculo.dto.VinculoDTO;
 import com.ufs.engdados.domain.vinculo.model.nosql.VinculoDocument;
 import com.ufs.engdados.domain.vinculo.model.relational.Vinculo;
@@ -10,6 +7,7 @@ import com.ufs.engdados.domain.vinculo.model.relational.Vinculo;
 public class VinculoMapper {
 
     public static Vinculo toEntity(VinculoDTO.Request dto) {
+        if(dto == null) return null;
         Vinculo vinculo = new Vinculo();
         vinculo.setIdVinculo(dto.idVinculo());
         vinculo.setMatEstudante(dto.matEstudante());
@@ -21,6 +19,7 @@ public class VinculoMapper {
     }
 
     public static VinculoDocument toDocument(VinculoDTO.Request dto) {
+        if(dto == null) return null;
         VinculoDocument doc = new VinculoDocument();
         doc.setIdVinculo(dto.idVinculo());
         doc.setMatEstudante(dto.matEstudante());
@@ -55,24 +54,24 @@ public class VinculoMapper {
         );
     }
 
-    public static void updateEntity(VinculoDTO.Request request, Vinculo vinculo){
-        if(request == null || vinculo == null) return;
-        vinculo.setIdVinculo(request.idVinculo());
-        vinculo.setMatEstudante(request.matEstudante());
-        vinculo.setCodCurso(request.codCurso());
-        vinculo.setDataEntrada(request.dataEntrada());
-        vinculo.setStatus(request.status());
-        vinculo.setDataSaida(request.dataSaida());
+    public static void updateEntity(VinculoDTO.Request dto, Vinculo vinculo){
+        if(dto == null || vinculo == null) return;
+        vinculo.setIdVinculo(dto.idVinculo());
+        vinculo.setMatEstudante(dto.matEstudante());
+        vinculo.setCodCurso(dto.codCurso());
+        vinculo.setDataEntrada(dto.dataEntrada());
+        vinculo.setStatus(dto.status());
+        vinculo.setDataSaida(dto.dataSaida());
     }
 
-    public static void updateDocument(VinculoDTO.Request request, VinculoDocument vinculo){
-        if(request == null || vinculo == null) return;
-        vinculo.setIdVinculo(request.idVinculo());
-        vinculo.setMatEstudante(request.matEstudante());
-        vinculo.setCodCurso(request.codCurso());
-        vinculo.setDataEntrada(request.dataEntrada());
-        vinculo.setStatus(request.status());
-        vinculo.setDataSaida(request.dataSaida());
+    public static void updateDocument(VinculoDTO.Request dto, VinculoDocument vinculo){
+        if(dto == null || vinculo == null) return;
+        vinculo.setIdVinculo(dto.idVinculo());
+        vinculo.setMatEstudante(dto.matEstudante());
+        vinculo.setCodCurso(dto.codCurso());
+        vinculo.setDataEntrada(dto.dataEntrada());
+        vinculo.setStatus(dto.status());
+        vinculo.setDataSaida(dto.dataSaida());
     }
 
 }

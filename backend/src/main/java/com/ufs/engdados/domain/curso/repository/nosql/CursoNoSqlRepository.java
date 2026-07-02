@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CursoNoSqlRepository extends MongoRepository<CursoDocument, Integer> {
+public interface CursoNoSqlRepository extends MongoRepository<CursoDocument, String> {
     List<CursoDocument> findByIdCursoIn(List<Integer> idsCursos);
     Optional<CursoDocument> findByIdCurso(Integer idCurso);
     void deleteByIdCurso(Integer idCurso);

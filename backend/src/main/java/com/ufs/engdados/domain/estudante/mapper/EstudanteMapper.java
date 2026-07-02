@@ -48,6 +48,7 @@ public class EstudanteMapper {
     public static void updateEntity(EstudanteDTO.Request request, Estudante estudante){
         if(request == null || estudante == null) return;
         estudante.setMatEstudante(request.matEstudante());
+        estudante.setCpf(request.cpf());
         estudante.setMc(request.mc());
         estudante.setAnoIngresso(request.anoIngresso());
     }
@@ -55,6 +56,7 @@ public class EstudanteMapper {
     public static void updateDocument(EstudanteDTO.Request request, EstudanteDocument estudante){
         if(request == null || estudante == null) return;
         estudante.setMatEstudante(request.matEstudante());
+        estudante.setCpf(request.cpf());
         estudante.setMc(request.mc());
         estudante.setAnoIngresso(request.anoIngresso());
     }

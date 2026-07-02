@@ -1,27 +1,17 @@
 package com.ufs.engdados.domain.professor.service;
 
 import com.ufs.engdados.domain.professor.dto.ProfessorDTO;
-import com.ufs.engdados.domain.professor.event.ProfessorDeletadoEvent;
-import com.ufs.engdados.domain.professor.event.ProfessorSalvoEvent;
 import com.ufs.engdados.domain.professor.mapper.ProfessorMapper;
 import com.ufs.engdados.domain.professor.model.nosql.ProfessorDocument;
 import com.ufs.engdados.domain.professor.model.relational.Professor;
 import com.ufs.engdados.domain.professor.repository.nosql.ProfessorNoSqlRepository;
-import com.ufs.engdados.domain.usuario.model.nosql.UsuarioDocument;
-import com.ufs.engdados.domain.usuario.repository.nosql.UsuarioNoSqlRepository;
 import com.ufs.engdados.domain.professor.repository.relational.ProfessorRelationalRepository;
-import com.ufs.engdados.domain.usuario.repository.relational.UsuarioRelationalRepository;
 import com.ufs.engdados.infrastructure.exception.ResourceNotFoundException;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class ProfessorService {
@@ -71,8 +61,9 @@ public class ProfessorService {
 
         ProfessorDocument doc = noSqlRepository.findByMatricula(matricula)
                 .orElseThrow(() -> new ResourceNotFoundException("Professor " + matricula + " não encontrado"));
-
         ProfessorMapper.updateDocument(dto, doc);
+        noSqlRepository.save(doc);
+
         return ProfessorMapper.toResponse(doc);
     }
 
@@ -84,7 +75,7 @@ public class ProfessorService {
 
         noSqlRepository.findByMatricula(matricula)
                 .orElseThrow(() -> new ResourceNotFoundException("Professor " + matricula + " não encontrado"));
-        noSqlRepository.findByMatricula(matricula);
+        noSqlRepository.deleteByMatricula(matricula);
     }
 
 }

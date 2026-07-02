@@ -39,6 +39,7 @@ public interface ProfessorDTO {
     ) {}
 
     record Response(
+            String mongoId,
             Long cpf,
             String matricula,
             String departamento,

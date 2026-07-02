@@ -1,8 +1,5 @@
 package com.ufs.engdados.domain.usuario.mapper;
 
-import com.ufs.engdados.domain.estudante.dto.EstudanteDTO;
-import com.ufs.engdados.domain.estudante.model.nosql.EstudanteDocument;
-import com.ufs.engdados.domain.estudante.model.relational.Estudante;
 import com.ufs.engdados.domain.usuario.dto.UsuarioDTO;
 import com.ufs.engdados.domain.usuario.model.nosql.UsuarioDocument;
 import com.ufs.engdados.domain.usuario.model.relational.Usuario;
@@ -63,24 +60,26 @@ public class UsuarioMapper {
         );
     }
 
-    public static void updateEntity(UsuarioDTO.Request request, Usuario usuario){
-        if(request == null || usuario == null) return;
-        usuario.setNome(request.nome());
-        usuario.setDataNascimento(request.dataNascimento());
-        usuario.setEmail(request.email());
-        usuario.setTelefone(request.telefone());
-        usuario.setLogin(request.login());
-        usuario.setSenha(request.senha());
+    public static void updateEntity(UsuarioDTO.Request dto, Usuario usuario){
+        if(dto == null || usuario == null) return;
+        usuario.setCpf(dto.cpf());
+        usuario.setNome(dto.nome());
+        usuario.setDataNascimento(dto.dataNascimento());
+        usuario.setEmail(dto.email());
+        usuario.setTelefone(dto.telefone());
+        usuario.setLogin(dto.login());
+        usuario.setSenha(dto.senha());
     }
 
-    public static void updateDocument(UsuarioDTO.Request request, UsuarioDocument usuario){
-        if(request == null || usuario == null) return;
-        usuario.setNome(request.nome());
-        usuario.setDataNascimento(request.dataNascimento());
-        usuario.setEmail(request.email());
-        usuario.setTelefone(request.telefone());
-        usuario.setLogin(request.login());
-        usuario.setSenha(request.senha());
+    public static void updateDocument(UsuarioDTO.Request dto, UsuarioDocument usuario){
+        if(dto == null || usuario == null) return;
+        usuario.setCpf(dto.cpf());
+        usuario.setNome(dto.nome());
+        usuario.setDataNascimento(dto.dataNascimento());
+        usuario.setEmail(dto.email());
+        usuario.setTelefone(dto.telefone());
+        usuario.setLogin(dto.login());
+        usuario.setSenha(dto.senha());
     }
 
 }
