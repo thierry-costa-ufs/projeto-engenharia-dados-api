@@ -21,8 +21,7 @@ public class VinculoController {
 
     @PostMapping
     public ResponseEntity<VinculoDTO.Response> create(@RequestBody VinculoDTO.Request dto) {
-        VinculoDTO.Response response = vinculoService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(vinculoService.create(dto));
     }
 
     @GetMapping("/relacional")

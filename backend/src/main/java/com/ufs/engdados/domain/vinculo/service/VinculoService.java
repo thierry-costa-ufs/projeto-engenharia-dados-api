@@ -28,42 +28,24 @@ public class VinculoService {
 
     @Transactional
     public VinculoDTO.Response create(VinculoDTO.Request dto) {
-        Vinculo vinculoPg = VinculoMapper.toEntity(dto);
-        vinculoPg = relationalRepository.save(vinculoPg);
+         relationalRepository.save(VinculoMapper.toEntity(dto));
+         VinculoDocument document = noSqlRepository.save(VinculoMapper.toDocument(dto));
 
-        String mongoId = null;
-        String statusExecucao = "SUCESSO_TOTAL";
-
-        try {
-            VinculoDocument vinculoMg = VinculoMapper.toDocument(dto);
-            vinculoMg.setIdRelacional(vinculoPg.getIdVinculo());
-
-            vinculoMg = noSqlRepository.save(vinculoMg);
-            mongoId = vinculoMg.getId();
-        } catch (Exception e) {
-            System.err.println("[ALERTA] Falha ao espelhar vínculo no MongoDB: " + e.getMessage());
-            statusExecucao = "FALHA_PARCIAL_MONGO";
-        }
-
-        return VinculoMapper.toResponse(vinculoPg, mongoId, statusExecucao);
+         return VinculoMapper.toResponse(document);
     }
 
     @Transactional(readOnly = true)
     public Page<VinculoDTO.Response> findAllRelational(Pageable pageable) {
         Page<Vinculo> page = relationalRepository.findAll(pageable);
-        List<VinculoDTO.Response> dtos = page.getContent().stream()
-                .map(VinculoMapper::toResponse)
-                .toList();
-        return new PageImpl<>(dtos, pageable, page.getTotalElements());
+
+        return page.map(vinculo -> VinculoMapper.toResponse(vinculo));
     }
 
     @Transactional(readOnly = true)
     public Page<VinculoDTO.Response> findAllNoSql(Pageable pageable) {
         Page<VinculoDocument> page = noSqlRepository.findAll(pageable);
-        List<VinculoDTO.Response> dtos = page.getContent().stream()
-                .map(VinculoMapper::toResponse)
-                .toList();
-        return new PageImpl<>(dtos, pageable, page.getTotalElements());
+
+        return page.map(vinculo -> VinculoMapper.toResponse(vinculo));
     }
 
     @Transactional
@@ -71,38 +53,26 @@ public class VinculoService {
         Vinculo vinculoPg = relationalRepository.findById(idVinculo)
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para o ID: " + idVinculo));
 
-        vinculoPg.setCodCurso(dto.codCurso() != null ? dto.codCurso().intValue() : null);
-        vinculoPg.setDataEntrada(dto.dataEntrada());
-        vinculoPg.setStatus(dto.status());
-        vinculoPg.setDataSaida(dto.dataSaida());
+        VinculoMapper.updateEntity(dto, vinculoPg);
+        relationalRepository.save(vinculoPg);
 
-        relationalRepository.saveAndFlush(vinculoPg);
+        VinculoDocument documentpg = noSqlRepository.findByidVinculo(idVinculo)
+                .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para o ID: " + idVinculo));
 
-        String mongoId = null;
-        String statusExecucao = "SUCESSO_TOTAL";
+        VinculoMapper.updateDocument(dto, documentpg);
+        noSqlRepository.save(documentpg);
 
-        try {
-            Optional<VinculoDocument> documentoExistente = noSqlRepository.findByIdRelacional(idVinculo);
-
-            VinculoDocument vinculoMg = VinculoMapper.toDocument(dto);
-            vinculoMg.setIdRelacional(vinculoPg.getIdVinculo());
-            documentoExistente.ifPresent(doc -> vinculoMg.setId(doc.getId()));
-
-            VinculoDocument vinculoMgAtualizado = noSqlRepository.save(vinculoMg);
-            mongoId = vinculoMgAtualizado.getId();
-        } catch (Exception e) {
-            System.err.println("[ALERTA] Falha ao atualizar espelho no MongoDB: " + e.getMessage());
-            statusExecucao = "FALHA_PARCIAL_MONGO";
-        }
-
-        return VinculoMapper.toResponse(vinculoPg, mongoId, statusExecucao);
+        return VinculoMapper.toResponse(documentpg);
     }
 
     @Transactional
     public void delete(Long idVinculo) {
-        if (relationalRepository.existsById(idVinculo)) {
-            relationalRepository.deleteById(idVinculo);
-        }
-        noSqlRepository.deleteByIdRelacional(idVinculo);
+        relationalRepository.findById(idVinculo)
+                .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para o ID: " + idVinculo));
+        relationalRepository.deleteById(idVinculo);
+
+        noSqlRepository.findByidVinculo(idVinculo)
+                .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para o ID: " + idVinculo));
+        noSqlRepository.deleteByIdVinculo(idVinculo);
     }
 }

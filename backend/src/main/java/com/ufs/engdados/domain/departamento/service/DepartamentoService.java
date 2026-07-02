@@ -6,6 +6,7 @@ import com.ufs.engdados.domain.departamento.model.nosql.DepartamentoDocument;
 import com.ufs.engdados.domain.departamento.model.relational.Departamento;
 import com.ufs.engdados.domain.departamento.repository.nosql.DepartamentoNoSqlRepository;
 import com.ufs.engdados.domain.departamento.repository.relational.DepartamentoRelationalRepository;
+import com.ufs.engdados.infrastructure.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,21 +48,15 @@ public class DepartamentoService{
     @Transactional
     public DepartamentoDTO.Response update(String codDepto, DepartamentoDTO.Request request){
         Departamento departamento = relationalRepository.findById(codDepto)
-                .orElseThrow(() -> new RuntimeException("Departamento de código " + codDepto + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Departamento de código " + codDepto + " não encontrado"));
 
-        departamento.setNome(request.nome());
-        departamento.setChefe(request.chefe());
-        departamento.setOrcamento(request.orcamento());
-        departamento.setComissal(request.comissal());
+        DepartamentoMapper.updateEntity(request, departamento);
         relationalRepository.save(departamento);
 
         DepartamentoDocument document = noSqlRepository.findByCodDepto(codDepto)
-                .orElseThrow(() -> new RuntimeException("Departamento de código " + codDepto + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Departamento de código " + codDepto + " não encontrado"));
 
-        document.setNome(request.nome());
-        document.setChefe(request.chefe());
-        document.setOrcamento(request.orcamento());
-        document.setComissal(request.comissal());
+        DepartamentoMapper.updateDocument(request, document);
         noSqlRepository.save(document);
 
         return DepartamentoMapper.toResponse(document);
@@ -70,12 +65,12 @@ public class DepartamentoService{
     @Transactional
     public void delete(String codDepto){
 
-    Departamento departamento = relationalRepository.findById(codDepto)
-            .orElseThrow(() -> new RuntimeException("Departamento de código " + codDepto + " não encontrado"));
+    relationalRepository.findById(codDepto)
+            .orElseThrow(() -> new ResourceNotFoundException("Departamento de código " + codDepto + " não encontrado"));
     relationalRepository.deleteById(codDepto);
 
-    DepartamentoDocument document = noSqlRepository.findByCodDepto(codDepto)
-            .orElseThrow(() -> new RuntimeException("Departamento de código " + codDepto + " não encontrado"));
+    noSqlRepository.findByCodDepto(codDepto)
+            .orElseThrow(() -> new ResourceNotFoundException("Departamento de código " + codDepto + " não encontrado"));
     noSqlRepository.deleteByCodDepto(codDepto);
 
     }

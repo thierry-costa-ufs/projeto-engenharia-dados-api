@@ -21,8 +21,7 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioDTO.Response> create(@Valid @RequestBody UsuarioDTO.Request dto) {
-        UsuarioDTO.Response novoUsuario = usuarioService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.create(dto));
     }
 
     @GetMapping("/relacional")
@@ -37,8 +36,7 @@ public class UsuarioController {
 
     @PutMapping("/{cpf}")
     public ResponseEntity<UsuarioDTO.Response> update(@PathVariable Long cpf, @Valid @RequestBody UsuarioDTO.Request dto) {
-        UsuarioDTO.Response usuarioAtualizado = usuarioService.update(cpf, dto);
-        return ResponseEntity.ok(usuarioAtualizado);
+        return ResponseEntity.ok(usuarioService.update(cpf, dto));
     }
 
     @DeleteMapping("/{cpf}")

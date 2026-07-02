@@ -10,31 +10,34 @@ import jakarta.validation.constraints.Size;
 public interface CursoDTO {
 
     record Request(
+            @NotNull(message = "O id do curso é obrigatório")
+            Integer idCurso,
+
             @NotBlank(message = "O nome do curso é obrigatório.")
             @Size(max = 100, message = "O nome não pode exceder 100 caracteres.")
             String nome,
 
             @NotBlank(message = "O grau acadêmico é obrigatório.")
-            String grau,
+            TipoGrau grau,
 
             @NotBlank(message = "O turno do curso é obrigatório.")
-            String turno,
+            TipoTurno turno,
 
             @NotBlank(message = "O campus é obrigatório.")
             @Size(max = 100, message = "O campus não pode exceder 100 caracteres.")
             String campus,
 
             @NotBlank(message = "O nível do curso é obrigatório.")
-            String nivel
+            TipoNivel nivel
     ) {}
 
     record Response(
+            String mongoId,
             Integer idCurso,
             String nome,
             TipoGrau grau,
             TipoTurno turno,
             String campus,
-            TipoNivel nivel,
-            String status
+            TipoNivel nivel
     ) {}
 }

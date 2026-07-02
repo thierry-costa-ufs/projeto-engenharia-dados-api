@@ -1,25 +1,36 @@
 package com.ufs.engdados.domain.vinculo.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
-public class VinculoDTO {
+public interface VinculoDTO {
 
-    public record Request(
+    record Request(
+            @NotNull(message = "O id é obrigatório")
+            Long idVinculo,
+
+            @Size(max = 7, message = "A matrícula deve ter no máximo 7 caracteres")
             String matEstudante,
-            Long codCurso,
+
+            Integer codCurso,
+
             LocalDate dataEntrada,
+
             String status,
+
             LocalDate dataSaida
     ) {}
 
-    public record Response(
-            Long idVinculo,
+    record Response(
             String mongoId,
+            Long idVinculo,
             String matEstudante,
-            Long codCurso,
+            Integer codCurso,
             LocalDate dataEntrada,
             String status,
-            LocalDate dataSaida,
-            String statusExecucao
+            LocalDate dataSaida
     ) {}
 }

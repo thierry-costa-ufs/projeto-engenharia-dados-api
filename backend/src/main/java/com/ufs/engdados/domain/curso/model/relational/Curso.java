@@ -1,5 +1,8 @@
 package com.ufs.engdados.domain.curso.model.relational;
 
+import com.ufs.engdados.domain.curso.enums.TipoGrau;
+import com.ufs.engdados.domain.curso.enums.TipoNivel;
+import com.ufs.engdados.domain.curso.enums.TipoTurno;
 import jakarta.persistence.*;
 
 @Entity
@@ -18,18 +21,18 @@ public class Curso {
 
     // Mudado para String para aceitar "Licenciatura Plena" do banco
     @Column(columnDefinition = "universidade.tipo_grau")
-    private String grau;
+    private TipoGrau grau;
 
     // Mudado para String para aceitar "Turno Indefinido" do banco
     @Column(nullable = false, columnDefinition = "universidade.tipo_turno")
-    private String turno;
+    private TipoTurno turno;
 
     @Column(length = 100)
     private String campus;
 
     // Mudado para String para aceitar "Graduação" do banco
     @Column(columnDefinition = "universidade.tipo_nivel")
-    private String nivel;
+    private TipoNivel nivel;
 
     public Curso() {}
 
@@ -37,12 +40,12 @@ public class Curso {
     public void setIdCurso(Integer idCurso) { this.idCurso = idCurso; }
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
-    public String getGrau() { return grau; }
-    public void setGrau(String grau) { this.grau = grau; }
-    public String getTurno() { return turno; }
-    public void setTurno(String turno) { this.turno = turno; }
+    public TipoGrau getGrau() { return grau; }
+    public void setGrau(TipoGrau grau) { this.grau = grau; }
+    public TipoTurno getTurno() { return turno; }
+    public void setTurno(TipoTurno turno) { this.turno = turno; }
     public String getCampus() { return campus; }
     public void setCampus(String campus) { this.campus = campus; }
-    public String getNivel() { return nivel; }
-    public void setNivel(String nivel) { this.nivel = nivel; }
+    public TipoNivel getNivel() { return nivel; }
+    public void setNivel(TipoNivel nivel) { this.nivel = nivel; }
 }

@@ -3,6 +3,9 @@ package com.ufs.engdados.domain.departamento.mapper;
 import com.ufs.engdados.domain.departamento.dto.DepartamentoDTO;
 import com.ufs.engdados.domain.departamento.model.nosql.DepartamentoDocument;
 import com.ufs.engdados.domain.departamento.model.relational.Departamento;
+import com.ufs.engdados.domain.estudante.dto.EstudanteDTO;
+import com.ufs.engdados.domain.estudante.model.nosql.EstudanteDocument;
+import com.ufs.engdados.domain.estudante.model.relational.Estudante;
 
 public class DepartamentoMapper{
 
@@ -46,5 +49,21 @@ public class DepartamentoMapper{
                 departamento.getOrcamento(),
                 departamento.getComissal()
         );
+    }
+
+    public static void updateEntity(DepartamentoDTO.Request request, Departamento departamento){
+        if(request == null || departamento == null) return;
+        departamento.setNome(request.nome());
+        departamento.setChefe(request.chefe());
+        departamento.setOrcamento(request.orcamento());
+        departamento.setComissal(request.comissal());
+    }
+
+    public static void updateDocument(DepartamentoDTO.Request request, DepartamentoDocument departamento){
+        if(request == null || departamento == null) return;
+        departamento.setNome(request.nome());
+        departamento.setChefe(request.chefe());
+        departamento.setOrcamento(request.orcamento());
+        departamento.setComissal(request.comissal());
     }
 }

@@ -40,13 +40,6 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UsuarioDTO.Response> findAll(Pageable pageable) {
-        Page<Usuario> usuarios = relationalRepository.findAll(pageable);
-
-        return usuarios.map(usuario -> UsuarioMapper.toResponse(usuario));
-    }
-
-    @Transactional(readOnly = true)
     public Page<UsuarioDTO.Response> findAllRelational(Pageable pageable) {
         Page<Usuario> usuarios = relationalRepository.findAll(pageable);
 

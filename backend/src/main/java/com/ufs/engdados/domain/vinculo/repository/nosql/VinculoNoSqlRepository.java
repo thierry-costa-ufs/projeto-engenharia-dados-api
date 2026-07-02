@@ -5,6 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
 public interface VinculoNoSqlRepository extends MongoRepository<VinculoDocument, String> {
-    Optional<VinculoDocument> findByIdRelacional(Long idRelacional);
-    void deleteByIdRelacional(Long idRelacional);
+    Optional<VinculoDocument> findByidVinculo(Long idVinculo);
+    void deleteByIdVinculo(Long idVinculo);
 }

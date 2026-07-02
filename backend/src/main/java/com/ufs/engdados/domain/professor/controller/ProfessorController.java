@@ -42,7 +42,6 @@ public class ProfessorController {
         return ResponseEntity.ok(page);
     }
 
-
     @PutMapping("/{mat_professor}")
     public ResponseEntity<ProfessorDTO.Response> update(@PathVariable String matricula, @Valid @RequestBody ProfessorDTO.Request dto) {
         return ResponseEntity.ok(professorService.update(matricula, dto));
