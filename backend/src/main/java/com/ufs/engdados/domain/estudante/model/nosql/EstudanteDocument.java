@@ -17,7 +17,7 @@ public class EstudanteDocument{
     private Long cpf;
 
     @Field("mc")
-    private Integer mc;
+    private Double mc;
 
     @Field("ano_ingresso")
     private Integer anoIngresso;
@@ -53,10 +53,10 @@ public class EstudanteDocument{
         this.matEstudante = matEstudante;
     }
 
-    public Integer getMc() {
+    public Double getMc() {
         return mc;
     }
-    public void setMc(Integer mc) {
+    public void setMc(Double mc) {
         this.mc = mc;
     }
 }

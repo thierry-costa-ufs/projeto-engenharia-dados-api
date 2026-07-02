@@ -3,41 +3,56 @@ import ModuleViewLayout from '../components/shared/ModuleViewLayout';
 import { DepartamentoForm } from '../components/forms';
 
 export default function DepartamentosView() {
+  const formatarMoeda = (valor) => {
+    if (valor === null || valor === undefined || valor === '') return '-';
+
+    return Number(valor).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+  };
+
   return (
     <ModuleViewLayout
-      title="Módulo de Departamentos"
-      subtitle="Gerenciamento dos centros acadêmicos e lotação de disciplinas da instituição."
+      title="Modulo de Departamentos"
+      subtitle="Gerenciamento dos departamentos academicos, chefias, orcamentos e comissoes."
       formTitle="Cadastrar Novo Departamento"
       endpoint="departamentos"
       FormComponent={DepartamentoForm}
-      tableHeaders={['ID', 'Nome', 'Sigla']}
-      renderRow={(depto, idx, sharedStyles, onEdit, onDelete) => (
-        <tr key={depto.idDepartamento || idx} className={sharedStyles.tableRow}>
-          <td>{depto.idDepartamento}</td>
-          <td>{depto.nome}</td>
-          <td className={sharedStyles.textMono}>{depto.sigla}</td>
-          <td>
-            <div className={sharedStyles.actionsCell}>
-              <button
-                type="button"
-                title="Editar Departamento"
-                onClick={() => onEdit(depto)}
-                className={sharedStyles.btnTableEdit}
-              >
-                <Pencil size={14} />
-              </button>
-              <button
-                type="button"
-                title="Deletar Departamento"
-                onClick={() => onDelete(depto.idDepartamento)}
-                className={sharedStyles.btnTableDelete}
-              >
-                <Trash2 size={14} />
-              </button>
-            </div>
-          </td>
-        </tr>
-      )}
+      tableHeaders={['Codigo', 'Nome', 'Chefe', 'Orcamento', 'Comissao']}
+      renderRow={(departamento, idx, sharedStyles, onEdit, onDelete) => {
+        const codigo = departamento.codDepto || departamento.idDepartamento;
+
+        return (
+          <tr key={codigo || idx} className={sharedStyles.tableRow}>
+            <td className={sharedStyles.textMono}>{codigo || '-'}</td>
+            <td>{departamento.nome}</td>
+            <td className={sharedStyles.textMono}>{departamento.chefe || '-'}</td>
+            <td>{formatarMoeda(departamento.orcamento)}</td>
+            <td>{formatarMoeda(departamento.comissal)}</td>
+            <td>
+              <div className={sharedStyles.actionsCell}>
+                <button
+                  type="button"
+                  title="Editar Departamento"
+                  onClick={() => onEdit(departamento)}
+                  className={sharedStyles.btnTableEdit}
+                >
+                  <Pencil size={14} />
+                </button>
+                <button
+                  type="button"
+                  title="Deletar Departamento"
+                  onClick={() => onDelete(codigo)}
+                  className={sharedStyles.btnTableDelete}
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            </td>
+          </tr>
+        );
+      }}
     />
   );
 }

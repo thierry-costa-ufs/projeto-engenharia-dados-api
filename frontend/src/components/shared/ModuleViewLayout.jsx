@@ -41,7 +41,14 @@ export default function ModuleViewLayout({
 
   const extrairChavePrimaria = (item) => {
     if (!item) return null;
-    return item.idVinculo || item.idCurso || item.matricula || item.cpf || item.id || item.idRelacional;
+
+    // para a entidade Cursa: se houver matrícula e turma juntas, cria a URL completa
+    if (item.matEstudante && item.idTurma) {
+      return `${item.matEstudante}/${item.idTurma}`;
+    }
+
+    // mantém as lógicas antigas para as outras entidades do sistema
+    return item.idVinculo || item.idCurso || item.codDepto || item.matEstudante || item.matricula || item.cpf || item.id || item.idRelacional;
   };
 
   const listaExibida = bancoAtivo === 'postgres'
@@ -157,6 +164,7 @@ export default function ModuleViewLayout({
             isEditing={!!itemEmEdicao}
             sharedStyles={styles}
             onCancel={handleFecharModal}
+            onSuccess={sincronizarDados}
           />
         </Modal>
       )}

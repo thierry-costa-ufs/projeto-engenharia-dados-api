@@ -4,7 +4,7 @@ import { disciplinaSchema } from '../../utils/validators';
 import ResilienceModal from '../shared/ResilienceModal';
 import theme from '../../styles/FormTheme.module.css';
 
-export default function DisciplinaForm({ onSubmit, initialData, isEditing, onCancel }) {
+export default function DisciplinaForm({ onSubmit, initialData, isEditing, onCancel, onSuccess }) {
   const [formData, setFormData] = useState({
     cod_disc: '', nome: '', pre_req: '', creditos: '', depto_responsavel: ''
   });
@@ -20,7 +20,8 @@ export default function DisciplinaForm({ onSubmit, initialData, isEditing, onCan
         nome: initialData.nome || '',
         pre_req: initialData.pre_req || '',
         creditos: initialData.creditos || '',
-        depto_responsavel: initialData.idDepartamento || initialData.depto_responsavel || ''
+        // A CORREÇÃO AQUI: adicionamos o initialData.codDepartamento
+        depto_responsavel: initialData.codDepartamento || initialData.idDepartamento || initialData.depto_responsavel || ''
       });
     } else {
       setFormData({ cod_disc: '', nome: '', pre_req: '', creditos: '', depto_responsavel: '' });
@@ -49,10 +50,15 @@ export default function DisciplinaForm({ onSubmit, initialData, isEditing, onCan
     }
 
     const payload = {
+
+      id: validacao.data.cod_disc,
+
       cod_disc: validacao.data.cod_disc,
+      codigoDisciplina: validacao.data.cod_disc,
       nome: validacao.data.nome,
       pre_req: validacao.data.pre_req,
       creditos: validacao.data.creditos,
+      codDepartamento: validacao.data.depto_responsavel,
       depto_responsavel: validacao.data.depto_responsavel
     };
 
@@ -60,9 +66,20 @@ export default function DisciplinaForm({ onSubmit, initialData, isEditing, onCan
       await onSubmit(payload);
     } else {
       const resultado = await executarEscritaDupla(payload);
-      if (resultado.status === 'SUCESSO' || resultado.status === 'FALHA_PARCIAL') {
+
+      // se o Java devolveu dados e não é um erro, fecha o modal!
+      if (!resultado || resultado?.status !== 'ERRO') {
         setFormData({ cod_disc: '', nome: '', pre_req: '', creditos: '', depto_responsavel: '' });
-        if (resultado.status === 'SUCESSO') onSubmit({ status: 'SUCESSO' });
+
+        // fecha a janela
+        if (onCancel) {
+          onCancel();
+        }
+
+        // atualiza a tabela em segundo plano
+        if (onSuccess) {
+          onSuccess();
+        }
       }
     }
   };

@@ -54,13 +54,13 @@ public class EstudanteService{
         Estudante estudante = relationalRepository.findById(matricula).
                 orElseThrow(() -> new ResourceNotFoundException("Estudante " + matricula + " não encontrado"));
 
-        estudante.setMc(request.mc());
+        EstudanteMapper.updateEntity(request, estudante);
         relationalRepository.save(estudante);
 
         EstudanteDocument document = noSqlRepository.findByMatEstudante(matricula).
                 orElseThrow(() -> new ResourceNotFoundException("Estudante " + matricula + " não encontrado"));
 
-        document.setMc(request.mc());
+        EstudanteMapper.updateDocument(request, document);
         noSqlRepository.save(document);
 
         return EstudanteMapper.toResponse(document);

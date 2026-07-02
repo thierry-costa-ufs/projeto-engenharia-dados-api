@@ -12,8 +12,8 @@ const NAVIGATION_SCHEMA = [
   { id: 'vinculos', label: 'Vínculos', icon: Link2 },
   { id: 'usuarios', label: 'Usuários', icon: Users },
   { id: 'professores', label: 'Professores', icon: Briefcase },
-  { id: 'estudantes', label: 'Estudantes [WIP]', icon: GraduationCap },
-  { id: 'departamentos', label: 'Departamentos [WIP]', icon: Building2 },
+  { id: 'estudantes', label: 'Estudantes', icon: GraduationCap },
+  { id: 'departamentos', label: 'Departamentos', icon: Building2 },
   { id: 'disciplinas', label: 'Disciplinas [WIP]', icon: BookMarked },
   { id: 'turmas', label: 'Turmas [WIP]', icon: Presentation },
   { id: 'cursa', label: 'Cursa [WIP]', icon: ClipboardCheck }
