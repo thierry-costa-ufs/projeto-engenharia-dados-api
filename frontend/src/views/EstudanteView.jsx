@@ -5,12 +5,12 @@ import { EstudanteForm } from '../components/forms';
 export default function EstudantesView() {
   return (
     <ModuleViewLayout
-      title="Modulo de Estudantes"
-      subtitle="Controle de registros academicos ativos, media de conclusao e ano de ingresso."
+      title="Módulo de Estudantes"
+      subtitle="Controle de registros acadêmicos ativos, média de conclusão e ano de ingresso."
       formTitle="Cadastrar Novo Estudante"
       endpoint="estudantes"
       FormComponent={EstudanteForm}
-      tableHeaders={['Matricula', 'CPF do Usuario', 'Media', 'Ano de Ingresso']}
+      tableHeaders={['Matrícula', 'CPF do Usuário', 'Média (MC)', 'Ano de Ingresso']}
       renderRow={(estudante, idx, sharedStyles, onEdit, onDelete) => {
         const matricula = estudante.matEstudante || estudante.matricula;
 

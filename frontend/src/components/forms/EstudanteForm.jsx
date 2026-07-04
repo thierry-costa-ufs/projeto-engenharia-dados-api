@@ -67,7 +67,7 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
     <div className={theme.formContainer}>
       <form onSubmit={handleLocalSubmit} className={theme.form}>
         <div className={theme.row}>
-          <div style={{ flex: 1 }}>
+          <div className={theme.column} style={{ flex: 1 }}>
             <input
               type="text"
               name="matEstudante"
@@ -81,7 +81,7 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
             {errors.matEstudante && <span className={theme.errorText}>{errors.matEstudante}</span>}
           </div>
 
-          <div style={{ flex: 1 }}>
+          <div className={theme.column} style={{ flex: 1 }}>
             <input
               type="number"
               name="cpf"
@@ -96,7 +96,7 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
         </div>
 
         <div className={theme.row}>
-          <div style={{ flex: 1 }}>
+          <div className={theme.column} style={{ flex: 1 }}>
             <input
               type="number"
               step="0.1"
@@ -108,7 +108,7 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
             {errors.mc && <span className={theme.errorText}>{errors.mc}</span>}
           </div>
 
-          <div style={{ flex: 1 }}>
+          <div className={theme.column} style={{ flex: 1 }}>
             <input
               type="number"
               name="anoIngresso"

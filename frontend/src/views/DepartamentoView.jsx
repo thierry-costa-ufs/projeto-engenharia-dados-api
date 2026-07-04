@@ -14,12 +14,12 @@ export default function DepartamentosView() {
 
   return (
     <ModuleViewLayout
-      title="Modulo de Departamentos"
-      subtitle="Gerenciamento dos departamentos academicos, chefias, orcamentos e comissoes."
+      title="Módulo de Departamentos"
+      subtitle="Gerenciamento dos departamentos acadêmicos, chefias, orçamentos e comissões."
       formTitle="Cadastrar Novo Departamento"
       endpoint="departamentos"
       FormComponent={DepartamentoForm}
-      tableHeaders={['Codigo', 'Nome', 'Chefe', 'Orcamento', 'Comissao']}
+      tableHeaders={['Código', 'Nome', 'Chefe', 'Orçamento', 'Comissão']}
       renderRow={(departamento, idx, sharedStyles, onEdit, onDelete) => {
         const codigo = departamento.codDepto || departamento.idDepartamento;
 
@@ -29,7 +29,7 @@ export default function DepartamentosView() {
             <td>{departamento.nome}</td>
             <td className={sharedStyles.textMono}>{departamento.chefe || '-'}</td>
             <td>{formatarMoeda(departamento.orcamento)}</td>
-            <td>{formatarMoeda(departamento.comissal)}</td>
+            <td>{formatarMoeda(departamento.comissao)}</td>
             <td>
               <div className={sharedStyles.actionsCell}>
                 <button

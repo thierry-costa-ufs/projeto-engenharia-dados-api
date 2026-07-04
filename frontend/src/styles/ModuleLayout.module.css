@@ -155,5 +155,48 @@
   flex-direction: column;
   gap: 4px;
 }
+
+/* Texto monospace para campos técnicos (matrícula, código, CPF) */
+.textMono {
+  font-family: ui-monospace, Consolas, 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  letter-spacing: 0.03em;
+}
+
+/* Variante monospace com destaque em negrito (ex: média final) */
+.textMonoBold {
+  font-family: ui-monospace, Consolas, 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #f8fafc;
+  letter-spacing: 0.03em;
+  font-weight: 700;
+}
+
+/* Estado vazio da tabela */
+.emptyState {
+  text-align: center;
+  padding: 48px 16px;
+  color: #475569;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Status de situação acadêmica */
+.statusAprovado {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.statusReprovado {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.statusEmCurso {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { 100% { transform: rotate(360deg); } }

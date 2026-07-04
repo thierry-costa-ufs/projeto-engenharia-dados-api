@@ -119,7 +119,7 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
         {errors.nome && <span className={theme.errorText}>{errors.nome}</span>}
 
         <div className={theme.row}>
-          <div style={{ flex: 1 }}>
+          <div className={theme.column} style={{ flex: 1 }}>
             <input
               type="text"
               name="login"
@@ -131,7 +131,7 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
             {errors.login && <span className={theme.errorText}>{errors.login}</span>}
           </div>
 
-          <div style={{ flex: 1 }}>
+          <div className={theme.column} style={{ flex: 1 }}>
             <input
               type="password"
               name="senha"

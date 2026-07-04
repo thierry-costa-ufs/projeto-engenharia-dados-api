@@ -90,47 +90,6 @@
   overflow: hidden;
 }
 
-.topHeader {
-  height: 70px;
-  background-color: #1e293b;
-  border-bottom: 1px solid #334155;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 32px;
-  flex-shrink: 0;
-}
-
-.breadCrumb {
-  color: #64748b;
-  font-size: 0.875rem;
-}
-
-.breadCrumbActive {
-  color: #3b82f6;
-  font-weight: 600;
-}
-
-.userProfile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #cbd5e1;
-  font-size: 0.9rem;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  background-color: #3b82f6;
-  color: #ffffff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-}
-
 .contentBody {
   flex: 1;
   padding: 32px;

@@ -35,16 +35,18 @@ export default function CursaView() {
             <td className={sharedStyles.textMono}>{formatarNota(registro.nota1)}</td>
             <td className={sharedStyles.textMono}>{formatarNota(registro.nota2)}</td>
             <td className={sharedStyles.textMono}>{formatarNota(registro.nota3)}</td>
-            <td className={sharedStyles.textMono} style={{ fontWeight: '700' }}>
+            <td className={sharedStyles.textMonoBold}>
               {formatarNota(registro.media)}
             </td>
             <td>{registro.frequencia ?? registro.faltas ?? 0}</td>
             <td>
-              <span style={{
-                color: registro.situacao === 'Aprovado' ? '#10b981' :
-                       registro.situacao === 'Reprovado' ? '#ef4444' : '#f59e0b',
-                fontWeight: '600'
-              }}>
+              <span className={
+                registro.situacao === 'Aprovado'
+                  ? sharedStyles.statusAprovado
+                  : registro.situacao === 'Reprovado'
+                    ? sharedStyles.statusReprovado
+                    : sharedStyles.statusEmCurso
+              }>
                 {registro.situacao || 'Em Curso'}
               </span>
             </td>

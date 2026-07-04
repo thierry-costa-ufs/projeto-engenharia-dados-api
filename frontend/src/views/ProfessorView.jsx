@@ -36,7 +36,7 @@ export default function ProfessorView() {
             <td>{professor.cpf}</td>
             <td>{professor.departamento}</td>
             <td>{professor.formacao}</td>
-            <td>{formatarData(professor.dataAdmissao || professor.data_andmissao)}</td>
+            <td>{formatarData(professor.dataAdmissao || professor.data_admissao)}</td>
             <td>{professor.jornada || professor.tipo_jornada_trabalho}</td>
             <td>
               {professor.salario

@@ -193,3 +193,12 @@
 .btnSubmitEdicao:hover {
   background-color: #2563eb;
 }
+
+/* Mensagens de erro de validação (Zod) */
+.errorText {
+  display: block;
+  font-size: 0.78rem;
+  color: #f87171;
+  margin-top: 4px;
+  font-weight: 500;
+}

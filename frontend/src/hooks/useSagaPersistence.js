@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { api } from '../utils/api';
 
-export function useSagaPersistence(endpoint, onSucess) {
+export function useSagaPersistence(endpoint, onSuccess) {
   const [modalAberto, setModalAberto] = useState(false);
   const [idPendente, setIdPendente] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ export function useSagaPersistence(endpoint, onSucess) {
           return { status: 'FALHA_PARCIAL' };
         } else {
           alert('Registro persistido com sucesso em ambos os bancos!');
-          if (onSucess) onSucess();
+          if (onSuccess) onSuccess();
           return { status: 'SUCESSO' };
         }
       } else {
@@ -47,14 +47,14 @@ export function useSagaPersistence(endpoint, onSucess) {
     } finally {
       setModalAberto(false);
       setIdPendente(null);
-      if (onSucess) onSucess();
+      if (onSuccess) onSuccess();
     }
   };
 
   const manterApenasNoPostgres = () => {
     setModalAberto(false);
     setIdPendente(null);
-    if (onSucess) onSucess();
+    if (onSuccess) onSuccess();
   };
 
   return { modalAberto, loading, executarEscritaDupla, executarRollback, manterApenasNoPostgres };
