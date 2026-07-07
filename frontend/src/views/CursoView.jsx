@@ -5,7 +5,7 @@ import { CursoForm } from '../components/forms';
 export default function CursoView() {
   const formatarEnum = (valor) => {
     if (!valor) return '—';
-    return valor.replace('_', ' ').toLowerCase().replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+    return valor.replaceAll('_', ' ').toLowerCase().replace(/(^\w|\s\w)/g, m => m.toUpperCase());
   };
 
   return (
