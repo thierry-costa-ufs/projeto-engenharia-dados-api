@@ -1,31 +1,45 @@
 package com.ufs.engdados.domain.turma.dto;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public record TurmaDTO(
+public interface TurmaDTO {
 
-        @JsonProperty("idTurma")
-        @JsonAlias("id_turma")
-        Integer idTurma,
+    record Request(
+            @NotBlank(message = "O código da disciplina é obrigatório")
+            @Size(max = 8, message = "O código da disciplina deve ter no máximo 8 caracteres")
+            @JsonProperty("cod_disc")
+            String codDisc,
 
-        @JsonProperty("codigoDisciplina") // o que a tabela lê
-        @JsonAlias({"cod_disc", "codDisc"}) // o que o formulário envia
-        String codDisc,
+            @NotNull(message = "O número da turma é obrigatório")
+            Integer numero,
 
-        @JsonProperty("codigoTurma") // o que a tabela lê
-        @JsonAlias("numero") // o que o formulário envia
-        Integer numero,
+            @NotNull(message = "O ano é obrigatório")
+            Integer ano,
 
-        Integer ano,
+            @NotNull(message = "O semestre é obrigatório")
+            Integer semestre
+    ) {}
 
-        Integer semestre
-) {
-    // para o botão de editar e deletar do React funcionar
-    @JsonProperty("id")
-    public Integer getId() {
-        return idTurma;
-    }
+    record Response(
+            String mongoId,
+
+            @JsonProperty("id") Integer id,
+            Integer idTurma,
+
+            @JsonProperty("codigoTurma") Integer codigoTurma,
+            Integer numero,
+
+            @JsonProperty("codigoDisciplina") String codigoDisciplina,
+            @JsonProperty("codDisciplina") String codDisciplina,
+            @JsonProperty("cod_disc") String codDisc,
+
+            Integer ano,
+            Integer semestre,
+            String matriculaProfessor,
+            String horario,
+            String sala
+    ) {}
 }

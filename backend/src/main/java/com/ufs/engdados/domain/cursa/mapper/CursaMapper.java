@@ -3,39 +3,69 @@ package com.ufs.engdados.domain.cursa.mapper;
 import com.ufs.engdados.domain.cursa.dto.CursaDTO;
 import com.ufs.engdados.domain.cursa.model.nosql.CursaDocument;
 import com.ufs.engdados.domain.cursa.model.relational.Cursa;
+import com.ufs.engdados.domain.cursa.model.relational.CursaId;
 import com.ufs.engdados.domain.estudante.model.relational.Estudante;
 import com.ufs.engdados.domain.turma.model.relational.Turma;
-import org.springframework.stereotype.Component;
 
-@Component
 public class CursaMapper {
 
-    public Cursa toEntity(CursaDTO dto, Estudante estudante, Turma turma) {
+    public static Cursa toEntity(CursaDTO.Request request, Estudante estudante, Turma turma) {
         Cursa entity = new Cursa();
         entity.setEstudante(estudante);
         entity.setTurma(turma);
-        entity.setNota(dto.nota());
+        entity.setNota(request.nota());
+
         // garante o preenchimento da chave composta:
-        entity.getId().setMatEstudante(dto.matEstudante());
-        entity.getId().setIdTurma(dto.idTurma());
+        CursaId cursaId = new CursaId(request.matEstudante(), request.idTurma());
+        entity.setId(cursaId);
+
         return entity;
     }
 
-    public CursaDocument toDocument(CursaDTO dto) {
+    public static CursaDocument toDocument(CursaDTO.Request request) {
         CursaDocument doc = new CursaDocument();
-        doc.setId(dto.matEstudante() + "_" + dto.idTurma());
-        doc.setMatEstudante(dto.matEstudante());
-        doc.setIdTurma(dto.idTurma());
-        doc.setNota(dto.nota());
+        doc.setId(request.matEstudante() + "_" + request.idTurma());
+        doc.setMatEstudante(request.matEstudante());
+        doc.setIdTurma(request.idTurma());
+        doc.setNota(request.nota());
         return doc;
     }
 
-    // converte do banco para DTO
-    public CursaDTO toDto(Cursa entity) {
-        return new CursaDTO(
+    public static CursaDTO.Response toResponse(Cursa entity) {
+        if (entity == null) return null;
+
+        String idVirtual = entity.getId().getMatEstudante() + "/" + entity.getId().getIdTurma();
+
+        return new CursaDTO.Response(
+                null,
+                idVirtual,
                 entity.getId().getMatEstudante(),
                 entity.getId().getIdTurma(),
                 entity.getNota()
         );
+    }
+
+    public static CursaDTO.Response toResponse(CursaDocument doc) {
+        if (doc == null) return null;
+
+        String idVirtual = doc.getMatEstudante() + "/" + doc.getIdTurma();
+
+        return new CursaDTO.Response(
+                doc.getId(),
+                idVirtual,
+                doc.getMatEstudante(),
+                doc.getIdTurma(),
+                doc.getNota()
+        );
+    }
+
+    public static void updateEntity(CursaDTO.Request request, Cursa entity) {
+        if (request == null || entity == null) return;
+        entity.setNota(request.nota());
+    }
+
+    public static void updateDocument(CursaDTO.Request request, CursaDocument doc) {
+        if (request == null || doc == null) return;
+        doc.setNota(request.nota());
     }
 }
