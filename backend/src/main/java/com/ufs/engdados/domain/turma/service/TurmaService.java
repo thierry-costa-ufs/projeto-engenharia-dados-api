@@ -7,101 +7,89 @@ import com.ufs.engdados.domain.turma.model.nosql.TurmaDocument;
 import com.ufs.engdados.domain.turma.model.relational.Turma;
 import com.ufs.engdados.domain.turma.repository.nosql.TurmaNoSqlRepository;
 import com.ufs.engdados.domain.turma.repository.relational.TurmaRelationalRepository;
+import com.ufs.engdados.infrastructure.exception.ResourceNotFoundException;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class TurmaService {
 
-    private final TurmaRelationalRepository relRepository;
+    private final TurmaRelationalRepository relationalRepository;
     private final TurmaNoSqlRepository noSqlRepository;
-    private final TurmaMapper mapper;
     private final EntityManager entityManager;
 
-    public TurmaService(TurmaRelationalRepository relRepository,
+    public TurmaService(TurmaRelationalRepository relationalRepository,
                         TurmaNoSqlRepository noSqlRepository,
-                        TurmaMapper mapper,
                         EntityManager entityManager) {
-        this.relRepository = relRepository;
+        this.relationalRepository = relationalRepository;
         this.noSqlRepository = noSqlRepository;
-        this.mapper = mapper;
         this.entityManager = entityManager;
     }
 
     @Transactional
-    public void salvarTurma(TurmaDTO dto) {
+    public TurmaDTO.Response create(TurmaDTO.Request request) {
         Disciplina disciplina = null;
-        if (dto.codDisc() != null) {
-            disciplina = entityManager.getReference(Disciplina.class, dto.codDisc());
+        if (request.codDisc() != null) {
+            disciplina = entityManager.getReference(Disciplina.class, request.codDisc());
         }
 
-        Turma entity = mapper.toEntity(dto, disciplina);
-        entity = relRepository.save(entity);
+        Turma entity = TurmaMapper.toEntity(request, disciplina);
+        entity = relationalRepository.save(entity);
 
         // força o PostgreSQL a gravar e gerar o ID imediatamente
         entityManager.flush();
 
-        TurmaDocument document = mapper.toDocument(dto);
-        // entity.getIdTurma() não está vazio
-        document.setIdTurma(entity.getIdTurma());
+        TurmaDocument document = TurmaMapper.toDocument(request, entity.getIdTurma());
+        TurmaDocument salvoNoSql = noSqlRepository.save(document);
 
-        noSqlRepository.save(document);
+        return TurmaMapper.toResponse(salvoNoSql);
     }
 
-    public List<TurmaDTO> listarTodasRelacional() {
-        return relRepository.findAll().stream()
-                .map(mapper::toDto)
-                .toList();
+    @Transactional(readOnly = true)
+    public Page<TurmaDTO.Response> findAllRelational(Pageable pageable) {
+        Page<Turma> turmas = relationalRepository.findAll(pageable);
+        return turmas.map(TurmaMapper::toResponse);
     }
 
-    public List<TurmaDTO> listarTodasNoSql() {
-        return noSqlRepository.findAll().stream()
-                .map(doc -> new TurmaDTO(
-                        doc.getIdTurma(),
-                        doc.getCodDisc(),
-                        doc.getNumero(),
-                        doc.getAno() != null ? doc.getAno().intValue() : null,
-                        doc.getSemestre() != null ? doc.getSemestre().intValue() : null
-                ))
-                .toList();
+    @Transactional(readOnly = true)
+    public Page<TurmaDTO.Response> findAllNoSql(Pageable pageable) {
+        Page<TurmaDocument> turmas = noSqlRepository.findAll(pageable);
+        return turmas.map(TurmaMapper::toResponse);
     }
 
     @Transactional
-    public void atualizarTurma(Integer idTurma, TurmaDTO dto) {
-        Turma entity = relRepository.findById(idTurma)
-                .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Turma não encontrada"));
+    public TurmaDTO.Response update(Integer idTurma, TurmaDTO.Request request) {
+        Turma entity = relationalRepository.findById(idTurma)
+                .orElseThrow(() -> new ResourceNotFoundException("Turma " + idTurma + " não encontrada"));
 
-        entity.setNumero(dto.numero());
-        entity.setAno(dto.ano() != null ? dto.ano().shortValue() : null);
-        entity.setSemestre(dto.semestre() != null ? dto.semestre().shortValue() : null);
-
-        if (dto.codDisc() != null) {
-            entity.setDisciplina(entityManager.getReference(com.ufs.engdados.domain.disciplina.model.relational.Disciplina.class, dto.codDisc()));
+        Disciplina disciplina = null;
+        if (request.codDisc() != null) {
+            disciplina = entityManager.getReference(Disciplina.class, request.codDisc());
         }
 
-        relRepository.save(entity);
+        TurmaMapper.updateEntity(request, entity, disciplina);
+        relationalRepository.save(entity);
 
-        // atualização no MongoDB
-        noSqlRepository.findById(idTurma).ifPresent(doc -> {
-            doc.setCodDisc(dto.codDisc());
-            doc.setNumero(dto.numero());
-            doc.setAno(dto.ano() != null ? dto.ano().shortValue() : null);
-            doc.setSemestre(dto.semestre() != null ? dto.semestre().shortValue() : null);
-            noSqlRepository.save(doc);
-        });
+        TurmaDocument document = noSqlRepository.findById(idTurma)
+                .orElseThrow(() -> new ResourceNotFoundException("Turma " + idTurma + " não encontrada no MongoDB"));
+
+        TurmaMapper.updateDocument(request, document);
+        noSqlRepository.save(document);
+
+        return TurmaMapper.toResponse(document);
     }
 
     @Transactional
-    public void deletarTurma(Integer idTurma) {
-        // apaga no banco relacional (PostgreSQL)
-        relRepository.deleteById(idTurma);
+    public void delete(Integer idTurma) {
+        relationalRepository.findById(idTurma)
+                .orElseThrow(() -> new ResourceNotFoundException("Turma " + idTurma + " não encontrada"));
+        relationalRepository.deleteById(idTurma);
 
-        // busca o documento exato no banco NoSQL (MongoDB) e força a exclusão
-        noSqlRepository.findById(idTurma).ifPresent(documento -> {
-            noSqlRepository.delete(documento);
-        });
+        noSqlRepository.findById(idTurma)
+                .orElseThrow(() -> new ResourceNotFoundException("Turma " + idTurma + " não encontrada no MongoDB"));
+        noSqlRepository.deleteById(idTurma);
     }
 }

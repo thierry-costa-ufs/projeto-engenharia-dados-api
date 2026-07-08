@@ -2,11 +2,13 @@ package com.ufs.engdados.domain.cursa.controller;
 
 import com.ufs.engdados.domain.cursa.dto.CursaDTO;
 import com.ufs.engdados.domain.cursa.service.CursaService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/cursa")
@@ -20,30 +22,27 @@ public class CursaController {
     }
 
     @PostMapping
-    public ResponseEntity<CursaDTO> criarCursa(@RequestBody CursaDTO dto) {
-        service.salvarCursa(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+    public ResponseEntity<CursaDTO.Response> criarCursa(@Valid @RequestBody CursaDTO.Request request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
     }
 
-    // rotas de Leitura
     @GetMapping("/relacional")
-    public ResponseEntity<List<CursaDTO>> listarTodasRelacional() {
-        return ResponseEntity.ok(service.listarTodasRelacional());
+    public ResponseEntity<Page<CursaDTO.Response>> listarTodasRelacional(@PageableDefault(size = 100) Pageable pageable) {
+        return ResponseEntity.ok(service.findAllRelational(pageable));
     }
 
     @GetMapping("/nosql")
-    public ResponseEntity<List<CursaDTO>> listarTodasNoSql() {
-        return ResponseEntity.ok(service.listarTodasNoSql());
+    public ResponseEntity<Page<CursaDTO.Response>> listarTodasNoSql(@PageableDefault(size = 100) Pageable pageable) {
+        return ResponseEntity.ok(service.findAllNoSql(pageable));
     }
 
     @PutMapping("/{matEstudante}/{idTurma}")
-    public ResponseEntity<CursaDTO> atualizarCursa(
+    public ResponseEntity<CursaDTO.Response> atualizarCursa(
             @PathVariable("matEstudante") String matEstudante,
             @PathVariable("idTurma") Integer idTurma,
-            @RequestBody CursaDTO dto) {
+            @Valid @RequestBody CursaDTO.Request request) {
 
-        service.atualizarCursa(matEstudante, idTurma, dto);
-        return ResponseEntity.ok(dto); // Devolve o DTO
+        return ResponseEntity.ok(service.update(matEstudante, idTurma, request));
     }
 
     @DeleteMapping("/{matEstudante}/{idTurma}")
@@ -51,7 +50,7 @@ public class CursaController {
             @PathVariable("matEstudante") String matEstudante,
             @PathVariable("idTurma") Integer idTurma) {
 
-        service.deletarCursa(matEstudante, idTurma);
+        service.delete(matEstudante, idTurma);
         return ResponseEntity.noContent().build();
     }
 }

@@ -14,9 +14,9 @@ const NAVIGATION_SCHEMA = [
   { id: 'professores', label: 'Professores', icon: Briefcase },
   { id: 'estudantes', label: 'Estudantes', icon: GraduationCap },
   { id: 'departamentos', label: 'Departamentos', icon: Building2 },
-  { id: 'disciplinas', label: 'Disciplinas [WIP]', icon: BookMarked },
-  { id: 'turmas', label: 'Turmas [WIP]', icon: Presentation },
-  { id: 'cursa', label: 'Cursa [WIP]', icon: ClipboardCheck }
+  { id: 'disciplinas', label: 'Disciplinas', icon: BookMarked },
+  { id: 'turmas', label: 'Turmas', icon: Presentation },
+  { id: 'cursa', label: 'Cursa', icon: ClipboardCheck }
 ];
 
 export default function DashboardLayout({ activeView, onViewChange, children }) {
