@@ -33,7 +33,7 @@ public class VinculoService {
     @Transactional
     public void consertarContadorDaAWS() {
         try {
-            String sql = "SELECT setval(pg_get_serial_sequence('universidade.vinculo', 'idvinculo'), COALESCE((SELECT MAX(id_vinculo) FROM universidade.vinculo), 1))";
+            String sql = "SELECT setval(pg_get_serial_sequence('universidade.vinculo', 'id_vinculo'), COALESCE((SELECT MAX(id_vinculo) FROM universidade.vinculo), 1))";
             entityManager.createNativeQuery(sql).getSingleResult();
             System.out.println("Contador do PostgreSQL (Vinculo) sincronizado com sucesso!");
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class VinculoService {
         VinculoMapper.updateEntity(dto, vinculoPg);
         relationalRepository.save(vinculoPg);
 
-        VinculoDocument documentpg = noSqlRepository.findByidVinculo(idVinculo)
+        VinculoDocument documentpg = noSqlRepository.findByIdVinculo(idVinculo)
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para o ID: " + idVinculo));
 
         VinculoMapper.updateDocument(dto, documentpg);
@@ -93,7 +93,7 @@ public class VinculoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para o ID: " + idVinculo));
         relationalRepository.deleteById(idVinculo);
 
-        noSqlRepository.findByidVinculo(idVinculo)
+        noSqlRepository.findByIdVinculo(idVinculo)
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo não encontrado para o ID: " + idVinculo));
         noSqlRepository.deleteByIdVinculo(idVinculo);
     }
