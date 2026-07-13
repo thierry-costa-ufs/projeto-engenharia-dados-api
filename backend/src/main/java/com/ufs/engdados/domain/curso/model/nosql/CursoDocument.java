@@ -15,22 +15,17 @@ public class CursoDocument {
     @Id
     private String id;
 
-    @Field
+    @Field(name = "idcurso")
     private Integer idCurso;
-
-    @Field
+    @Field(name = "nome")
     private String nome;
-
-    @Field
+    @Field(name = "grau")
     private TipoGrau grau;
-
-    @Field
+    @Field(name = "turno")
     private TipoTurno turno;
-
-    @Field
+    @Field(name = "campus")
     private String campus;
-
-    @Field
+    @Field(name = "nivel")
     private TipoNivel nivel;
 
     // Construtores, Getters e Setters

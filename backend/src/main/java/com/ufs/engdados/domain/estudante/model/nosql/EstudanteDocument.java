@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection = "estudante")
+@Document(collection = "estudantes")
 public class EstudanteDocument{
 
     @Id
@@ -12,13 +12,10 @@ public class EstudanteDocument{
 
     @Field("mat_estudante")
     private String matEstudante;
-
     @Field("cpf")
     private Long cpf;
-
     @Field("mc")
     private Double mc;
-
     @Field("ano_ingresso")
     private Integer anoIngresso;
 

@@ -38,7 +38,6 @@ public class DepartamentoService{
         return departamentos.map(departamento -> DepartamentoMapper.toResponse(departamento));
     }
 
-    @Transactional(readOnly = true)
     public Page<DepartamentoDTO.Response> findAllNoSql(Pageable pageable){
         Page<DepartamentoDocument> departamentos = noSqlRepository.findAll(pageable);
 

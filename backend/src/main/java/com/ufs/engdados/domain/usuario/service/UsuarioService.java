@@ -38,7 +38,6 @@ public class UsuarioService {
         return usuarios.map(usuario -> UsuarioMapper.toResponse(usuario));
     }
 
-    @Transactional(readOnly = true)
     public Page<UsuarioDTO.Response> findAllNoSql(Pageable pageable) {
         Page<UsuarioDocument> usuarios = noSqlRepository.findAll(pageable);
 

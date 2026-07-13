@@ -54,7 +54,6 @@ public class TurmaService {
         return turmas.map(TurmaMapper::toResponse);
     }
 
-    @Transactional(readOnly = true)
     public Page<TurmaDTO.Response> findAllNoSql(Pageable pageable) {
         Page<TurmaDocument> turmas = noSqlRepository.findAll(pageable);
         return turmas.map(TurmaMapper::toResponse);

@@ -40,7 +40,6 @@ public class ProfessorService {
         return professores.map(professor -> ProfessorMapper.toResponse(professor));
     }
 
-    @Transactional(readOnly = true)
     public Page<ProfessorDTO.Response> findAllNoSql(Pageable pageable) {
         Page<ProfessorDocument> professores = noSqlRepository.findAll(pageable);
 
