@@ -42,6 +42,7 @@ public class CursoMapper {
                 r.getNivel()
         );
     }
+
     public static CursoDTO.Response toResponse(CursoDocument n) {
         if (n == null) return null;
         return new CursoDTO.Response(
@@ -57,7 +58,6 @@ public class CursoMapper {
 
     public static void updateEntity(CursoDTO.Request dto, Curso ent) {
         if (dto == null || ent == null) return;
-        ent.setIdCurso(dto.idCurso());
         ent.setNome(dto.nome());
         ent.setGrau(dto.grau());
         ent.setTurno(dto.turno());
@@ -67,7 +67,6 @@ public class CursoMapper {
 
     public static void updateDocument(CursoDTO.Request dto, CursoDocument ent) {
         if (dto == null || ent == null) return;
-        ent.setIdCurso(dto.idCurso());
         ent.setNome(dto.nome());
         ent.setGrau(dto.grau());
         ent.setTurno(dto.turno());

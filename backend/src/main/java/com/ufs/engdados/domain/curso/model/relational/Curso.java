@@ -7,6 +7,7 @@ import com.ufs.engdados.domain.curso.enums.converter.TipoGrauConverter;
 import com.ufs.engdados.domain.curso.enums.converter.TipoNivelConverter;
 import com.ufs.engdados.domain.curso.enums.converter.TipoTurnoConverter;
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnTransformer;
 
 @Entity
 @Table(name = "curso", schema = "universidade", uniqueConstraints = {
@@ -24,10 +25,12 @@ public class Curso {
 
     @Convert(converter = TipoGrauConverter.class)
     @Column(columnDefinition = "universidade.tipo_grau")
+    @ColumnTransformer(write = "?::universidade.tipo_grau")
     private TipoGrau grau;
 
     @Convert(converter = TipoTurnoConverter.class)
     @Column(nullable = false, columnDefinition = "universidade.tipo_turno")
+    @ColumnTransformer(write = "?::universidade.tipo_turno")
     private TipoTurno turno;
 
     @Column(length = 100)
@@ -35,6 +38,7 @@ public class Curso {
 
     @Convert(converter = TipoNivelConverter.class)
     @Column(columnDefinition = "universidade.tipo_nivel")
+    @ColumnTransformer(write = "?::universidade.tipo_nivel")
     private TipoNivel nivel;
 
     public Curso() {

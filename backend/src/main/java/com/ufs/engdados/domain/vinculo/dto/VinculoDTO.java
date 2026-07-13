@@ -9,7 +9,6 @@ import java.time.LocalDate;
 public interface VinculoDTO {
 
     record Request(
-            @NotNull(message = "O id é obrigatório")
             Long idVinculo,
 
             @Size(max = 7, message = "A matrícula deve ter no máximo 7 caracteres")

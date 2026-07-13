@@ -7,7 +7,7 @@ import theme from '../../styles/FormTheme.module.css';
 
 export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel }) {
   const [formData, setFormData] = useState({
-    cpf: '', nome: '', login: '', senha: '', emails: [''], telefones: ['']
+    cpf: '', nome: '', dataNascimento: '', login: '', senha: '', emails: [''], telefones: ['']
   });
   const [errors, setErrors] = useState({});
 
@@ -19,13 +19,14 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
       setFormData({
         cpf: initialData.cpf || initialData.id || '',
         nome: initialData.nome || '',
+        dataNascimento: initialData.dataNascimento || '',
         login: initialData.login || '',
         senha: '',
         emails: initialData.email && initialData.email.length > 0 ? initialData.email : [''],
         telefones: initialData.telefone && initialData.telefone.length > 0 ? initialData.telefone : ['']
       });
     } else {
-      setFormData({ cpf: '', nome: '', login: '', senha: '', emails: [''], telefones: [''] });
+      setFormData({ cpf: '', nome: '', dataNascimento: '', login: '', senha: '', emails: [''], telefones: [''] });
     }
     setErrors({});
   }, [initialData]);
@@ -57,56 +58,64 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
   };
 
   const handleLocalSubmit = async (e) => {
-    e.preventDefault();
+      e.preventDefault();
 
-    // Valida propriedades base via Zod
-    const validacao = usuarioSchema.safeParse(formData);
+      const validacao = usuarioSchema.safeParse(formData);
 
-    if (!validacao.success) {
-      const mapeamentoErros = {};
-      validacao.error.issues.forEach(issue => {
-        mapeamentoErros[issue.path[0]] = issue.message;
-      });
-      setErrors(mapeamentoErros);
-      return;
-    }
-
-    const payload = {
-      nome: validacao.data.nome,
-      login: validacao.data.login,
-      cpf: Number(validacao.data.cpf),
-      email: formData.emails.filter(emailStr => emailStr.trim() !== ''),
-      telefone: formData.telefones.filter(telStr => telStr.trim() !== '')
-    };
-
-    if (validacao.data.senha || !isEditing) {
-      payload.senha = validacao.data.senha;
-    }
-
-    if (isEditing) {
-      await onSubmit(payload);
-    } else {
-      const resultado = await executarEscritaDupla(payload);
-      if (resultado.status === 'SUCESSO' || resultado.status === 'FALHA_PARCIAL') {
-        setFormData({ cpf: '', nome: '', login: '', senha: '', emails: [''], telefones: [''] });
-        if (resultado.status === 'SUCESSO') onSubmit({ status: 'SUCESSO' });
+      if (!validacao.success) {
+        const mapeamentoErros = {};
+        validacao.error.issues.forEach(issue => {
+          mapeamentoErros[issue.path[0]] = issue.message;
+        });
+        setErrors(mapeamentoErros);
+        return;
       }
-    }
-  };
+
+      const payload = {
+        nome: validacao.data.nome,
+        login: validacao.data.login,
+        cpf: Number(validacao.data.cpf),
+        dataNascimento: validacao.data.dataNascimento || formData.dataNascimento,
+        email: formData.emails.filter(emailStr => emailStr.trim() !== ''),
+        telefone: formData.telefones.filter(telStr => telStr.trim() !== '')
+      };
+
+      if (validacao.data.senha || !isEditing) {
+        payload.senha = validacao.data.senha;
+      }
+
+      onSubmit(payload);
+    };
 
   return (
     <div className={theme.formContainer}>
       <form onSubmit={handleLocalSubmit} className={theme.form}>
-        <input
-          type="number"
-          name="cpf"
-          placeholder="CPF (Apenas números)"
-          value={formData.cpf}
-          onChange={handleBaseChange}
-          required
-          disabled={isEditing}
-        />
-        {errors.cpf && <span className={theme.errorText}>{errors.cpf}</span>}
+
+        <div className={theme.row}>
+          <div className={theme.column} style={{ flex: 1 }}>
+            <input
+              type="number"
+              name="cpf"
+              placeholder="CPF (Apenas números)"
+              value={formData.cpf}
+              onChange={handleBaseChange}
+              required
+              disabled={isEditing}
+            />
+            {errors.cpf && <span className={theme.errorText}>{errors.cpf}</span>}
+          </div>
+
+          <div className={theme.column} style={{ flex: 1 }}>
+            <input
+              type="date"
+              name="dataNascimento"
+              value={formData.dataNascimento}
+              onChange={handleBaseChange}
+              required
+            />
+            {errors.dataNascimento && <span className={theme.errorText}>{errors.dataNascimento}</span>}
+          </div>
+        </div>
 
         <input
           type="text"
@@ -144,7 +153,6 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
           </div>
         </div>
 
-        {/* Blocos de arrays dinâmicos mantidos intocados */}
         <div className={theme.dynamicSection}>
           <label className={theme.fieldLabel}>E-mails Vinculados</label>
           {formData.emails.map((email, idx) => (

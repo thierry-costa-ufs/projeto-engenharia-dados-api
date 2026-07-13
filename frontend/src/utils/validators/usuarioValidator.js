@@ -14,6 +14,6 @@ export const usuarioSchema = z.object({
     .min(4, 'O login deve ter pelo menos 4 caracteres')
     .max(45, 'O login não pode passar de 45 caracteres'), // VARCHAR(45)
   senha: z.string()
-    .min(6, 'A senha deve ter pelo menos 6 caracteres')
+    .min(8, 'A senha deve ter pelo menos 8 caracteres')
     .max(32, 'A senha não pode passar de 32 caracteres') // VARCHAR(32)
 });

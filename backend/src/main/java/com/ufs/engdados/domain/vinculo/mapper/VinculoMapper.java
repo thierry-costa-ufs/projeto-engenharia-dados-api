@@ -56,7 +56,6 @@ public class VinculoMapper {
 
     public static void updateEntity(VinculoDTO.Request dto, Vinculo vinculo){
         if(dto == null || vinculo == null) return;
-        vinculo.setIdVinculo(dto.idVinculo());
         vinculo.setMatEstudante(dto.matEstudante());
         vinculo.setCodCurso(dto.codCurso());
         vinculo.setDataEntrada(dto.dataEntrada());
@@ -66,7 +65,6 @@ public class VinculoMapper {
 
     public static void updateDocument(VinculoDTO.Request dto, VinculoDocument vinculo){
         if(dto == null || vinculo == null) return;
-        vinculo.setIdVinculo(dto.idVinculo());
         vinculo.setMatEstudante(dto.matEstudante());
         vinculo.setCodCurso(dto.codCurso());
         vinculo.setDataEntrada(dto.dataEntrada());

@@ -10,7 +10,6 @@ import jakarta.validation.constraints.Size;
 public interface CursoDTO {
 
         record Request(
-                @NotNull(message = "O id do curso é obrigatório")
                 Integer idCurso,
 
                 @NotBlank(message = "O nome do curso é obrigatório.")

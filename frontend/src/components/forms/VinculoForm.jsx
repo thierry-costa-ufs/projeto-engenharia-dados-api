@@ -66,7 +66,7 @@ export default function VinculoForm({ onSubmit, initialData, isEditing, onCancel
               placeholder="Ex: E101"
               value={formData.matEstudante}
               onChange={handleChange}
-              maxLength={7}
+              maxLength={4}
               required
             />
             {errors.matEstudante && <span className={theme.errorText}>{errors.matEstudante}</span>}
