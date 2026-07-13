@@ -25,6 +25,9 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO.Response create(UsuarioDTO.Request dto) {
+        if (dto.senha() == null || dto.senha().isBlank()) {
+            throw new IllegalArgumentException("A senha é obrigatória no cadastro.");
+        }
         relationalRepository.save(UsuarioMapper.toEntity(dto));
         UsuarioDocument doc = noSqlRepository.save(UsuarioMapper.toDocument(dto));
 

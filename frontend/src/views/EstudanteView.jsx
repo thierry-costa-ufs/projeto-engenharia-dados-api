@@ -1,8 +1,12 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import ModuleViewLayout from '../components/shared/ModuleViewLayout';
 import { EstudanteForm } from '../components/forms';
+import { useSagaPersistence } from '../hooks/useSagaPersistence';
 
 export default function EstudantesView() {
+  // 2. Extraindo a função de escrita dupla do hook
+  const { executarEscritaDupla } = useSagaPersistence('estudantes');
+
   return (
     <ModuleViewLayout
       title="Módulo de Estudantes"
@@ -10,6 +14,7 @@ export default function EstudantesView() {
       formTitle="Cadastrar Novo Estudante"
       endpoint="estudantes"
       FormComponent={EstudanteForm}
+      onSaveCustom={executarEscritaDupla}
       tableHeaders={['Matrícula', 'CPF do Usuário', 'Média (MC)', 'Ano de Ingresso']}
       renderRow={(estudante, idx, sharedStyles, onEdit, onDelete) => {
         const matricula = estudante.matEstudante || estudante.matricula;

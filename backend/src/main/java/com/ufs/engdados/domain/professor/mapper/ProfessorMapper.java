@@ -1,6 +1,8 @@
 package com.ufs.engdados.domain.professor.mapper;
 
 import com.ufs.engdados.domain.professor.dto.ProfessorDTO;
+import com.ufs.engdados.domain.professor.enums.TipoFormacao;
+import com.ufs.engdados.domain.professor.enums.TipoJornada;
 import com.ufs.engdados.domain.professor.model.nosql.ProfessorDocument;
 import com.ufs.engdados.domain.professor.model.relational.Professor;
 
@@ -12,11 +14,16 @@ public class ProfessorMapper {
         prof.setCpf(dto.cpf());
         prof.setMatricula(dto.matricula());
         prof.setDepartamento(dto.departamento());
-        prof.setFormacao(dto.formacao());
-        prof.setJornada(dto.jornada());
+
+        if (dto.formacao() != null) {
+            prof.setFormacao(TipoFormacao.valueOf(dto.formacao()));
+        }
+        if (dto.jornada() != null) {
+            prof.setJornada(TipoJornada.deString(dto.jornada()));
+        }
+
         prof.setDataAdmissao(dto.dataAdmissao());
         prof.setSalario(dto.salario());
-
 
         return prof;
     }
@@ -27,8 +34,10 @@ public class ProfessorMapper {
         prof.setCpf(dto.cpf());
         prof.setMatricula(dto.matricula());
         prof.setDepartamento(dto.departamento());
+
         prof.setFormacao(dto.formacao());
         prof.setJornada(dto.jornada());
+
         prof.setDataAdmissao(dto.dataAdmissao());
         prof.setSalario(dto.salario());
 
@@ -42,10 +51,10 @@ public class ProfessorMapper {
                 p.getCpf(),
                 p.getMatricula(),
                 p.getDepartamento(),
-                p.getFormacao(),
+                p.getFormacao() != null ? p.getFormacao().name() : null,
                 p.getDataAdmissao(),
-                p.getJornada(),
-                p.getSalario() != null ? p.getSalario() : null
+                p.getJornada() != null ? p.getJornada().getCodigoDb().toUpperCase() : null,
+                p.getSalario()
         );
     }
 
@@ -59,7 +68,7 @@ public class ProfessorMapper {
                 p.getFormacao(),
                 p.getDataAdmissao(),
                 p.getJornada(),
-                p.getSalario() != null ? p.getSalario() : null
+                p.getSalario()
         );
     }
 
@@ -68,11 +77,16 @@ public class ProfessorMapper {
         prof.setCpf(dto.cpf());
         prof.setMatricula(dto.matricula());
         prof.setDepartamento(dto.departamento());
-        prof.setFormacao(dto.formacao());
-        prof.setJornada(dto.jornada());
+
+        if (dto.formacao() != null) {
+            prof.setFormacao(TipoFormacao.valueOf(dto.formacao()));
+        }
+        if (dto.jornada() != null) {
+            prof.setJornada(TipoJornada.deString(dto.jornada()));
+        }
+
         prof.setDataAdmissao(dto.dataAdmissao());
         prof.setSalario(dto.salario());
-
     }
 
     public static void updateDocument(ProfessorDTO.Request dto, ProfessorDocument prof){
@@ -84,7 +98,5 @@ public class ProfessorMapper {
         prof.setJornada(dto.jornada());
         prof.setDataAdmissao(dto.dataAdmissao());
         prof.setSalario(dto.salario());
-
     }
-
 }

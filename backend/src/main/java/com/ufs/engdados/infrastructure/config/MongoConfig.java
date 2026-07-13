@@ -19,7 +19,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Override
     protected void configureClientSettings(com.mongodb.MongoClientSettings.Builder builder) {
-        builder.applyConnectionString(new com.mongodb.ConnectionString("mongodb://98.83.25.76:27017/universidade"));
+        builder.applyConnectionString(new com.mongodb.ConnectionString("mongodb://18.207.164.141:27017/universidade"));
     }
 
     @Bean
