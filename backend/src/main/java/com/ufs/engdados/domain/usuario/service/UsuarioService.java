@@ -25,6 +25,9 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO.Response create(UsuarioDTO.Request dto) {
+        if (dto.senha() == null || dto.senha().isBlank()) {
+            throw new IllegalArgumentException("A senha é obrigatória no cadastro.");
+        }
         relationalRepository.save(UsuarioMapper.toEntity(dto));
         UsuarioDocument doc = noSqlRepository.save(UsuarioMapper.toDocument(dto));
 
@@ -38,7 +41,6 @@ public class UsuarioService {
         return usuarios.map(usuario -> UsuarioMapper.toResponse(usuario));
     }
 
-    @Transactional(readOnly = true)
     public Page<UsuarioDTO.Response> findAllNoSql(Pageable pageable) {
         Page<UsuarioDocument> usuarios = noSqlRepository.findAll(pageable);
 

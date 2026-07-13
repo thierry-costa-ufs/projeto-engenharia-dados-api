@@ -39,7 +39,6 @@ public class EstudanteService{
         return estudantes.map(estudante -> EstudanteMapper.toResponse(estudante));
     }
 
-    @Transactional(readOnly = true)
     public Page<EstudanteDTO.Response> findAllNoSql(Pageable pageable){
         Page<EstudanteDocument> estudantes = noSqlRepository.findAll(pageable);
 

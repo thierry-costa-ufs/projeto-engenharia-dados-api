@@ -17,7 +17,7 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
   useEffect(() => {
     if (initialData) {
       setFormData({
-        cpf: initialData.cpf || initialData.id || '',
+        cpf: initialData.cpf ? String(initialData.cpf) : initialData.id ? String(initialData.id) : '',
         nome: initialData.nome || '',
         dataNascimento: initialData.dataNascimento || '',
         login: initialData.login || '',
@@ -57,35 +57,43 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
     }));
   };
 
-  const handleLocalSubmit = async (e) => {
-      e.preventDefault();
+const handleLocalSubmit = async (e) => {
+    e.preventDefault();
 
-      const validacao = usuarioSchema.safeParse(formData);
+    const dadosParaValidacao = { ...formData };
 
-      if (!validacao.success) {
-        const mapeamentoErros = {};
-        validacao.error.issues.forEach(issue => {
-          mapeamentoErros[issue.path[0]] = issue.message;
-        });
-        setErrors(mapeamentoErros);
-        return;
-      }
+    if (isEditing && (!formData.senha || formData.senha.trim() === '')) {
+      dadosParaValidacao.senha = 'senha_ignorada_123';
+    }
 
-      const payload = {
-        nome: validacao.data.nome,
-        login: validacao.data.login,
-        cpf: Number(validacao.data.cpf),
-        dataNascimento: validacao.data.dataNascimento || formData.dataNascimento,
-        email: formData.emails.filter(emailStr => emailStr.trim() !== ''),
-        telefone: formData.telefones.filter(telStr => telStr.trim() !== '')
-      };
+    const validacao = usuarioSchema.safeParse(dadosParaValidacao);
 
-      if (validacao.data.senha || !isEditing) {
-        payload.senha = validacao.data.senha;
-      }
+    if (!validacao.success) {
+      const mapeamentoErros = {};
+      validacao.error.issues.forEach(issue => {
+        mapeamentoErros[issue.path[0]] = issue.message;
+      });
+      setErrors(mapeamentoErros);
+      return;
+    }
 
-      onSubmit(payload);
+    const payload = {
+      nome: validacao.data.nome,
+      login: validacao.data.login,
+      cpf: validacao.data.cpf,
+      dataNascimento: validacao.data.dataNascimento || formData.dataNascimento,
+      email: formData.emails.filter(emailStr => emailStr.trim() !== ''),
+      telefone: formData.telefones.filter(telStr => telStr.trim() !== '')
     };
+
+    if (formData.senha && formData.senha.trim() !== '') {
+      payload.senha = formData.senha;
+    } else if (!isEditing) {
+      payload.senha = validacao.data.senha;
+    }
+
+    onSubmit(payload);
+  };
 
   return (
     <div className={theme.formContainer}>
@@ -94,13 +102,14 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
         <div className={theme.row}>
           <div className={theme.column} style={{ flex: 1 }}>
             <input
-              type="number"
+              type="text"
               name="cpf"
               placeholder="CPF (Apenas números)"
               value={formData.cpf}
               onChange={handleBaseChange}
               required
               disabled={isEditing}
+              maxLength="11"
             />
             {errors.cpf && <span className={theme.errorText}>{errors.cpf}</span>}
           </div>
@@ -111,7 +120,6 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
               name="dataNascimento"
               value={formData.dataNascimento}
               onChange={handleBaseChange}
-              required
             />
             {errors.dataNascimento && <span className={theme.errorText}>{errors.dataNascimento}</span>}
           </div>
@@ -144,7 +152,7 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
             <input
               type="password"
               name="senha"
-              placeholder="Senha"
+              placeholder={isEditing ? "Nova Senha (opcional)" : "Senha"}
               value={formData.senha}
               onChange={handleBaseChange}
               required={!isEditing}
@@ -162,7 +170,6 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
                 placeholder={`E-mail #${idx + 1}`}
                 value={email}
                 onChange={(e) => handleArrayChange(idx, 'emails', e.target.value)}
-                required
               />
               {formData.emails.length > 1 && (
                 <button type="button" className={theme.btnRemove} onClick={() => removerCampo(idx, 'emails')}>
@@ -185,7 +192,6 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
                 placeholder={`Telefone #${idx + 1}`}
                 value={tel}
                 onChange={(e) => handleArrayChange(idx, 'telefones', e.target.value)}
-                required
               />
               {formData.telefones.length > 1 && (
                 <button type="button" className={theme.btnRemove} onClick={() => removerCampo(idx, 'telefones')}>

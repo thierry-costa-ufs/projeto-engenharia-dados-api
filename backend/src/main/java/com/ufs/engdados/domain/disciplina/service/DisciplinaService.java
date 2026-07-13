@@ -56,7 +56,6 @@ public class DisciplinaService {
         return disciplinas.map(DisciplinaMapper::toResponse);
     }
 
-    @Transactional(readOnly = true)
     public Page<DisciplinaDTO.Response> findAllNoSql(Pageable pageable) {
         Page<DisciplinaDocument> disciplinas = noSqlRepository.findAll(pageable);
         return disciplinas.map(DisciplinaMapper::toResponse);

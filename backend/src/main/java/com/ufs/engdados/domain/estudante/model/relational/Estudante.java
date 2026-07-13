@@ -30,7 +30,7 @@ public class Estudante{
         this.anoIngresso = anoIngresso;
     }
 
-    public long getCpf() {
+    public Long getCpf() {
         return cpf;
     }
     public void setCpf(long cpf) {
