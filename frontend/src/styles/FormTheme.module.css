@@ -1,0 +1,204 @@
+/* src/styles/FormTheme.module.css */
+.formContainer {
+  width: 100%;
+  color: #f8fafc;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.row > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Inputs, Selects Globais Nativos */
+.form input[type="text"],
+.form input[type="number"],
+.form input[type="email"],
+.form input[type="password"],
+.form input[type="date"],
+.form select {
+  width: 100%;
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: #f8fafc;
+  font-size: 0.9rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.form input:focus,
+.form select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Engenharia Purista: Elimina a necessidade de classes manuais via JS */
+.form input:disabled,
+.form select:disabled {
+  background-color: #1e293b;
+  color: #64748b;
+  border-color: #334155;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.inputUppercase {
+  text-transform: uppercase;
+}
+
+/* Seções Dinâmicas (Coleções) */
+.dynamicSection {
+  border-top: 1px dashed #334155;
+  padding-top: 16px;
+  margin-top: 4px;
+}
+
+.dynamicRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.dynamicRow > input {
+  flex: 1;
+}
+
+.btnRemove {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border-radius: 6px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btnRemove:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.btnAdd {
+  background: none;
+  border: 1px dashed #475569;
+  color: #94a3b8;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.btnAdd:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+.btnSubmit {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  width: 100%;
+}
+
+.btnSubmit:hover {
+  background-color: #2563eb;
+}
+
+.formActionsGroup {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.btnCancel {
+  flex: 1;
+  background-color: #334155;
+  color: #f8fafc;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btnCancel:hover {
+  background-color: #475569;
+}
+
+.btnSubmitEdicao {
+  flex: 2;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btnSubmitEdicao:hover {
+  background-color: #2563eb;
+}
+
+/* Mensagens de erro de validação (Zod) */
+.errorText {
+  display: block;
+  font-size: 0.78rem;
+  color: #f87171;
+  margin-top: 4px;
+  font-weight: 500;
+}

@@ -1,0 +1,202 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.actionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: #ffffff;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* SWITCH DE PERSISTÊNCIA */
+.switchContainer {
+  display: flex;
+  background-color: #0f172a;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+.switchBtn {
+  background: none;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.activeBtn { background-color: #3b82f6; color: #ffffff; }
+
+/* BOTÕES GLOBAIS DE TOPO */
+.btnCreate {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8.5px 14px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+.btnCreate:hover { background-color: #2563eb; }
+
+.btnSecondary {
+  background-color: #334155;
+  color: #f8fafc;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+.btnSecondary:hover { background-color: #475569; }
+
+/* ESTRUTURA SEMÂNTICA DA TABELA */
+.tableCardFull {
+  width: 100%;
+}
+
+.tableHeaderInline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+.tableHeaderInline strong { color: #f8fafc; }
+
+.tableWrapper {
+  border: 1px solid #334155;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #0f172a;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+  table-layout: auto;
+}
+
+.table th {
+  background-color: #1e293b;
+  padding: 12px 16px;
+  color: #94a3b8;
+  font-weight: 600;
+  border-bottom: 1px solid #334155;
+}
+
+.table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #334155;
+  color: #cbd5e1;
+}
+
+.tableRow:hover {
+  background-color: #1e293b;
+}
+
+/* CONTAINER E AÇÕES DE REGISTRO */
+.actionsCell {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btnTableEdit, .btnTableDelete {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.15s ease;
+}
+.btnTableEdit { color: #3b82f6; }
+.btnTableDelete { color: #ef4444; }
+.btnTableEdit:hover, .btnTableDelete:hover { transform: scale(1.15); }
+
+/* UTILITÁRIOS GLOBAIS DE LINHA */
+.textListWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Texto monospace para campos técnicos (matrícula, código, CPF) */
+.textMono {
+  font-family: ui-monospace, Consolas, 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  letter-spacing: 0.03em;
+}
+
+/* Variante monospace com destaque em negrito (ex: média final) */
+.textMonoBold {
+  font-family: ui-monospace, Consolas, 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #f8fafc;
+  letter-spacing: 0.03em;
+  font-weight: 700;
+}
+
+/* Estado vazio da tabela */
+.emptyState {
+  text-align: center;
+  padding: 48px 16px;
+  color: #475569;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Status de situação acadêmica */
+.statusAprovado {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.statusReprovado {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.statusEmCurso {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
