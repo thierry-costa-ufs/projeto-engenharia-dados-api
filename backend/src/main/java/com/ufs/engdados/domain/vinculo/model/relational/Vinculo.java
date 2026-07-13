@@ -9,19 +9,19 @@ public class Vinculo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idVinculo")
+    @Column(name = "id_vinculo")
     private Long idVinculo;
 
-    @Column(name = "mat_estudante")
+    @Column(name = "mat_estudante", nullable = false, length = 7)
     private String matEstudante;
 
-    @Column(name = "curso")
+    @Column(name = "curso", nullable = false)
     private Integer codCurso;
 
     @Column(name = "data_entrada")
     private LocalDate dataEntrada;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
 
     @Column(name = "data_saida")

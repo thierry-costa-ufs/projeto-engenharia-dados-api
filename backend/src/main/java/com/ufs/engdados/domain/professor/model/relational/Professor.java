@@ -4,6 +4,7 @@ import com.ufs.engdados.domain.usuario.model.relational.Usuario;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.math.BigDecimal;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -21,6 +22,7 @@ public class Professor {
     private String departamento;
 
     @Column(nullable = false, columnDefinition = "universidade.tipo_formacao")
+    @ColumnTransformer(write = "?::universidade.tipo_formacao")
     @JdbcTypeCode(SqlTypes.OTHER)
     private String formacao;
 
@@ -28,6 +30,7 @@ public class Professor {
     private LocalDate dataAdmissao;
 
     @Column(name = "tipo_jornada_trabalho", nullable = false, columnDefinition = "universidade.tipo_jornada")
+    @ColumnTransformer(write = "?::universidade.tipo_jornada")
     @JdbcTypeCode(SqlTypes.OTHER)
     private String jornada;
 

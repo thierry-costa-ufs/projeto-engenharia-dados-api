@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface VinculoNoSqlRepository extends MongoRepository<VinculoDocument, String> {
-    Optional<VinculoDocument> findByidVinculo(Long idVinculo);
+    Optional<VinculoDocument> findByIdVinculo(Long idVinculo);
     void deleteByIdVinculo(Long idVinculo);
 }

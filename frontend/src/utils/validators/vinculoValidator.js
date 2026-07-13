@@ -1,11 +1,15 @@
 import { z } from 'zod';
 
 export const vinculoSchema = z.object({
-  matEstudante: z.string().length(4, 'A matrícula deve ter exatamente 4 caracteres'),
-  codCurso: z.coerce.number().int().positive('Código do curso inválido'),
-  dataEntrada: z.string().min(1, 'A data de entrada é obrigatória'),
-  dataSaida: z.preprocess((val) => (val === '' ? null : val), z.string().nullable().optional()),
+  matEstudante: z.string()
+    .min(1, 'A matricula e obrigatoria')
+    .max(7, 'A matricula deve ter no maximo 7 caracteres'),
+  codCurso: z.coerce.number().int().positive('Codigo do curso invalido'),
+  
+  dataEntrada: z.string().optional().or(z.literal('')),
+  dataSaida: z.string().optional().or(z.literal('')),
+  
   status: z.enum(['Ativo', 'Cancelada', 'Formando', 'Graduado'], {
-    errorMap: () => ({ message: 'Selecione um status acadêmico válido' })
+    errorMap: () => ({ message: 'Selecione um status academico valido' })
   })
 });
