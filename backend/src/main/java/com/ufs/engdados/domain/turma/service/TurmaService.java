@@ -72,7 +72,8 @@ public class TurmaService {
         TurmaMapper.updateEntity(request, entity, disciplina);
         relationalRepository.save(entity);
 
-        TurmaDocument document = noSqlRepository.findById(idTurma)
+        // Trocando findById por findByIdTurma
+        TurmaDocument document = noSqlRepository.findByIdTurma(idTurma)
                 .orElseThrow(() -> new ResourceNotFoundException("Turma " + idTurma + " não encontrada no MongoDB"));
 
         TurmaMapper.updateDocument(request, document);
@@ -87,8 +88,9 @@ public class TurmaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Turma " + idTurma + " não encontrada"));
         relationalRepository.deleteById(idTurma);
 
-        noSqlRepository.findById(idTurma)
+        // Trocando findById e deleteById por findByIdTurma e deleteByIdTurma
+        noSqlRepository.findByIdTurma(idTurma)
                 .orElseThrow(() -> new ResourceNotFoundException("Turma " + idTurma + " não encontrada no MongoDB"));
-        noSqlRepository.deleteById(idTurma);
+        noSqlRepository.deleteByIdTurma(idTurma);
     }
 }

@@ -79,7 +79,8 @@ public class DisciplinaService {
         DisciplinaMapper.updateEntity(request, entity, depto, preReq);
         relRepository.save(entity);
 
-        DisciplinaDocument document = noSqlRepository.findById(codDisc)
+        // Trocando findById por findByCodDisc
+        DisciplinaDocument document = noSqlRepository.findByCodDisc(codDisc)
                 .orElseThrow(() -> new ResourceNotFoundException("Disciplina " + codDisc + " não encontrada no MongoDB"));
 
         DisciplinaMapper.updateDocument(request, document);
@@ -94,8 +95,9 @@ public class DisciplinaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Disciplina " + codDisc + " não encontrada"));
         relRepository.deleteById(codDisc);
 
-        noSqlRepository.findById(codDisc)
+        // Trocando findById e deleteById por findByCodDisc e deleteByCodDisc
+        noSqlRepository.findByCodDisc(codDisc)
                 .orElseThrow(() -> new ResourceNotFoundException("Disciplina " + codDisc + " não encontrada no MongoDB"));
-        noSqlRepository.deleteById(codDisc);
+        noSqlRepository.deleteByCodDisc(codDisc);
     }
 }
