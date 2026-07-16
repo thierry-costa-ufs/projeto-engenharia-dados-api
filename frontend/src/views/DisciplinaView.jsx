@@ -16,7 +16,7 @@ export default function DisciplinasView() {
                     <td className={sharedStyles.textMono}>{disc.codigoDisciplina || disc.cod_disc}</td>
                     <td>{disc.nome}</td>
                     <td className={sharedStyles.textMono}>{disc.preReq || disc.pre_req || '—'}</td>
-                    <td>{disc.creditos}h</td>
+                    <td>{disc.creditos}</td>
                     <td>{disc.idDepartamento || disc.codDepartamento || disc.depto_responsavel || '—'}</td>
                     <td>
                         <div className={sharedStyles.actionsCell}>

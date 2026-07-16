@@ -16,7 +16,6 @@ export default function CursoView() {
       endpoint="cursos"
       FormComponent={CursoForm}
       tableHeaders={[
-        'ID',
         'Nome do Curso',
         'Grau',
         'Turno',
@@ -25,7 +24,6 @@ export default function CursoView() {
       ]}
       renderRow={(curso, idx, sharedStyles, onEdit, onDelete) => (
         <tr key={curso.idCurso || idx} className={sharedStyles.tableRow}>
-          <td>{curso.idCurso}</td>
           <td>{curso.nome}</td>
           <td>{formatarEnum(curso.grau)}</td>
           <td>{formatarEnum(curso.turno)}</td>

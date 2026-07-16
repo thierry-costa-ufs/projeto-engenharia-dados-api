@@ -14,11 +14,9 @@ export default function ModuleViewLayout({
   const [itemEmEdicao, setItemEmEdicao] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Novos estados para a paginação
   const [paginaAtual, setPaginaAtual] = useState(0);
   const tamanhoPagina = 10; // Você pode alterar quantos registros aparecem por tela
 
-  // Busca genérica otimizada com os parâmetros de paginação na URL
   const buscarDadosPorBanco = useCallback(async (tipoPersistencia) => {
     try {
       return await api.get(`${endpoint}/${tipoPersistencia}?page=${paginaAtual}&size=${tamanhoPagina}`);

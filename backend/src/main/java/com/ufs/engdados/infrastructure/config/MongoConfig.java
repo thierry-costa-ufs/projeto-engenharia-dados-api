@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 @Configuration
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
-    // Lê a configuração dinamicamente do application.properties
     @Value("${spring.data.mongodb.uri}")
     private String mongoUri;
 
@@ -35,7 +34,6 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
         MappingMongoConverter converter = super.mappingMongoConverter(databaseFactory, customConversions, mappingContext);
 
-        // Remove a criação da coluna "_class" que polui os documentos do MongoDB
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
 
         return converter;

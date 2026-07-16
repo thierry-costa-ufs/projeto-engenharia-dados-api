@@ -16,7 +16,6 @@ export default function VinculosView() {
       endpoint="vinculos"
       FormComponent={VinculoForm}
       tableHeaders={[
-        'ID Vínculo',
         'Matrícula',
         'Código do Curso',
         'Data de Entrada',
@@ -27,7 +26,6 @@ export default function VinculosView() {
         const idVinculo = vinculo.idVinculo || vinculo.id || vinculo.idvinculo;
         return (
           <tr key={idVinculo || idx} className={sharedStyles.tableRow}>
-            <td>{idVinculo}</td>
             <td>{vinculo.matEstudante}</td>
             <td>{vinculo.codCurso}</td>
             <td>{formatarData(vinculo.dataEntrada)}</td>

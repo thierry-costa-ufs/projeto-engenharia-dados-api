@@ -10,10 +10,9 @@ export default function TurmasView() {
             formTitle="Cadastrar Nova Turma"
             endpoint="turmas"
             FormComponent={TurmaForm}
-            tableHeaders={['ID Turma', 'Código', 'Disciplina', 'Ano', 'Semestre']}
+            tableHeaders={['Código', 'Disciplina', 'Ano', 'Semestre']}
             renderRow={(turma, idx, sharedStyles, onEdit, onDelete) => (
                 <tr key={turma.idTurma || idx} className={sharedStyles.tableRow}>
-                    <td>{turma.idTurma}</td>
                     <td className={sharedStyles.textMono}>{turma.codigoTurma || turma.numero}</td>
                     <td>{turma.codigoDisciplina || turma.codDisciplina || turma.cod_disc}</td>
                     <td>{turma.ano}</td>
