@@ -56,6 +56,7 @@ public class DisciplinaService {
         return disciplinas.map(DisciplinaMapper::toResponse);
     }
 
+    @Transactional(readOnly = true)
     public Page<DisciplinaDTO.Response> findAllNoSql(Pageable pageable) {
         Page<DisciplinaDocument> disciplinas = noSqlRepository.findAll(pageable);
         return disciplinas.map(DisciplinaMapper::toResponse);
@@ -79,8 +80,7 @@ public class DisciplinaService {
         DisciplinaMapper.updateEntity(request, entity, depto, preReq);
         relRepository.save(entity);
 
-        // Trocando findById por findByCodDisc
-        DisciplinaDocument document = noSqlRepository.findByCodDisc(codDisc)
+        DisciplinaDocument document = noSqlRepository.findById(codDisc)
                 .orElseThrow(() -> new ResourceNotFoundException("Disciplina " + codDisc + " não encontrada no MongoDB"));
 
         DisciplinaMapper.updateDocument(request, document);
@@ -95,9 +95,8 @@ public class DisciplinaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Disciplina " + codDisc + " não encontrada"));
         relRepository.deleteById(codDisc);
 
-        // Trocando findById e deleteById por findByCodDisc e deleteByCodDisc
-        noSqlRepository.findByCodDisc(codDisc)
+        noSqlRepository.findById(codDisc)
                 .orElseThrow(() -> new ResourceNotFoundException("Disciplina " + codDisc + " não encontrada no MongoDB"));
-        noSqlRepository.deleteByCodDisc(codDisc);
+        noSqlRepository.deleteById(codDisc);
     }
 }

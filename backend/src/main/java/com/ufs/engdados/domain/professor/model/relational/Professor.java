@@ -1,11 +1,12 @@
 package com.ufs.engdados.domain.professor.model.relational;
 
-import com.ufs.engdados.domain.professor.enums.TipoFormacao;
-import com.ufs.engdados.domain.professor.enums.TipoJornada;
+import com.ufs.engdados.domain.usuario.model.relational.Usuario;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.math.BigDecimal;
 import org.hibernate.annotations.ColumnTransformer;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "professor", schema = "universidade")
@@ -22,14 +23,16 @@ public class Professor {
 
     @Column(nullable = false, columnDefinition = "universidade.tipo_formacao")
     @ColumnTransformer(write = "?::universidade.tipo_formacao")
-    private TipoFormacao formacao;
+    @JdbcTypeCode(SqlTypes.OTHER)
+    private String formacao;
 
     @Column(name = "data_admissao", nullable = false)
     private LocalDate dataAdmissao;
 
     @Column(name = "tipo_jornada_trabalho", nullable = false, columnDefinition = "universidade.tipo_jornada")
     @ColumnTransformer(write = "?::universidade.tipo_jornada")
-    private TipoJornada jornada;
+    @JdbcTypeCode(SqlTypes.OTHER)
+    private String jornada;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal salario;
@@ -43,16 +46,12 @@ public class Professor {
     public void setMatricula(String matricula) { this.matricula = matricula; }
     public String getDepartamento() { return departamento; }
     public void setDepartamento(String departamento) { this.departamento = departamento; }
-
-    public TipoFormacao getFormacao() { return formacao; }
-    public void setFormacao(TipoFormacao formacao) { this.formacao = formacao; }
-
+    public String getFormacao() { return formacao; }
+    public void setFormacao(String formacao) { this.formacao = formacao; }
     public LocalDate getDataAdmissao() { return dataAdmissao; }
     public void setDataAdmissao(LocalDate dataAdmissao) { this.dataAdmissao = dataAdmissao; }
-
-    public TipoJornada getJornada() { return jornada; }
-    public void setJornada(TipoJornada jornada) { this.jornada = jornada; }
-
+    public String getJornada() { return jornada; }
+    public void setJornada(String jornada) { this.jornada = jornada; }
     public BigDecimal getSalario() { return salario; }
     public void setSalario(BigDecimal salario) { this.salario = salario; }
 }
