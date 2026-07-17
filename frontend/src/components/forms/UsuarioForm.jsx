@@ -11,15 +11,13 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
   });
   const [errors, setErrors] = useState({});
 
-  const { modalAberto, executarRollback, manterApenasNoPostgres } =
-      useSagaPersistence('usuarios');
+  const { modalAberto, executarEscritaDupla, executarRollback, manterApenasNoPostgres } =
+    useSagaPersistence('usuarios');
 
   useEffect(() => {
     if (initialData) {
-      // Comentário para silenciar o falso-positivo do linter
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
-        cpf: initialData.cpf ? String(initialData.cpf).padStart(11, '0') : initialData.id ? String(initialData.id).padStart(11, '0') : '',
+        cpf: initialData.cpf || initialData.id || '',
         nome: initialData.nome || '',
         dataNascimento: initialData.dataNascimento || '',
         login: initialData.login || '',
@@ -28,18 +26,13 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
         telefones: initialData.telefone && initialData.telefone.length > 0 ? initialData.telefone : ['']
       });
     } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({ cpf: '', nome: '', dataNascimento: '', login: '', senha: '', emails: [''], telefones: [''] });
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setErrors({});
   }, [initialData]);
 
   const handleBaseChange = (e) => {
     const { name, value } = e.target;
-    // Impede o usuário de digitar letras no campo de CPF
-    if (name === 'cpf' && !/^\d*$/.test(value)) return;
-
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
   };
@@ -65,177 +58,165 @@ export default function UsuarioForm({ onSubmit, initialData, isEditing, onCancel
   };
 
   const handleLocalSubmit = async (e) => {
-    e.preventDefault();
+      e.preventDefault();
 
-    // VALIDAÇÃO ESTRITA DO CPF (Exatamente 11 números)
-    if (!/^\d{11}$/.test(formData.cpf)) {
-      setErrors({ cpf: 'O CPF deve conter exatamente 11 dígitos numéricos.' });
-      return;
-    }
+      const validacao = usuarioSchema.safeParse(formData);
 
-    const dadosParaValidacao = { ...formData };
+      if (!validacao.success) {
+        const mapeamentoErros = {};
+        validacao.error.issues.forEach(issue => {
+          mapeamentoErros[issue.path[0]] = issue.message;
+        });
+        setErrors(mapeamentoErros);
+        return;
+      }
 
-    if (isEditing && (!formData.senha || formData.senha.trim() === '')) {
-      dadosParaValidacao.senha = 'senha_ignorada_123';
-    }
+      const payload = {
+        nome: validacao.data.nome,
+        login: validacao.data.login,
+        cpf: Number(validacao.data.cpf),
+        dataNascimento: validacao.data.dataNascimento || formData.dataNascimento,
+        email: formData.emails.filter(emailStr => emailStr.trim() !== ''),
+        telefone: formData.telefones.filter(telStr => telStr.trim() !== '')
+      };
 
-    const validacao = usuarioSchema.safeParse(dadosParaValidacao);
+      if (validacao.data.senha || !isEditing) {
+        payload.senha = validacao.data.senha;
+      }
 
-    if (!validacao.success) {
-      const mapeamentoErros = {};
-      validacao.error.issues.forEach(issue => {
-        mapeamentoErros[issue.path[0]] = issue.message;
-      });
-      setErrors(mapeamentoErros);
-      return;
-    }
-
-    const payload = {
-      nome: validacao.data.nome,
-      login: validacao.data.login,
-      cpf: validacao.data.cpf,
-      dataNascimento: validacao.data.dataNascimento || formData.dataNascimento,
-      email: formData.emails.filter(emailStr => emailStr.trim() !== ''),
-      telefone: formData.telefones.filter(telStr => telStr.trim() !== '')
+      onSubmit(payload);
     };
 
-    if (formData.senha && formData.senha.trim() !== '') {
-      payload.senha = formData.senha;
-    } else if (!isEditing) {
-      payload.senha = validacao.data.senha;
-    }
-
-    onSubmit(payload);
-  };
-
   return (
-      <div className={theme.formContainer}>
-        <form onSubmit={handleLocalSubmit} className={theme.form}>
+    <div className={theme.formContainer}>
+      <form onSubmit={handleLocalSubmit} className={theme.form}>
 
-          <div className={theme.row}>
-            <div className={theme.column} style={{ flex: 1 }}>
-              <input
-                  type="text"
-                  name="cpf"
-                  placeholder="CPF (Apenas números)"
-                  value={formData.cpf}
-                  onChange={handleBaseChange}
-                  required
-                  disabled={isEditing}
-                  maxLength="11"
-              />
-              {errors.cpf && <span className={theme.errorText} style={{ color: 'red', fontSize: '0.85rem' }}>{errors.cpf}</span>}
-            </div>
-
-            <div className={theme.column} style={{ flex: 1 }}>
-              <input
-                  type="date"
-                  name="dataNascimento"
-                  value={formData.dataNascimento}
-                  onChange={handleBaseChange}
-              />
-              {errors.dataNascimento && <span className={theme.errorText}>{errors.dataNascimento}</span>}
-            </div>
-          </div>
-
-          <input
-              type="text"
-              name="nome"
-              placeholder="Nome Completo"
-              value={formData.nome}
+        <div className={theme.row}>
+          <div className={theme.column} style={{ flex: 1 }}>
+            <input
+              type="number"
+              name="cpf"
+              placeholder="CPF (Apenas números)"
+              value={formData.cpf}
               onChange={handleBaseChange}
               required
-          />
-          {errors.nome && <span className={theme.errorText}>{errors.nome}</span>}
-
-          <div className={theme.row}>
-            <div className={theme.column} style={{ flex: 1 }}>
-              <input
-                  type="text"
-                  name="login"
-                  placeholder="Username"
-                  value={formData.login}
-                  onChange={handleBaseChange}
-                  required
-              />
-              {errors.login && <span className={theme.errorText}>{errors.login}</span>}
-            </div>
-
-            <div className={theme.column} style={{ flex: 1 }}>
-              <input
-                  type="password"
-                  name="senha"
-                  placeholder={isEditing ? "Nova Senha (opcional)" : "Senha"}
-                  value={formData.senha}
-                  onChange={handleBaseChange}
-                  required={!isEditing}
-              />
-              {errors.senha && <span className={theme.errorText}>{errors.senha}</span>}
-            </div>
+              disabled={isEditing}
+            />
+            {errors.cpf && <span className={theme.errorText}>{errors.cpf}</span>}
           </div>
 
-          <div className={theme.dynamicSection}>
-            <label className={theme.fieldLabel}>E-mails Vinculados</label>
-            {formData.emails.map((email, idx) => (
-                <div key={idx} className={theme.dynamicRow}>
-                  <input
-                      type="email"
-                      placeholder={`E-mail #${idx + 1}`}
-                      value={email}
-                      onChange={(e) => handleArrayChange(idx, 'emails', e.target.value)}
-                  />
-                  {formData.emails.length > 1 && (
-                      <button type="button" className={theme.btnRemove} onClick={() => removerCampo(idx, 'emails')}>
-                        <Trash2 size={16}/>
-                      </button>
-                  )}
-                </div>
-            ))}
-            <button type="button" className={theme.btnAdd} onClick={() => adicionarCampo('emails')}>
-              <Plus size={14}/> Adicionar E-mail
-            </button>
+          <div className={theme.column} style={{ flex: 1 }}>
+            <input
+              type="date"
+              name="dataNascimento"
+              value={formData.dataNascimento}
+              onChange={handleBaseChange}
+              required
+            />
+            {errors.dataNascimento && <span className={theme.errorText}>{errors.dataNascimento}</span>}
           </div>
+        </div>
 
-          <div className={theme.dynamicSection}>
-            <label className={theme.fieldLabel}>Telefones</label>
-            {formData.telefones.map((tel, idx) => (
-                <div key={idx} className={theme.dynamicRow}>
-                  <input
-                      type="text"
-                      placeholder={`Telefone #${idx + 1}`}
-                      value={tel}
-                      onChange={(e) => handleArrayChange(idx, 'telefones', e.target.value)}
-                  />
-                  {formData.telefones.length > 1 && (
-                      <button type="button" className={theme.btnRemove} onClick={() => removerCampo(idx, 'telefones')}>
-                        <Trash2 size={16}/>
-                      </button>
-                  )}
-                </div>
-            ))}
-            <button type="button" className={theme.btnAdd} onClick={() => adicionarCampo('telefones')}>
-              <Plus size={14}/> Adicionar Telefone
-            </button>
-          </div>
-
-          <div className={theme.formActionsGroup}>
-            {isEditing && (
-                <button type="button" className={theme.btnCancel} onClick={onCancel}>
-                  Cancelar
-                </button>
-            )}
-            <button type="submit" className={theme.btnSubmitEdicao}>
-              {isEditing ? 'Salvar Alterações' : 'Dupla Inserção'}
-            </button>
-          </div>
-        </form>
-
-        <ResilienceModal
-            aberto={modalAberto}
-            entidade="Usuário"
-            onKeep={() => { manterApenasNoPostgres(); onSubmit({ status: 'SUCESSO' }); }}
-            onRollback={() => { executarRollback(); onCancel(); }}
+        <input
+          type="text"
+          name="nome"
+          placeholder="Nome Completo"
+          value={formData.nome}
+          onChange={handleBaseChange}
+          required
         />
-      </div>
+        {errors.nome && <span className={theme.errorText}>{errors.nome}</span>}
+
+        <div className={theme.row}>
+          <div className={theme.column} style={{ flex: 1 }}>
+            <input
+              type="text"
+              name="login"
+              placeholder="Username"
+              value={formData.login}
+              onChange={handleBaseChange}
+              required
+            />
+            {errors.login && <span className={theme.errorText}>{errors.login}</span>}
+          </div>
+
+          <div className={theme.column} style={{ flex: 1 }}>
+            <input
+              type="password"
+              name="senha"
+              placeholder="Senha"
+              value={formData.senha}
+              onChange={handleBaseChange}
+              required={!isEditing}
+            />
+            {errors.senha && <span className={theme.errorText}>{errors.senha}</span>}
+          </div>
+        </div>
+
+        <div className={theme.dynamicSection}>
+          <label className={theme.fieldLabel}>E-mails Vinculados</label>
+          {formData.emails.map((email, idx) => (
+            <div key={idx} className={theme.dynamicRow}>
+              <input
+                type="email"
+                placeholder={`E-mail #${idx + 1}`}
+                value={email}
+                onChange={(e) => handleArrayChange(idx, 'emails', e.target.value)}
+                required
+              />
+              {formData.emails.length > 1 && (
+                <button type="button" className={theme.btnRemove} onClick={() => removerCampo(idx, 'emails')}>
+                  <Trash2 size={16}/>
+                </button>
+              )}
+            </div>
+          ))}
+          <button type="button" className={theme.btnAdd} onClick={() => adicionarCampo('emails')}>
+            <Plus size={14}/> Adicionar E-mail
+          </button>
+        </div>
+
+        <div className={theme.dynamicSection}>
+          <label className={theme.fieldLabel}>Telefones</label>
+          {formData.telefones.map((tel, idx) => (
+            <div key={idx} className={theme.dynamicRow}>
+              <input
+                type="text"
+                placeholder={`Telefone #${idx + 1}`}
+                value={tel}
+                onChange={(e) => handleArrayChange(idx, 'telefones', e.target.value)}
+                required
+              />
+              {formData.telefones.length > 1 && (
+                <button type="button" className={theme.btnRemove} onClick={() => removerCampo(idx, 'telefones')}>
+                  <Trash2 size={16}/>
+                </button>
+              )}
+            </div>
+          ))}
+          <button type="button" className={theme.btnAdd} onClick={() => adicionarCampo('telefones')}>
+            <Plus size={14}/> Adicionar Telefone
+          </button>
+        </div>
+
+        <div className={theme.formActionsGroup}>
+          {isEditing && (
+            <button type="button" className={theme.btnCancel} onClick={onCancel}>
+              Cancelar
+            </button>
+          )}
+          <button type="submit" className={theme.btnSubmitEdicao}>
+            {isEditing ? 'Salvar Alterações' : 'Dupla Inserção'}
+          </button>
+        </div>
+      </form>
+
+      <ResilienceModal
+        aberto={modalAberto}
+        entidade="Usuário"
+        onKeep={() => { manterApenasNoPostgres(); onSubmit({ status: 'SUCESSO' }); }}
+        onRollback={() => { executarRollback(); onCancel(); }}
+      />
+    </div>
   );
 }

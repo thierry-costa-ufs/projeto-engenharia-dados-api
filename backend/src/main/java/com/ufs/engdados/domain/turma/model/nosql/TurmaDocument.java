@@ -2,23 +2,17 @@ package com.ufs.engdados.domain.turma.model.nosql;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "turmas")
 public class TurmaDocument {
 
     @Id
-    private String id;
-
-    @Field(name = "id_turma")
     private Integer idTurma;
-    @Field(name = "cod_disc")
+
     private String codDisc;
-    @Field(name = "numero")
+
     private Integer numero;
-    @Field(name = "ano")
     private Short ano;
-    @Field(name = "semestre")
     private Short semestre;
 
     public TurmaDocument() {

@@ -7,28 +7,25 @@ const obterDataAtual = () => new Date().toISOString().split('T')[0];
 
 export default function ProfessorForm({ onSubmit, initialData, isEditing, onCancel }) {
   const [formData, setFormData] = useState({
-    matricula: '', cpf: '', departamento: '', formacao: 'DOUTORADO',
+    matricula: '', cpf: '', departamento: '', formacao: 'Doutorado',
     jornada: 'DE', salario: '', dataAdmissao: obterDataAtual()
   });
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (initialData) {
-      const formacaoFormatada = (initialData.formacao || 'DOUTORADO').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-      const jornadaFormatada = (initialData.jornada || initialData.tipoJornadaTrabalho || 'DE').toUpperCase();
-
       setFormData({
         matricula: initialData.matricula || '',
-        cpf: initialData.cpf ? String(initialData.cpf) : '',
+        cpf: initialData.cpf || '',
         departamento: initialData.departamento || '',
-        formacao: formacaoFormatada,
-        jornada: jornadaFormatada,
+        formacao: initialData.formacao || 'Doutorado',
+        jornada: initialData.jornada || initialData.tipoJornadaTrabalho || 'DE',
         salario: initialData.salario || '',
         dataAdmissao: initialData.dataAdmissao || obterDataAtual()
       });
     } else {
       setFormData({
-        matricula: '', cpf: '', departamento: '', formacao: 'DOUTORADO',
+        matricula: '', cpf: '', departamento: '', formacao: 'Doutorado',
         jornada: 'DE', salario: '', dataAdmissao: obterDataAtual()
       });
     }
@@ -41,16 +38,10 @@ export default function ProfessorForm({ onSubmit, initialData, isEditing, onCanc
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
   };
 
-  const handleLocalSubmit = async (e) => {
+  const handleLocalSubmit = (e) => {
     e.preventDefault();
 
-    const dadosParaValidacao = {
-      ...formData,
-      cpf: String(formData.cpf),
-      salario: Number(formData.salario)
-    };
-
-    const validacao = professorSchema.safeParse(dadosParaValidacao);
+    const validacao = professorSchema.safeParse(formData);
 
     if (!validacao.success) {
       const mapeamentoErros = {};
@@ -67,72 +58,67 @@ export default function ProfessorForm({ onSubmit, initialData, isEditing, onCanc
   return (
     <div className={theme.formContainer}>
       <form onSubmit={handleLocalSubmit} className={theme.form}>
-
         <div className={theme.row}>
           <div className={theme.column} style={{ flex: 1 }}>
             <label className={theme.fieldLabel}>Matrícula</label>
             <input
               type="text"
               name="matricula"
-              placeholder="Ex: 1234567"
               value={formData.matricula}
               onChange={handleChange}
+              maxLength={7}
               required
               disabled={isEditing}
+              placeholder="Ex: P100"
             />
             {errors.matricula && <span className={theme.errorText}>{errors.matricula}</span>}
           </div>
 
           <div className={theme.column} style={{ flex: 1 }}>
-            <label className={theme.fieldLabel}>CPF do Usuário</label>
+            <label className={theme.fieldLabel}>Depto</label>
             <input
               type="text"
-              name="cpf"
-              placeholder="Apenas números"
-              value={formData.cpf}
+              name="departamento"
+              value={formData.departamento}
               onChange={handleChange}
+              maxLength={5}
               required
-              maxLength="11"
+              placeholder="DCOMP"
+              className={theme.inputUppercase}
             />
-            {errors.cpf && <span className={theme.errorText}>{errors.cpf}</span>}
+            {errors.departamento && <span className={theme.errorText}>{errors.departamento}</span>}
           </div>
         </div>
 
         <div className={theme.column}>
-          <label className={theme.fieldLabel}>Departamento (Código)</label>
+          <label className={theme.fieldLabel}>CPF do Usuário Base</label>
           <input
             type="text"
-            name="departamento"
-            placeholder="Ex: DCOMP"
-            value={formData.departamento}
+            name="cpf"
+            value={formData.cpf}
             onChange={handleChange}
             required
+            disabled={isEditing}
+            placeholder="Apenas números"
           />
-          {errors.departamento && <span className={theme.errorText}>{errors.departamento}</span>}
+          {errors.cpf && <span className={theme.errorText}>{errors.cpf}</span>}
         </div>
 
         <div className={theme.row}>
           <div className={theme.column} style={{ flex: 1 }}>
-            <label className={theme.fieldLabel}>Formação</label>
-            <select name="formacao" value={formData.formacao} onChange={handleChange}>
-              {TITULACAO_PROFESSOR.map(t => (
-                <option
-                  key={t.value}
-                  value={t.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")}
-                >
-                  {t.label}
-                </option>
+            <label className={theme.fieldLabel}>Titulação Acadêmica</label>
+            <select name="formacao" value={formData.formacao} onChange={handleChange} required>
+              {TITULACAO_PROFESSOR.map(item => (
+                <option key={item.value} value={item.value}>{item.label}</option>
               ))}
             </select>
           </div>
 
           <div className={theme.column} style={{ flex: 1 }}>
-            <label className={theme.fieldLabel}>Jornada</label>
-            <select name="jornada" value={formData.jornada} onChange={handleChange}>
-              {JORNADA_PROFESSOR.map(t => (
-                <option key={t.value} value={t.value.toUpperCase()}>
-                  {t.label}
-                </option>
+            <label className={theme.fieldLabel}>Regime de Jornada</label>
+            <select name="jornada" value={formData.jornada} onChange={handleChange} required>
+              {JORNADA_PROFESSOR.map(item => (
+                <option key={item.value} value={item.value}>{item.label}</option>
               ))}
             </select>
           </div>
@@ -140,7 +126,7 @@ export default function ProfessorForm({ onSubmit, initialData, isEditing, onCanc
 
         <div className={theme.row}>
           <div className={theme.column} style={{ flex: 1 }}>
-            <label className={theme.fieldLabel}>Salário (R$)</label>
+            <label className={theme.fieldLabel}>Vencimento (R$)</label>
             <input
               type="number"
               name="salario"
@@ -165,16 +151,20 @@ export default function ProfessorForm({ onSubmit, initialData, isEditing, onCanc
           </div>
         </div>
 
-        <div className={theme.formActionsGroup}>
-          {isEditing && (
+        {isEditing ? (
+          <div className={theme.formActionsGroup}>
             <button type="button" className={theme.btnCancel} onClick={onCancel}>
               Cancelar
             </button>
-          )}
-          <button type="submit" className={theme.btnSubmitEdicao}>
-            {isEditing ? 'Salvar Alterações' : 'Cadastrar Professor'}
+            <button type="submit" className={theme.btnSubmitEdicao}>
+              Salvar Alterações
+            </button>
+          </div>
+        ) : (
+          <button type="submit" className={theme.btnSubmit}>
+            Cadastrar Professor
           </button>
-        </div>
+        )}
       </form>
     </div>
   );

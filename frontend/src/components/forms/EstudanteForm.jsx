@@ -15,7 +15,7 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
     if (initialData) {
       setFormData({
         matEstudante: initialData.matEstudante || initialData.matricula || initialData.mat_estudante || '',
-        cpf: initialData.cpf ? String(initialData.cpf) : '',
+        cpf: initialData.cpf || '',
         mc: initialData.mc ?? initialData.MC ?? '',
         anoIngresso: initialData.anoIngresso || initialData.ano_ingresso || initialData.dataIngresso?.split('-')[0] || ''
       });
@@ -34,14 +34,7 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
   const handleLocalSubmit = async (e) => {
     e.preventDefault();
 
-    const dadosParaValidacao = {
-      ...formData,
-      cpf: String(formData.cpf),
-      mc: formData.mc !== '' ? Number(formData.mc) : 0,
-      anoIngresso: Number(formData.anoIngresso)
-    };
-
-    const validacao = estudanteSchema.safeParse(dadosParaValidacao);
+    const validacao = estudanteSchema.safeParse(formData);
 
     if (!validacao.success) {
       const mapeamentoErros = {};
@@ -52,37 +45,51 @@ export default function EstudanteForm({ onSubmit, initialData, isEditing, onCanc
       return;
     }
 
-    onSubmit(validacao.data);
+    const payload = {
+      matEstudante: validacao.data.matEstudante,
+      cpf: Number(validacao.data.cpf),
+      mc: validacao.data.mc,
+      anoIngresso: validacao.data.anoIngresso
+    };
+
+    if (isEditing) {
+      await onSubmit(payload);
+    } else {
+      const resultado = await executarEscritaDupla(payload);
+      if (resultado.status === 'SUCESSO' || resultado.status === 'FALHA_PARCIAL') {
+        setFormData({ matEstudante: '', cpf: '', mc: '', anoIngresso: '' });
+        if (resultado.status === 'SUCESSO') onSubmit({ status: 'SUCESSO' });
+      }
+    }
   };
 
   return (
     <div className={theme.formContainer}>
       <form onSubmit={handleLocalSubmit} className={theme.form}>
-
         <div className={theme.row}>
           <div className={theme.column} style={{ flex: 1 }}>
             <input
               type="text"
               name="matEstudante"
-              placeholder="Matrícula"
+              placeholder="Matrícula (7 caracteres)"
+              maxLength={7}
               value={formData.matEstudante}
               onChange={handleChange}
               required
               disabled={isEditing}
-              maxLength="7"
             />
             {errors.matEstudante && <span className={theme.errorText}>{errors.matEstudante}</span>}
           </div>
 
           <div className={theme.column} style={{ flex: 1 }}>
             <input
-              type="text"
+              type="number"
               name="cpf"
-              placeholder="CPF (Apenas números)"
+              placeholder="CPF do Usuário Base"
               value={formData.cpf}
               onChange={handleChange}
               required
-              maxLength="11"
+              disabled={isEditing}
             />
             {errors.cpf && <span className={theme.errorText}>{errors.cpf}</span>}
           </div>
