@@ -26,7 +26,6 @@ public interface ProfessorDTO {
             @NotBlank(message = "A formação é obrigatória.")
             String formacao,
 
-            @NotNull(message = "A data de admissão é obrigatória.")
             LocalDate dataAdmissao,
 
             @NotBlank(message = "A jornada de trabalho é obrigatória.")

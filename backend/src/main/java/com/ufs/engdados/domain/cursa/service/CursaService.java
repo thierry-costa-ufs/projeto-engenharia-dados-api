@@ -56,7 +56,6 @@ public class CursaService {
         return cursas.map(CursaMapper::toResponse);
     }
 
-    @Transactional(readOnly = true)
     public Page<CursaDTO.Response> findAllNoSql(Pageable pageable) {
         Page<CursaDocument> cursas = noSqlRepository.findAll(pageable);
         return cursas.map(CursaMapper::toResponse);

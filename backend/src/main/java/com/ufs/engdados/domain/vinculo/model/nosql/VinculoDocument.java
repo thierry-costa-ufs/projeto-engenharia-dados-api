@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate; // 🌟 Importado para os controles temporais de datas
 
-@Document(collection = "vinculo")
+@Document(collection = "vinculos")
 @CompoundIndexes({
         @CompoundIndex(name = "idx_vinculo_estudante_curso", def = "{'matEstudante': 1, 'codCurso': 1}", unique = false)
 })
@@ -17,22 +17,17 @@ public class VinculoDocument {
     @Id
     private String id;
 
-    @Field
+    @Field(name = "idvinculo")
     private Long idVinculo;
-
-    @Field
+    @Field(name = "mat_estudante")
     private String matEstudante;
-
-    @Field
+    @Field(name = "curso")
     private Integer codCurso;
-
-    @Field
+    @Field(name = "data_entrada")
     private LocalDate dataEntrada;
-
-    @Field
+    @Field(name = "status")
     private String status;
-
-    @Field
+    @Field(name = "data_saida")
     private LocalDate dataSaida;
 
     // Getters e Setters

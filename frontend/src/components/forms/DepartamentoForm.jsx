@@ -113,7 +113,6 @@ export default function DepartamentoForm({ onSubmit, initialData, isEditing, onC
               placeholder="Orçamento (Deve ser > 0)"
               value={formData.orcamento}
               onChange={handleChange}
-              required
             />
             {errors.orcamento && <span className={theme.errorText}>{errors.orcamento}</span>}
           </div>
@@ -126,7 +125,6 @@ export default function DepartamentoForm({ onSubmit, initialData, isEditing, onC
               placeholder="Comissão de Função"
               value={formData.comissal}
               onChange={handleChange}
-              required
             />
             {errors.comissal && <span className={theme.errorText}>{errors.comissal}</span>}
           </div>

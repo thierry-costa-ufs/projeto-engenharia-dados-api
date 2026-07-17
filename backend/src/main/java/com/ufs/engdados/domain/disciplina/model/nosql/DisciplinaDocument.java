@@ -2,21 +2,25 @@ package com.ufs.engdados.domain.disciplina.model.nosql;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "disciplinas")
 public class DisciplinaDocument {
 
     @Id
-    private String codDisc; // código da disciplina será o identificador único no Mongo
+    private String id;
 
+    @Field(name = "cod_disc")
+    private String codDisc;
+    @Field(name = "nome")
     private String nome;
-    private Integer creditos;
-
-    // salvamos apenas os códigos de referência no NoSQL
+    @Field(name = "pre_req")
     private String preReq;
+    @Field(name = "creditos")
+    private Integer creditos;
+    @Field(name = "depto_responsavel")
     private String deptoResponsavel;
 
-    // construtor vazio exigido pelo Spring Data
     public DisciplinaDocument() {
     }
 

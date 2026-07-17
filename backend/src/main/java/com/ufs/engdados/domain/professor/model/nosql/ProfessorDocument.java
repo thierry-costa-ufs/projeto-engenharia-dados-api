@@ -8,33 +8,26 @@
     import java.time.LocalDate;
     import java.util.List;
 
-    @Document(collection = "professor")
+    @Document(collection = "professores")
     public class ProfessorDocument {
 
         @Id
         private String id;
 
-        @Field
+        @Field(name = "mat_professor")
         private String matricula;
-
         @Field("cpf")
         private Long cpf;
-
         @Field("nome")
         private String nome;
-
         @Field("departamento")
         private String departamento;
-
         @Field("formacao")
         private String formacao;
-
         @Field("data_admissao")
         private LocalDate dataAdmissao;
-
         @Field("tipo_jornada_trabalho")
         private String jornada;
-
         @Field("salario")
         private BigDecimal salario;
 
@@ -42,7 +35,6 @@
         public ProfessorDocument() {}
 
         // Getters e Setters
-
 
         public String getId() {
             return id;
