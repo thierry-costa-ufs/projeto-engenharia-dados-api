@@ -25,9 +25,15 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO.Response create(UsuarioDTO.Request dto) {
+        // Nova trava de segurança contra CPFs duplicados
+        if (relationalRepository.existsById(dto.cpf())) {
+            throw new IllegalArgumentException("Já existe um usuário cadastrado com este CPF no sistema.");
+        }
+
         if (dto.senha() == null || dto.senha().isBlank()) {
             throw new IllegalArgumentException("A senha é obrigatória no cadastro.");
         }
+
         relationalRepository.save(UsuarioMapper.toEntity(dto));
         UsuarioDocument doc = noSqlRepository.save(UsuarioMapper.toDocument(dto));
 
@@ -37,20 +43,18 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Page<UsuarioDTO.Response> findAllRelational(Pageable pageable) {
         Page<Usuario> usuarios = relationalRepository.findAll(pageable);
-
         return usuarios.map(usuario -> UsuarioMapper.toResponse(usuario));
     }
 
     public Page<UsuarioDTO.Response> findAllNoSql(Pageable pageable) {
         Page<UsuarioDocument> usuarios = noSqlRepository.findAll(pageable);
-
         return usuarios.map(usuario -> UsuarioMapper.toResponse(usuario));
     }
 
     @Transactional
     public UsuarioDTO.Response update(Long cpf, UsuarioDTO.Request dto) {
         if(!(cpf.equals(dto.cpf()))){
-            throw new IllegalArgumentException("O cpf da URL não corresponde ao cpf enviada no corpo da requisição.");
+            throw new IllegalArgumentException("O cpf da URL não corresponde ao cpf enviado no corpo da requisição.");
         }
 
         Usuario usuario = relationalRepository.findById(cpf)
