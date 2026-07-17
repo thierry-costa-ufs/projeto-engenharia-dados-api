@@ -13,6 +13,7 @@ backend/target/
 backend/.mvn/
 backend/*.jar
 backend/*.war
+backend/src/main/resources/application.properties
 
 # Node / React (Frontend)
 frontend/node_modules/
