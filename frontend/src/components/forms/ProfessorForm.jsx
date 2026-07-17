@@ -140,7 +140,7 @@ export default function ProfessorForm({ onSubmit, initialData, isEditing, onCanc
 
         <div className={theme.row}>
           <div className={theme.column} style={{ flex: 1 }}>
-            <label className={theme.fieldLabel}>Vencimento (R$)</label>
+            <label className={theme.fieldLabel}>Salário (R$)</label>
             <input
               type="number"
               name="salario"

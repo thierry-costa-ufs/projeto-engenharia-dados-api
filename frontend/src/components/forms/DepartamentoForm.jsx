@@ -100,6 +100,7 @@ export default function DepartamentoForm({ onSubmit, initialData, isEditing, onC
           maxLength={7}
           value={formData.chefe}
           onChange={handleChange}
+          required
         />
         {errors.chefe && <span className={theme.errorText}>{errors.chefe}</span>}
 
