@@ -17,11 +17,14 @@ public interface DepartamentoDTO{
             @Size(max = 50, message = "O nome deve ter no máximo 50 carcteres")
             String nome,
 
+            @NotBlank(message = "O chefe é obrigatório")
             @Size(max = 7, message = "O chefe deve ter no máximo 7 caracteres.")
             String chefe,
 
+            @NotNull(message = "O orçamento é obrigatório")
             BigDecimal orcamento,
 
+            @NotNull(message = "A comissal é obrigatória")
             BigDecimal comissal
     ){}
 

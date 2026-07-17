@@ -61,6 +61,7 @@ public class CursoService {
         return cursosPg.map(curso -> CursoMapper.toResponse(curso));
     }
 
+    @Transactional(readOnly = true)
     public Page<CursoDTO.Response> findAllNoSql(Pageable pageable) {
         Page<CursoDocument> cursosPg = noSqlRepository.findAll(pageable);
         return cursosPg.map(curso -> CursoMapper.toResponse(curso));

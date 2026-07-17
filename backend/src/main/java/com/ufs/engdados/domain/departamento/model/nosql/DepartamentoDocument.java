@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.math.BigDecimal;
 
-@Document(collection = "departamentos")
+@Document(collection = "departamento")
 public class DepartamentoDocument{
 
     @Id
@@ -14,16 +14,21 @@ public class DepartamentoDocument{
 
     @Field("cod_depto")
     private String codDepto;
+
     @Field("nome")
     private String nome;
+
     @Field("chefe")
     private String chefe;
+
     @Field("orcamento")
     private BigDecimal orcamento;
+
     @Field("comissal")
     private BigDecimal comissal;
 
     // --- GETTERS E SETTERS ---
+
 
     public String getChefe() {
         return chefe;

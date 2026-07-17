@@ -25,6 +25,7 @@ export default function UsuariosView() {
         'Senha'
       ]}
       renderRow={(usuario, idx, sharedStyles, onEdit, onDelete) => {
+        // Normaliza o ID para o ModuleViewLayout encontrar o identificador no Postgres (cpf) e no Mongo (mongoId)
         const idUsuario = usuario.cpf || usuario.mongoId || idx;
 
         return (

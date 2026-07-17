@@ -60,6 +60,7 @@ public class VinculoService {
         return page.map(vinculo -> VinculoMapper.toResponse(vinculo));
     }
 
+    @Transactional(readOnly = true)
     public Page<VinculoDTO.Response> findAllNoSql(Pageable pageable) {
         Page<VinculoDocument> page = noSqlRepository.findAll(pageable);
         return page.map(vinculo -> VinculoMapper.toResponse(vinculo));
