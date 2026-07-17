@@ -9,10 +9,10 @@ export default function TurmasView() {
             subtitle="Alocação de horários, salas, atribuição docente e oferta de disciplinas."
             formTitle="Cadastrar Nova Turma"
             endpoint="turmas"
-            FormComponent={TurmaForm}
-            tableHeaders={['Código', 'Disciplina', 'Ano', 'Semestre']}
+            tableHeaders={['ID Turma', 'Código', 'Disciplina', 'Ano', 'Semestre']}
             renderRow={(turma, idx, sharedStyles, onEdit, onDelete) => (
                 <tr key={turma.idTurma || idx} className={sharedStyles.tableRow}>
+                    <td className={sharedStyles.textMono}>{turma.idTurma}</td>
                     <td className={sharedStyles.textMono}>{turma.codigoTurma || turma.numero}</td>
                     <td>{turma.codigoDisciplina || turma.codDisciplina || turma.cod_disc}</td>
                     <td>{turma.ano}</td>
